@@ -38,4 +38,5 @@ export const kannurDistrictPincodes = new Set([
     670631, 670511, 670693, 670632, 670104, 670651, 670307, 670632, 670705, 670514,
     670651, 670301, 670103, 670621, 670011, 670571,]);
 
-export const MARUTI_SUZUKI_IMAGE = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngmart.com%2Ffiles%2F17%2FMaruti-Suzuki-Logo-PNG-Photo.png&f=1&nofb=1&ipt=10350ea3d0026bc31a0834efa4a7b91ac8e16802f61985387d7808466eefa6c4&ipo=images"
+export const MARUTI_SUZUKI_IMAGE = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwww.pngmart.com%2Ffiles%2F17%2FMaruti-Suzuki-Logo-PNG-Photo.png&f=1&nofb=1&ipt=10350ea3d0026bc31a0834efa4a7b91ac8e16802f61985387d7808466eefa6c4&ipo=images";
+export const CAR_COLLECTIONS = "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fi1.wp.com%2Flovebelfast.co.uk%2Fwp-content%2Fuploads%2F2020%2F03%2Ffamily_cars_header-scaled.jpg%3Fresize%3D1068%252C601%26ssl%3D1&f=1&nofb=1&ipt=2d267bbd1383fbacc9c6d0ba6be597d75084cdc52395d7c1fb1953e781fd602f&ipo=images";

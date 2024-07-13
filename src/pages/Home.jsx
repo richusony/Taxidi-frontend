@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { HOME_BG_IMAGE_URL } from '../constants'
+import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import BecomeHost from '../components/BecomeHost'
 
 const Home = () => {
     const [menu, setMenu] = useState(false);
@@ -64,6 +65,157 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Text  */}
+            <div className='px-10 py-14 text-center'>
+                <div className='my-5'>
+                    <h1 className='text-3xl font-bold text-gray-700'>Skip the rental car counters</h1>
+                    <h3 className='mt-2'>Rent just about any car, just about anywhere</h3>
+                </div>
+            </div>
+
+            {/* Explore Cars for any occasion */}
+            <div className='py-10 pr-10 bg-[#E8E6E6] flex justify-evenly items-center'>
+                <div className='w-96 rounded'>
+                    <img className='w-full h-full object-cover rounded' src={CAR_COLLECTIONS} alt="car-collections" />
+                </div>
+
+                <div className='text'>
+                    <h1 className='text-3xl font-bold text-gray-700'>Explore cars for any <br /> occasion</h1>
+                    <p className='mt-3'>Our incredible selection of cars makes it <br />
+                        easy to find a ride anytime, anywhere.</p>
+                    <button className='mt-3 py-2 px-4 bg-[#593CFB] text-white rounded'>Explore cars</button>
+                </div>
+            </div>
+
+            {/* Browse by Make */}
+            <div className='mt-5 px-10 py-5'>
+                <h1 className='font-bold text-gray-700 text-xl'>Browse by make</h1>
+
+                <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div>
+                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                        </div>
+                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
+                    </div>
+                    {/* Repeat similar divs for other items */}
+                </div>
+
+            </div>
+
+            {/* Become a host | Book a car */}
+            <div className='mt-5 py-2 px-5 flex justify-center items-center'>
+                {/* <img className='w-full h-full' src="../assets/images/becomehost.jpg" alt="image" /> */}
+                <BecomeHost />
+            </div>
+
+            {/* Footer */}
+            <footer className='mt-10 px-10 py-10 bg-[#F2F1F1] grid grid-cols-3'>
+                <div className='w-52'>
+                    <h1 className='text-xl font-bold'>Location</h1>
+                    <div className='mt-5'>
+                        <h3>Kasargod</h3>
+                        <h3>Kannur</h3>
+                        <h3>Kozhikode</h3>
+                        <h3>Malapuram</h3>
+                        <h3>Kozhikode</h3>
+                    </div>
+                </div>
+                <div className='w-52'>
+                    <h1 className='text-xl font-bold'>Social Media</h1>
+                    <div className='mt-5'>
+                        <h3>Instagram</h3>
+                        <h3>Facebook</h3>
+                        <h3>Twitter/X</h3>
+                        <h3>Median</h3>
+                    </div>
+                </div>
+                <div className='w-52'>
+                    <h1 className='text-xl font-bold'>Brands</h1>
+                    <div className='mt-5'>
+                        <h3>Maruti Suzuki</h3>
+                        <h3>Mahindra</h3>
+                        <h3>Renault</h3>
+                        <h3>Volkswagen</h3>
+                        <h3>Toyota</h3>
+                        <h3>Hyundai</h3>
+                        <h3>Honda</h3>
+                    </div>
+                </div>
+            </footer>
         </div>
     )
 }
