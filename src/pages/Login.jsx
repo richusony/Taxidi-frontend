@@ -46,7 +46,7 @@ const Login = () => {
             const res = await axios.post('http://localhost:8080/login', formData)
             if (res.status == 200) window.location.href = "/"
         } catch (error) {
-            console.log(error.reponse)
+            setError(error?.response?.data?.error)
         }
     }
 

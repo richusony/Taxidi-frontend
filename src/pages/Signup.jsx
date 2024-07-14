@@ -1,5 +1,5 @@
 import React, { createElement, useEffect, useState } from 'react'
-import { Link, redirect } from 'react-router-dom'
+import { json, Link, redirect } from 'react-router-dom'
 import { signInWithPopup } from "firebase/auth"
 import { auth, googleProvider } from "../services/firebase"
 import { isKannur, validateEmail, validatePhoneNumber, validatePassword } from '../utils/helper'
@@ -22,7 +22,7 @@ const Signup = () => {
     })
 
     useEffect(() => {
-         const clearErrorTimer = setTimeout(() => setError(""), 3000);
+        const clearErrorTimer = setTimeout(() => setError(""), 3000);
         return () => clearTimeout(clearErrorTimer);
     }, [error])
 
@@ -54,8 +54,8 @@ const Signup = () => {
             return
         }
 
-        if(!validatePassword(formData.password)) {
-        
+        if (!validatePassword(formData.password)) {
+
             setError("Password must be at least 8 characters long and contain both letters and numbers")
             return
         }
@@ -67,11 +67,13 @@ const Signup = () => {
         try {
             // console.log(formData);
             // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-            const res = await axios.post('http://localhost:8080/signup', formData)
-            console.log("checking :: ",res);
-            if (res.status == 201) window.location.href = "/login"
+            console.log(typeof formData);
+            sessionStorage.setItem("userData", JSON.stringify(formData));
+            const res = await axios.post('http://localhost:8080/send-otp', { email: formData.email })
+            // console.log("checking :: ",res);
+            window.location.href = "/otp"
         } catch (error) {
-            setError(error.response?.data?.err)
+            setError(error.response?.data?.error)
         }
     }
 
