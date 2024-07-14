@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import axiosInstance from "../axiosConfig"
+import ErrorToast from '../components/ErrorToast';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faWarning } from '@fortawesome/free-solid-svg-icons';
 
 const Otp = () => {
-    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem("userData")))
     const [otp, setOtp] = useState(null);
+    const [error, setError] = useState("");
+    const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem("userData")))
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -15,17 +19,21 @@ const Otp = () => {
             if (res.status == 200) {
                 console.log(typeof userData);
                 const res = await axiosInstance.post("/signup", userData)
-                if(res.status == 201) window.location.href = "/login";
+                if (res.status == 201) window.location.href = "/login";
             }
         } catch (error) {
-            console.log(error);
+            setError(error?.response?.data?.error)
         }
     }
 
     const handleResendOtp = async (e) => {
         e.preventDefault();
-        const res = await axiosInstance.post("/send-otp", { email: userData.email });
-        if (res.status == 200) alert("otp sended");
+        try {
+            const res = await axiosInstance.post("/send-otp", { email: userData.email });
+            if (res.status == 200) alert("otp sended");
+        } catch (error) {
+            setError(error?.response?.data?.error)
+        }
     }
 
     return (
@@ -45,6 +53,8 @@ const Otp = () => {
                     <img className='w-full h-full rounded bg-transparent' src="/src/assets/images/otpimage.jpg" alt="otp-image" />
                 </div>
             </div>
+
+            <ErrorToast error={error} setError={setError}/>
         </div>
     )
 }

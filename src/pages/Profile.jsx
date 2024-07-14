@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosConfig';
+import { handleLogOut } from '../utils/helper';
+import UpdateUser from '../components/UpdateUser';
+import ErrorToast from '../components/ErrorToast';
+import React, { useEffect, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import UpdateUser from '../components/UpdateUser';
-import { handleLogOut } from '../utils/helper';
 
 const Profile = () => {
+    const [error, setError] = useState("");
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
     const [updateBox, setUpdateBox] = useState(false);
@@ -19,7 +21,7 @@ const Profile = () => {
 
     const getUserDetails = async () => {
         try {
-            const res = await axios.get('http://localhost:8080/profile');
+            const res = await axiosInstance.get('/profile');
             setUserData(res.data.user);
             if (res.status !== 200) window.location.href = "/login";
         } catch (error) {
@@ -136,6 +138,7 @@ const Profile = () => {
                     <div>Loading...</div>
                 )}
             </div>
+            <ErrorToast error={error} setError={setError} />
         </div>
     );
 };

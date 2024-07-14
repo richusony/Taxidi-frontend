@@ -12,7 +12,7 @@ const BecomeHost = () => {
 
             <div className='absolute top-80 left-[55%] text-center w-56'>
                 <h1 className='text-2xl text-[#593CFB] font-bold'>Book a host</h1>
-                <p className='mt-2'>Accelerate your entrepreneurship and start building a small car sharing business on Turo.</p>
+                <p className='mt-2'>Accelerate your entrepreneurship and start building a small car sharing business on Taxidi.</p>
             </div>
         </div>
     )

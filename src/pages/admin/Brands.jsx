@@ -59,7 +59,7 @@ const Brands = () => {
 
                     </div>
                 </div>
-                {addBrand && <AddBrand />}
+                {addBrand && <AddBrand setAddBrand={setAddBrand} />}
             </div>
         </div>
     )

@@ -1,13 +1,31 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import BecomeHost from '../components/BecomeHost'
+import { handleLogOut } from '../utils/helper'
+import axiosInstance from '../axiosConfig'
 
 const Home = () => {
     const [menu, setMenu] = useState(false);
+    const [userData, setUserData] = useState(null);
     const handleMenu = () => setMenu(prev => !prev);
+
+    useEffect(() => {
+        getUserDetails();
+    }, []);
+
+    const getUserDetails = async () => {
+        try {
+            const res = await axiosInstance.get('/profile');
+            setUserData(res.data.user);
+            // if (res.status !== 200) window.location.href = "/login";
+        } catch (error) {
+            // window.location.href = "/login";
+            console.error('Error fetching profile:', error);
+        }
+    };
     return (
         <div className='overflow-x-hidden'>
             {/* Announcements */}
@@ -33,9 +51,13 @@ const Home = () => {
                             <div className='my-4'>
                                 <Link className='hover:text-[#593CFB] text-lg' to="/bookings">Bookings</Link>
                             </div>
-                            <div className='my-4'>
-                                <Link className='hover:text-[#593CFB] text-lg' to="/login">Login</Link>
+                            {userData ? <div className='my-4'>
+                                <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
                             </div>
+                                :
+                                <div className='my-4'>
+                                    <Link className='hover:text-[#593CFB] text-lg' to="/login">Login</Link>
+                                </div>}
                         </div>
                     </div>
                 </div>

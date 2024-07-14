@@ -6,6 +6,7 @@ import { isKannur, validateEmail, validatePhoneNumber, validatePassword } from '
 import axios from 'axios'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import ErrorToast from '../components/ErrorToast'
 
 const Signup = () => {
     const [error, setError] = useState("");
@@ -21,10 +22,7 @@ const Signup = () => {
         googleLogin: false
     })
 
-    useEffect(() => {
-        const clearErrorTimer = setTimeout(() => setError(""), 3000);
-        return () => clearTimeout(clearErrorTimer);
-    }, [error])
+    
 
     const handleChange = (e) => {
         setFormData({
@@ -94,7 +92,7 @@ const Signup = () => {
             const res = await axios.post('http://localhost:8080/signup', formData)
             if (res.status == 201) window.location.href = "/login"
         } catch (error) {
-            console.log(error.message)
+            setError(error.response?.data?.error)
         }
     }
 
@@ -159,9 +157,7 @@ const Signup = () => {
 
     return (
         <div className='bg-gradient-to-r from-violet-600 to-indigo-600 relative'>
-            <div className={`transition delay-150 absolute ease-linear ${error ? "left-40 top-1" : "right-full"} px-4 py-2 bg-white border-2 border-violet-500 w-fit rounded shadow-md`}>
-                <span className='text-violet-600'><FontAwesomeIcon icon={faWarning} /> {error}</span>
-            </div>
+            <ErrorToast error={error} setError={setError}/>
             {DesktopView()}
         </div>
     )

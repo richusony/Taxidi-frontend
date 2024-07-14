@@ -3,6 +3,7 @@ import axiosInstance from '../axiosConfig.js';
 import { isKannur, validateEmail, validatePhoneNumber } from '../utils/helper.js';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
+import ErrorToast from './ErrorToast.jsx';
 
 const UpdateUser = ({ userData, userFun }) => {
     const [error, setError] = useState("");
@@ -61,9 +62,7 @@ const UpdateUser = ({ userData, userFun }) => {
         <div>
             <div className='mt-5'>
                 {/* Error Display  */}
-                <div className={`transition delay-150 absolute ease-linear ${error ? "left-40 top-1" : "right-full"} px-4 py-2 bg-white border-2 border-violet-500 w-fit rounded shadow-md`}>
-                    <span className='text-violet-600'><FontAwesomeIcon icon={faWarning} /> {error}</span>
-                </div>
+                <ErrorToast error={error} setError={setError}/>
 
                 <h1 className='py-1 px-2 bg-[#593CFB] text-white rounded-tl rounded-tr'>1. Basic Information - UPDATE</h1>
                 <div className='px-5 py-2 border border-[#593CFB] grid grid-cols-2 gap-5'>
