@@ -7,7 +7,7 @@ import { MARUTI_SUZUKI_IMAGE } from '../../constants'
 import axios from 'axios'
 import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
 import AddBody from '../../components/AddBody'
-import ErrorToast from '../../components/ErrorToast'
+import ErrorToast from '../../components/ErrorToast.jsx'
 
 const BodyTypes = () => {
     const [addBody, setAddBody] = useState(false);
@@ -18,18 +18,18 @@ const BodyTypes = () => {
 
     useEffect(() => {
         validateAdmin();
-        getAllBodys()   
+        getAllBodys()
     }, [])
 
 
 
     const getAllBodys = async () => {
-       try {
-         const res = await axios.get("http://localhost:8080/admin/body-types");
-        setBody(res.data);
-       } catch (error) {
-        setError(error?.response?.data?.error)
-       }
+        try {
+            const res = await axios.get("http://localhost:8080/admin/body-types");
+            setBody(res.data);
+        } catch (error) {
+            setError(error?.response?.data?.error)
+        }
     }
 
     return (
@@ -59,7 +59,7 @@ const BodyTypes = () => {
                     <div className='mt-5 grid grid-cols-3 gap-5'>
                         {body.map((type) => (
                             <div key={type._id} className='my-2 text-center w-44 shadow-md rounded'>
-                                <div  className='w-44 h-28 border border-b-2 rounded'>
+                                <div className='w-44 h-28 border border-b-2 rounded'>
                                     <FontAwesomeIcon className='w-full h-full text-gray-500' icon={faCar} />
                                 </div>
                                 <h1 className='py-2 text-center font-semibold'>{type.bodyType}</h1>

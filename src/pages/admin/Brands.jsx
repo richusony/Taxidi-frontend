@@ -6,10 +6,12 @@ import { Link } from 'react-router-dom'
 import { MARUTI_SUZUKI_IMAGE } from '../../constants'
 import AddBrand from '../../components/AddBrand'
 import axios from 'axios'
+import ErrorToast from "../../components/ErrorToast.jsx"
 import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
 
 const Brands = () => {
     const [addBrand, setAddBrand] = useState(false);
+    const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
 
     const handleAddBrand = () => setAddBrand(prev => !prev);
@@ -59,8 +61,9 @@ const Brands = () => {
 
                     </div>
                 </div>
-                {addBrand && <AddBrand setAddBrand={setAddBrand} />}
+                {addBrand && <AddBrand setError={setError} setAddBrand={setAddBrand} />}
             </div>
+            <ErrorToast error={error} setError={setError} />
         </div>
     )
 }

@@ -10,10 +10,13 @@ import axiosInstance from '../axiosConfig'
 const Home = () => {
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
+    const [brands, setBrands] = useState([]);
+
     const handleMenu = () => setMenu(prev => !prev);
 
     useEffect(() => {
         getUserDetails();
+        getAllBrands();
     }, []);
 
     const getUserDetails = async () => {
@@ -26,6 +29,15 @@ const Home = () => {
             console.error('Error fetching profile:', error);
         }
     };
+
+    const getAllBrands = async () => {
+        try {
+            const res = await axiosInstance.get("/brands");
+            setBrands(res.data);
+        } catch (error) {
+            console.error('Error fetching brands:', error);
+        }
+    }
     return (
         <div className='overflow-x-hidden'>
             {/* Announcements */}
@@ -115,12 +127,16 @@ const Home = () => {
                 <h1 className='font-bold text-gray-700 text-xl'>Browse by make</h1>
 
                 <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+
+                    {brands.length > 0 && brands.map((brand) => (
+                        <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                            <div>
+                                <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                            </div>
+                            <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>{brand.brandName}</h1>
                         </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
+                    ))}
+
                     <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
                         <div>
                             <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />

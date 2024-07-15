@@ -17,6 +17,10 @@ const AddBody = ({setError, setAddBody}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+        if(!formData.bodyType){
+            setError("Enter Body Type")
+            return;
+        }
         try {
           const res = await axiosInstance.post("/admin/add-body", formData);  
         } catch (error) {

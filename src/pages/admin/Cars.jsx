@@ -5,11 +5,17 @@ import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import AddCar from '../../components/AddCar'
 import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
+import ErrorToast from '../../components/ErrorToast'
+import axiosInstance from '../../axiosConfig'
 
 const Cars = () => {
     const [addCar, setAddCar] = useState(false);
+    const [vehicles, setVehicles] = useState([]);
+    const [error, setError] = useState("");
+
     useEffect(() => {
         validateAdmin();
+        getAllVehicles();
     }, [])
     const data = [
         { model: 'Model S', brand: 'Tesla', bodyType: 'Sedan', host: 'John Doe', added: '2024-01-01' },
@@ -23,6 +29,15 @@ const Cars = () => {
         { model: 'Model X', brand: 'Tesla', bodyType: 'SUV', host: 'David Martin', added: '2024-05-01' },
         { model: 'Explorer', brand: 'Ford', bodyType: 'SUV', host: 'Susan Lee', added: '2024-05-15' },
     ];
+
+const getAllVehicles = async () => {
+    try {
+        const res = await axiosInstance.get("/admin/cars");
+        setVehicles(res.data);
+    } catch (error) {
+        setError(error?.response?.data?.error)
+    }
+}
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
@@ -51,24 +66,25 @@ const Cars = () => {
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Brand</th>
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Body Type</th>
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Host</th>
-                                <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Added</th>
+                                <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Registeration Number</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {data.map((item, index) => (
+                            {vehicles.map((item, index) => (
                                 <tr key={index} className="hover:bg-gray-100">
                                     <td className="py-2 px-4 border-b text-center">{item.model}</td>
-                                    <td className="py-2 px-4 border-b text-center">{item.brand}</td>
-                                    <td className="py-2 px-4 border-b text-center">{item.bodyType}</td>
+                                    <td className="py-2 px-4 border-b text-center">{item.brand.brandName}</td>
+                                    <td className="py-2 px-4 border-b text-center">{item.bodyType.bodyType}</td>
                                     <td className="py-2 px-4 border-b text-center">{item.host}</td>
-                                    <td className="py-2 px-4 border-b text-center">{item.added}</td>
+                                    <td className="py-2 px-4 border-b text-center">{item.registerationNumber}</td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
-                {addCar && <AddCar />}
+                {addCar && <AddCar setError={setError} setAddCar={setAddCar} />}
             </div>
+            <ErrorToast error={error} setError={setError}/>
         </div>
     )
 }

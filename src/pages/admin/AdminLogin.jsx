@@ -2,12 +2,14 @@ import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { signInWithPopup } from "firebase/auth"
 import { auth, googleProvider } from '../../services/firebase'
-import axios from 'axios'
+import axiosInstance from '../../axiosConfig.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { validateEmail } from '../../utils/helper'
+import ErrorToast from '../../components/ErrorToast.jsx'
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AdminLogin = () => {
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -24,23 +26,23 @@ const AdminLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.email || !formData.password) {
-      alert("Fill all the forms")
+      setError("Fill all the forms")
       return;
     }
 
     if (!validateEmail(formData.email)) {
-      alert("Enter valid email");
+      setError("Enter valid email");
       return;
     }
 
     try {
       // console.log(formData);
       // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-      const res = await axios.post('http://localhost:8080/admin/login', formData)
+      const res = await axiosInstance.post('/admin/login', formData)
       if (res.status == 200) window.location.href = "/admin"
     } catch (error) {
-      console.log(error.message)
-      alert("Invalid Credentials");
+      // console.log(error.message)
+      setError(error?.response?.data?.error)
     }
   }
 
@@ -102,6 +104,7 @@ const AdminLogin = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-r from-violet-600 to-indigo-600'>
+      <ErrorToast error={error} setError={setError}/>
       {DesktopView()}
     </div>
   )

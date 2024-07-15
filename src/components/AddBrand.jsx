@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import React, { useState } from 'react'
 
-const AddBrand = ({setAddBrand}) => {
+const AddBrand = ({setError, setAddBrand}) => {
     const [formData, setFormData] = useState({
         brandName: '',
         brandImage: ''
@@ -18,6 +18,9 @@ const AddBrand = ({setAddBrand}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+        if(!formData.brandImage || !formData.brandName) {
+            setError("Fill All the fields")
+        }
         const res = await axios.post("http://localhost:8080/admin/add-brand", formData);
     }
 
