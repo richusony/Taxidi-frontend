@@ -1,0 +1,44 @@
+{
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/"
+    },
+    {
+      "src": "/profile",
+      "dest": "/"
+    },
+    {
+      "src": "/login",
+      "dest": "/"
+    },
+    {
+      "src": "/admin",
+      "dest": "/"
+    },
+    {
+      "src": "/otp",
+      "dest": "/"
+    },
+    {
+      "src": "/admin-login",
+      "dest": "/"
+    },
+    {
+      "src": "/admin/cars",
+      "dest": "/"
+    },
+    {
+      "src": "/admin/brands",
+      "dest": "/"
+    },
+    {
+      "src": "/admin/body-types",
+      "dest": "/"
+    },
+    {
+      "src": "/signup",
+      "dest": "/"
+    }
+  ]
+}

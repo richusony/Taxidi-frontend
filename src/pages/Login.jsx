@@ -77,14 +77,14 @@ const Login = () => {
 
     const DesktopView = () => (
         <>
-            <div className='pl-2 flex items-center'>
-                <div className='w-[50%] h-full'>
+            <div className='md:pl-2 flex items-center'>
+                <div className='hidden md:block w-[50%] h-full'>
                     <Link to="/" className='absolute top-5 left-4 font-bold text-2xl text-white cursor-pointer'>Taxidi</Link>
 
                     <div className='text-center'><p className='text-4xl text-white'>Welcome to <span>Taxidi</span></p></div>
                 </div>
 
-                <div className='min-h-screen px-20 py-10 w-[50%] bg-[#F7F3FA] rounded-l-2xl'>
+                <div className='min-h-screen px-10 md:px-20 py-10 w-full md:w-[50%] bg-[#F7F3FA] md:rounded-l-2xl'>
                     <h1 className='text-4xl font-bold'>Login</h1>
                     <p className='mt-2 mx-auto'>Login for booking your pefered car</p>
 

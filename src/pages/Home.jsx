@@ -93,22 +93,22 @@ const Home = () => {
             <div className="h-screen relative">
                 <img className='h-full w-full object-cover' src={HOME_BG_IMAGE_URL} alt="" />
 
-                <div className='px-5 py-8 w-10/12 absolute top-10 left-[8%] bg-white rounded-xl flex justify-between items-center shadow-md'>
+                <div className='px-5 py-8 w-10/12 absolute top-10 left-[8%] bg-white rounded-xl flex flex-col md:flex-row justify-between items-center shadow-md'>
                     <div>
                         <h2 className='font-semibold'>Start Date and Time</h2>
                         <div className='mt-2'>
-                            <input type="datetime-local" className='px-4 outline-none border-2 rounded' />
+                            <input type="datetime-local" placeholder='date and time' className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
-                    <div className='ml-8'>
+                    <div className='mt-4 md:mt-0 md:ml-8'>
                         <h2 className='font-semibold'>End Date and Time</h2>
                         <div className='mt-2'>
-                            <input type="datetime-local" className='px-4 outline-none border-2 rounded' />
+                            <input type="datetime-local" className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
-                    <div className='ml-8'>
+                    <div className='mt-4 md:mt-0 md:ml-8'>
                         <button className='px-8 py-2 bg-[#593CFB] text-white rounded-lg'>Search</button>
                     </div>
                 </div>
@@ -123,12 +123,12 @@ const Home = () => {
             </div>
 
             {/* Explore Cars for any occasion */}
-            <div className='py-10 pr-10 bg-[#E8E6E6] flex justify-evenly items-center'>
+            <div className='py-10 md:pr-10 bg-[#E8E6E6] flex flex-col md:flex-row justify-center md:justify-evenly items-center'>
                 <div className='w-96 rounded'>
                     <img className='w-full h-full object-cover rounded' src={CAR_COLLECTIONS} alt="car-collections" />
                 </div>
 
-                <div className='text'>
+                <div className='mt-5 md:mt-0'>
                     <h1 className='text-3xl font-bold text-gray-700'>Explore cars for any <br /> occasion</h1>
                     <p className='mt-3'>Our incredible selection of cars makes it <br />
                         easy to find a ride anytime, anywhere.</p>
@@ -137,7 +137,7 @@ const Home = () => {
             </div>
 
             {/* Browse by Make */}
-            <div className='mt-5 px-10 py-5'>
+            <div className='mt-5 px-5 md:px-10 py-5'>
                 <h1 className='font-bold text-gray-700 text-xl'>Browse by make</h1>
 
                 <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
@@ -235,9 +235,9 @@ const Home = () => {
             </div>
 
             {/* Footer */}
-            <footer className='mt-10 px-10 py-10 bg-[#F2F1F1] grid grid-cols-3'>
+            <footer className='mt-10 px-5 md:px-10 py-10 bg-[#F2F1F1] grid grid-cols-3 gap-x-5'>
                 <div className='w-52'>
-                    <h1 className='text-xl font-bold'>Location</h1>
+                    <h1 className='md:text-xl font-bold'>Location</h1>
                     <div className='mt-5'>
                         <h3>Kasargod</h3>
                         <h3>Kannur</h3>
@@ -247,7 +247,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='w-52'>
-                    <h1 className='text-xl font-bold'>Social Media</h1>
+                    <h1 className='md:text-xl font-bold'>Social Media</h1>
                     <div className='mt-5'>
                         <h3>Instagram</h3>
                         <h3>Facebook</h3>
@@ -256,7 +256,7 @@ const Home = () => {
                     </div>
                 </div>
                 <div className='w-52'>
-                    <h1 className='text-xl font-bold'>Brands</h1>
+                    <h1 className='md:text-xl font-bold'>Brands</h1>
                     <div className='mt-5'>
                         <h3>Maruti Suzuki</h3>
                         <h3>Mahindra</h3>

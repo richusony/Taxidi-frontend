@@ -1,13 +1,11 @@
-import React, { createElement, useEffect, useState } from 'react'
-import { json, Link, redirect } from 'react-router-dom'
-import { signInWithPopup } from "firebase/auth"
-import { auth, googleProvider } from "../services/firebase"
-import { isKannur, validateEmail, validatePhoneNumber, validatePassword } from '../utils/helper'
-import axiosInstance from '../axiosConfig.js'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faWarning } from '@fortawesome/free-solid-svg-icons'
-import ErrorToast from '../components/ErrorToast'
-import useOnline from "../hooks/useOnline.jsx"
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosConfig.js';
+import useOnline from "../hooks/useOnline.jsx";
+import { signInWithPopup } from "firebase/auth";
+import ErrorToast from '../components/ErrorToast';
+import { auth, googleProvider } from "../services/firebase";
+import { isKannur, validateEmail, validatePhoneNumber, validatePassword } from '../utils/helper';
 
 const Signup = () => {
     const isOnline = useOnline();
@@ -108,14 +106,14 @@ const Signup = () => {
 
     const DesktopView = () => (
         <>
-            <div className='pl-2 flex items-center'>
-                <div className='w-[40%] h-full'>
+            <div className='md:pl-2 flex items-center'>
+                <div className='hidden md:block w-[40%] h-full'>
                     <Link to="/" className='absolute top-5 left-4 font-bold text-2xl text-white cursor-pointer'>Taxidi</Link>
 
                     <div className='text-center'><p className='text-4xl text-white'>Welcome to <span>Taxidi</span></p></div>
                 </div>
 
-                <div className='px-20 py-10 w-[60%] bg-[#F7F3FA] rounded-l-2xl'>
+                <div className='px-10 md:px-20 py-10 w-full md:w-[60%] min-h-screen md:h-auto bg-[#F7F3FA] md:rounded-l-2xl'>
                     <h1 className='text-4xl font-bold'>Sign Up</h1>
                     <p className='mt-2'>Create a account for booking your pefered car</p>
 
@@ -148,7 +146,7 @@ const Signup = () => {
 
                     <div className='mt-5 w-full text-center'>
                         <button onClick={handleSubmit} className='mx-auto w-[70%] px-4 py-2 bg-violet-500 text-white font-semibold rounded shadow-md'>SIGN UP</button>
-                        <p className='mt-3'>Already have an account? <Link to="/login" className='font-semibold cursor-pointer hover:underline'>Login in</Link></p>
+                        <p className='mt-3'>Already have an account? <Link to="/login" className='font-semibold cursor-pointer hover:underline'>Login</Link></p>
                     </div>
 
                     <div className='my-5 flex items-center justify-center'>
