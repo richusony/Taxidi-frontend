@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosConfig.js';
 import useOnline from "../hooks/useOnline.jsx";
 import { validateEmail } from '../utils/helper';
 import { signInWithPopup } from "firebase/auth";
@@ -49,7 +49,7 @@ const Login = () => {
         try {
             // console.log(formData);
             // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-            const res = await axios.post('http://localhost:8080/login', formData)
+            const res = await axiosInstance.post('/login', formData)
             if (res.status == 200) window.location.href = "/"
         } catch (error) {
             setError(error?.response?.data?.error)

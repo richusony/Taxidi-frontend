@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const axiosInstance = axios.create({
-  baseURL: 'http://192.168.8.32:8080', // Replace with your API base URL
+  baseURL: 'https://taxidi-z3d0.onrender.com', // Replace with your API base URL
   //timeout: 10000, // Set a timeout for requests (optional)
   headers: {
     'Content-Type': 'application/json',
