@@ -1,9 +1,11 @@
-import { faCar } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import axiosInstance from '../axiosConfig'
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import useOnline from '../hooks/useOnline';
+import axiosInstance from '../axiosConfig';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const AddBody = ({setError, setAddBody}) => {
+    const isOnline = useOnline();
     const [formData, setFormData] = useState({
         bodyType: ''
     })
@@ -17,6 +19,12 @@ const AddBody = ({setError, setAddBody}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if(!formData.bodyType){
             setError("Enter Body Type")
             return;

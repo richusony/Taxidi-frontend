@@ -1,18 +1,27 @@
-import React, { useState } from 'react'
-import axiosInstance from "../axiosConfig"
+import React, { useState } from 'react';
+import axiosInstance from "../axiosConfig";
+import useOnline from '../hooks/useOnline';
 import ErrorToast from '../components/ErrorToast';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWarning } from '@fortawesome/free-solid-svg-icons';
 
 const Otp = () => {
+    const isOnline = useOnline();
     const [otp, setOtp] = useState(null);
     const [error, setError] = useState("");
     const [userData, setUserData] = useState(JSON.parse(sessionStorage.getItem("userData")))
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // console.log(otp);
-        // console.log(userData);
+
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
+        if(!otp || otp === null || otp === undefined || otp === "") {
+            setError("Enter otp to verify");
+            return;
+        }
+
         try {
             const res = await axiosInstance.post("/verify-otp", { email: userData.email, otp: otp });
             console.log(res);

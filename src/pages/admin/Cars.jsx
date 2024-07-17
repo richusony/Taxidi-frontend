@@ -1,17 +1,16 @@
-import React, { useEffect, useState } from 'react'
-import AdminSideBar from '../../components/AdminSideBar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
-import AddCar from '../../components/AddCar'
-import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
-import ErrorToast from '../../components/ErrorToast'
-import axiosInstance from '../../axiosConfig'
+import AddCar from '../../components/AddCar';
+import axiosInstance from '../../axiosConfig';
+import React, { useEffect, useState } from 'react';
+import ErrorToast from '../../components/ErrorToast';
+import AdminNavbar from '../../components/AdminNavbar';
+import AdminSideBar from '../../components/AdminSideBar';
 
 const Cars = () => {
+    const [error, setError] = useState("");
+    const [page, setPage] = useState("Cars");
     const [addCar, setAddCar] = useState(false);
     const [vehicles, setVehicles] = useState([]);
-    const [error, setError] = useState("");
+
 
     useEffect(() => {
         validateAdmin();
@@ -44,18 +43,7 @@ const getAllVehicles = async () => {
 
             <div className='w-[80%] relative'>
                 {/* Navbar  */}
-                <nav className='py-3 flex justify-between items-center'>
-                    <div>
-                        <h2 className='text-gray-500'>Pages / Cars</h2>
-                        <h2 className='text-semibold'>Cars</h2>
-                    </div>
-
-                    <div>
-                        <button onClick={handleAdminLogOut} className='py-1 px-4 border border-[#593CFB] rounded text-[#593CFB]'>Logout</button>
-                        <span className='ml-5 cursor-pointer'><FontAwesomeIcon icon={faGear} /> Settings</span>
-                    </div>
-                </nav>
-
+                <AdminNavbar page={page} />
 
                 <div className='mt-10 text-end'><button onClick={() => setAddCar(prev => !prev)} className='px-6 py-2 bg-[#593CFB] text-white rounded'>Add Car</button></div>
                 <div className="flex justify-center my-8">

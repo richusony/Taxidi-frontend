@@ -1,32 +1,35 @@
 import { faCar, faGear, faGlobe, faList, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import AdminSideBar from '../../components/AdminSideBar'
 import axios from 'axios'
 import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
+import AdminNavbar from '../../components/AdminNavbar'
+import useOnline from '../../hooks/useOnline.jsx';
+import ErrorToast from "../../components/ErrorToast.jsx";
 
 const AdminDashboard = () => {
+    const isOnline = useOnline();
+    const [error, setError] = useState("");
+    const [page, setPage] = useState("Dashboard");
+
     useEffect(() => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         validateAdmin();
     }, [])
+
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
 
             <div className='w-[80%]'>
                 {/* Navbar  */}
-                <nav className='py-3 flex justify-between items-center'>
-                    <div>
-                        <h2 className='text-gray-500'>Pages / Dashboard</h2>
-                        <h2 className='text-semibold'>Dashboard</h2>
-                    </div>
-
-                    <div>
-                        <button onClick={handleAdminLogOut} className='py-1 px-4 border border-[#593CFB] rounded text-[#593CFB]'>Logout</button>
-                        <span className='ml-5 cursor-pointer'><FontAwesomeIcon icon={faGear} /> Settings</span>
-                    </div>
-                </nav>
+                <AdminNavbar page={page} />
 
                 {/* Cards  */}
                 <div className='mt-10 grid grid-cols-4 gap-5'>
@@ -57,6 +60,7 @@ const AdminDashboard = () => {
 
                 </div>
             </div>
+            <ErrorToast error={error} setError={setError}/>
         </div>
     )
 }

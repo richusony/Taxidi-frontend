@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { signInWithPopup } from "firebase/auth"
-import { auth, googleProvider } from '../../services/firebase'
-import axiosInstance from '../../axiosConfig.js'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { validateEmail } from '../../utils/helper'
-import ErrorToast from '../../components/ErrorToast.jsx'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import axiosInstance from '../../axiosConfig.js';
+import useOnline from '../../hooks/useOnline.jsx';
+import { validateEmail } from '../../utils/helper';
+import ErrorToast from '../../components/ErrorToast.jsx';
 
 const AdminLogin = () => {
+  const isOnline = useOnline();
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     email: '',
@@ -25,6 +23,11 @@ const AdminLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    if (!isOnline) {
+      setError("You are offline");
+      return;
+    }
+
     if (!formData.email || !formData.password) {
       setError("Fill all the forms")
       return;
@@ -43,21 +46,6 @@ const AdminLogin = () => {
     } catch (error) {
       // console.log(error.message)
       setError(error?.response?.data?.error)
-    }
-  }
-
-  const handleGoogleSignup = async () => {
-    try {
-      const userData = await signInWithPopup(auth, googleProvider)
-      formData.email = userData.user.email
-      formData.password = null
-      formData.googleLogin = true
-
-      const res = await axios.post('http://localhost:8080/admin/login', formData)
-      if (res.status == 200) window.location.href = "/admin"
-      if (res.status !== 200) alert("Invalid Credentials")
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -88,15 +76,6 @@ const AdminLogin = () => {
             {/* <p className='mt-3'>Don't have an account? <Link to="/signup" className='font-semibold cursor-pointer hover:underline'>Sign in</Link></p> */}
           </div>
 
-          {/* <div className='my-5 flex items-center justify-center'>
-                        <p><span>--------</span> OR <span>--------</span></p>
-                    </div>
-
-                    <div className='flex justify-center'>
-                        <div onClick={handleGoogleSignup} className='px-3 py-2 border-2 w-fit cursor-pointer rounded shadow-md'>
-                            <span>Login with Google</span>
-                        </div>
-                    </div> */}
         </div>
       </div>
     </>
@@ -104,7 +83,7 @@ const AdminLogin = () => {
 
   return (
     <div className='min-h-screen bg-gradient-to-r from-violet-600 to-indigo-600'>
-      <ErrorToast error={error} setError={setError}/>
+      <ErrorToast error={error} setError={setError} />
       {DesktopView()}
     </div>
   )

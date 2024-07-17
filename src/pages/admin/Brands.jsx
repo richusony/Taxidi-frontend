@@ -5,26 +5,28 @@ import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { MARUTI_SUZUKI_IMAGE } from '../../constants'
 import AddBrand from '../../components/AddBrand'
-import axios from 'axios'
+import axiosInstance from '../../axiosConfig.js'
 import ErrorToast from "../../components/ErrorToast.jsx"
 import { handleAdminLogOut, validateAdmin } from '../../utils/helper'
+import AdminNavbar from '../../components/AdminNavbar.jsx'
 
 const Brands = () => {
-    const [addBrand, setAddBrand] = useState(false);
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
+    const [page, setPage] = useState("Brands");
+    const [addBrand, setAddBrand] = useState(false);
 
     const handleAddBrand = () => setAddBrand(prev => !prev);
 
     useEffect(() => {
         validateAdmin();
-        getAllBrands()
+        getAllBrands();
     }, [])
 
 
 
     const getAllBrands = async () => {
-        const res = await axios.get("http://localhost:8080/admin/brands");
+        const res = await axiosInstance.get("/admin/brands");
         setBrands(res.data);
     }
 
@@ -34,17 +36,7 @@ const Brands = () => {
 
             <div className='w-[80%] relative'>
                 {/* Navbar  */}
-                <nav className='py-3 flex justify-between items-center'>
-                    <div>
-                        <h2 className='text-gray-500'>Pages / Brands</h2>
-                        <h2 className='text-semibold'>Brands</h2>
-                    </div>
-
-                    <div>
-                        <button onClick={handleAdminLogOut} className='py-1 px-4 border border-[#593CFB] rounded text-[#593CFB]'>Logout</button>
-                        <span className='ml-5 cursor-pointer'><FontAwesomeIcon icon={faGear} /> Settings</span>
-                    </div>
-                </nav>
+                <AdminNavbar page={page} />
 
                 <div className='mt-10'>
                     <div className='flex justify-between'>

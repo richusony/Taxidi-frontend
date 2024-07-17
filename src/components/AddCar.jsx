@@ -1,9 +1,11 @@
-import { faCar } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import React, { useEffect, useState } from 'react'
-import axiosInstance from "../axiosConfig.js"
+import axiosInstance from "../axiosConfig.js";
+import useOnline from '../hooks/useOnline.jsx';
+import React, { useEffect, useState } from 'react';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const AddCar = ({ setError, setAddCar }) => {
+    const isOnline = useOnline();
     const [body, setBody] = useState([]);
     const [brands, setBrands] = useState([]);
     const [formData, setFormData] = useState({
@@ -62,6 +64,12 @@ const AddCar = ({ setError, setAddCar }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if (!formData.model || !formData.brand || !formData.color || !formData.bodyType || !formData.registerationNumber ||
             !formData.fuel || !formData.transmission || !formData.mileage || !formData.host || !formData.pickUpLocation) {
             setError("Fill All the fields");
@@ -220,22 +228,6 @@ const AddCar = ({ setError, setAddCar }) => {
                     <label htmlFor="images">Images</label>
                     <input onChange={handleFileChange} type="file" id='images' name='images' multiple className='border-2  bg-white px-2 py-1 rounded' />
                 </div>
-                {/* <div className='flex flex-col'>
-                <label htmlFor="model">Brand</label>
-                <input type="text" id='model' name='model' className='border-2  px-2 py-1 rounded' />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="model">Brand</label>
-                <input type="text" id='model' name='model' className='border-2  px-2 py-1 rounded' />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="model">Brand</label>
-                <input type="text" id='model' name='model' className='border-2  px-2 py-1 rounded' />
-            </div>
-            <div className='flex flex-col'>
-                <label htmlFor="model">Brand</label>
-                <input type="text" id='model' name='model' className='border-2  px-2 py-1 rounded' />
-            </div> */}
             </form>
             <div className='mt-5 text-end'><button onClick={handleSubmit} className='bg-[#593CFB] text-white text-xl px-6 py-1 rounded'>Add</button></div>
         </div>

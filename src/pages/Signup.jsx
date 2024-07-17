@@ -3,12 +3,14 @@ import { json, Link, redirect } from 'react-router-dom'
 import { signInWithPopup } from "firebase/auth"
 import { auth, googleProvider } from "../services/firebase"
 import { isKannur, validateEmail, validatePhoneNumber, validatePassword } from '../utils/helper'
-import axios from 'axios'
+import axiosInstance from '../axiosConfig.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import ErrorToast from '../components/ErrorToast'
+import useOnline from "../hooks/useOnline.jsx"
 
 const Signup = () => {
+    const isOnline = useOnline();
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         firstName: '',
@@ -22,8 +24,6 @@ const Signup = () => {
         googleLogin: false
     })
 
-    
-
     const handleChange = (e) => {
         setFormData({
             ...formData,
@@ -33,6 +33,11 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if (!formData.firstName || !formData.email || !formData.pincode || !formData.password || !formData.confirmPassword) {
             setError("Fill all the forms")
         }
@@ -67,7 +72,7 @@ const Signup = () => {
             // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
             console.log(typeof formData);
             sessionStorage.setItem("userData", JSON.stringify(formData));
-            const res = await axios.post('http://localhost:8080/send-otp', { email: formData.email })
+            const res = await axiosInstance.post('/send-otp', { email: formData.email })
             // console.log("checking :: ",res);
             window.location.href = "/otp"
         } catch (error) {
@@ -76,6 +81,11 @@ const Signup = () => {
     }
 
     const handleGoogleSignup = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         try {
             const userData = await signInWithPopup(auth, googleProvider)
 
@@ -89,7 +99,7 @@ const Signup = () => {
             formData.confirmPassword = null
             formData.googleLogin = true
 
-            const res = await axios.post('http://localhost:8080/signup', formData)
+            const res = await axiosInstance.post('/signup', formData)
             if (res.status == 201) window.location.href = "/login"
         } catch (error) {
             setError(error.response?.data?.error)
@@ -157,7 +167,7 @@ const Signup = () => {
 
     return (
         <div className='bg-gradient-to-r from-violet-600 to-indigo-600 relative'>
-            <ErrorToast error={error} setError={setError}/>
+            <ErrorToast error={error} setError={setError} />
             {DesktopView()}
         </div>
     )

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axiosInstance from "../axiosConfig.js";
 import { kannurDistrictPincodes } from "../constants";
 
 export const validateEmail = (email) => {
@@ -21,7 +21,7 @@ export function isKannur(pin) {
 
 export const validateAdmin = async () => {
   try {
-    const res = await axios.get("http://localhost:8080/admin");
+    const res = await axiosInstance.get("/admin");
     console.log(res.status);
     if (res.status !== 200) window.location.href = "/admin-login";
   } catch (error) {
@@ -29,8 +29,9 @@ export const validateAdmin = async () => {
   }
 };
 
-export const handleAdminLogOut = async () => await axios.get("http://localhost:8080/admin/logout").then(() => window.location.reload())
-export const handleLogOut = async () => await axios.get("http://localhost:8080/logout").then(() => window.location.reload())
+export const handleAdminLogOut = async () => await axiosInstance.get("/admin/logout").then(() => window.location.reload());
+
+export const handleLogOut = async () => await axiosInstance.get("/logout").then(() => window.location.reload());
 
 export const validatePassword = (password) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;

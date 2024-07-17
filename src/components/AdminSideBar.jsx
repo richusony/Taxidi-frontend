@@ -4,6 +4,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const AdminSideBar = () => {
+const redirectTo = (url) => {
+    window.location.href = url;
+}
   return (
     <div className='w-[20%]'>
             {/* Heading  */}
@@ -18,17 +21,17 @@ const AdminSideBar = () => {
             {/* Manage Bookings */}
             <div className='mt-5'>
                 <h1 className='my-5 text-xl text-gray-400 font-semibold'>MANAGE BOOKINGS</h1>
-                <Link to="/admin/bookings" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Bookings</span></Link>
-                <Link to="/admin/booking-history" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Booking History</span></Link>
-                <Link to="/admin/verify-users" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faUsers}/> <span className='ml-2'>Verify Users</span></Link>
+                <h1 onClick={()=>redirectTo("/admin/bookings")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Bookings</span></h1>
+                <h1 onClick={()=>redirectTo("/admin/booking-history")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Booking History</span></h1>
+                <h1 onClick={()=>redirectTo("/admin/verify-users")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faUsers}/> <span className='ml-2'>Verify Users</span></h1>
             </div>
 
             {/* Manage Services */}
             <div className='mt-5'>
                 <h1 className='my-5 text-xl text-gray-400 font-semibold'>MANAGE SERVICES</h1>
-                <Link to="/admin/brands" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Brands</span></Link>
-                <Link to="/admin/body-types" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faCar}/> <span className='ml-2'>Body Types</span></Link>
-                <Link to="/admin/cars" className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faCar}/> <span className='ml-2'>Cars</span></Link>
+                <h1 onClick={()=>redirectTo("/admin/brands")} className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList}/> <span className='ml-2'>Brands</span></h1>
+                <h1 onClick={()=>redirectTo("/admin/body-types")} className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faCar}/> <span className='ml-2'>Body Types</span></h1>
+                <h1 onClick={()=>redirectTo("/admin/cars")} className='mb-4 flex items-center'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faCar}/> <span className='ml-2'>Cars</span></h1>
             </div>
 
             {/* Manage Site */}

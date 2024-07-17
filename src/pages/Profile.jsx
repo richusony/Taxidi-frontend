@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
+import useOnline from '../hooks/useOnline';
 import { handleLogOut } from '../utils/helper';
 import UpdateUser from '../components/UpdateUser';
 import ErrorToast from '../components/ErrorToast';
@@ -8,6 +9,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Profile = () => {
+    const isOnline = useOnline();
     const [error, setError] = useState("");
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -20,19 +22,29 @@ const Profile = () => {
     }, []);
 
     const getUserDetails = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         try {
             const res = await axiosInstance.get('/profile');
-            setUserData(res.data.user);
+            setUserData(res?.data?.user);
             if (res.status !== 200) window.location.href = "/login";
         } catch (error) {
             window.location.href = "/login";
-            console.error('Error fetching profile:', error);
+            setError(error?.response?.data?.error);
         }
     };
 
     const handleMenu = () => setMenu(prev => !prev);
 
     const handleUpdate = (update) => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         setUpdateBox(true);
         if (update === "update-user") {
             setUpdateUser(true);

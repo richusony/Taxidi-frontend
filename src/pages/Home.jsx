@@ -1,16 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import BecomeHost from '../components/BecomeHost'
-import { handleLogOut } from '../utils/helper'
-import axiosInstance from '../axiosConfig'
+import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosConfig';
+import useOnline from '../hooks/useOnline';
+import { handleLogOut } from '../utils/helper';
+import BecomeHost from '../components/BecomeHost';
+import ErrorToast from '../components/ErrorToast';
+import React, { useEffect, useState } from 'react';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
 
 const Home = () => {
+    const isOnline = useOnline();
+    const [error, setError] = useState("");
     const [menu, setMenu] = useState(false);
-    const [userData, setUserData] = useState(null);
     const [brands, setBrands] = useState([]);
+    const [userData, setUserData] = useState(null);
 
     const handleMenu = () => setMenu(prev => !prev);
 
@@ -20,22 +24,32 @@ const Home = () => {
     }, []);
 
     const getUserDetails = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         try {
             const res = await axiosInstance.get('/profile');
-            setUserData(res.data.user);
+            setUserData(res?.data?.user);
             // if (res.status !== 200) window.location.href = "/login";
         } catch (error) {
             // window.location.href = "/login";
-            console.error('Error fetching profile:', error);
+            // console.error('Error fetching profile:', error);
         }
     };
 
     const getAllBrands = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         try {
             const res = await axiosInstance.get("/brands");
             setBrands(res.data);
         } catch (error) {
-            console.error('Error fetching brands:', error);
+            // console.error('Error fetching brands:', error);
         }
     }
     return (
@@ -129,7 +143,7 @@ const Home = () => {
                 <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
 
                     {brands.length > 0 && brands.map((brand) => (
-                        <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                        <div key={brand._id} className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
                             <div>
                                 <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
                             </div>
@@ -254,6 +268,8 @@ const Home = () => {
                     </div>
                 </div>
             </footer>
+
+            <ErrorToast error={error} setError={setError}/>
         </div>
     )
 }

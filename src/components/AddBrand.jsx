@@ -1,9 +1,11 @@
-import { faCar } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import axios from 'axios'
-import React, { useState } from 'react'
+import axios from 'axios';
+import React, { useState } from 'react';
+import useOnline from '../hooks/useOnline';
+import { faCar } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const AddBrand = ({setError, setAddBrand}) => {
+    const isOnline = useOnline();
     const [formData, setFormData] = useState({
         brandName: '',
         brandImage: ''
@@ -18,6 +20,11 @@ const AddBrand = ({setError, setAddBrand}) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData);
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if(!formData.brandImage || !formData.brandName) {
             setError("Fill All the fields")
         }

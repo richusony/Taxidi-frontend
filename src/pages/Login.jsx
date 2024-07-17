@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { signInWithPopup } from "firebase/auth"
-import { auth, googleProvider } from '../services/firebase'
-import axios from 'axios'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { validateEmail } from '../utils/helper'
-import { faWarning } from '@fortawesome/free-solid-svg-icons'
-// import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import axios from 'axios';
+import { Link } from 'react-router-dom';
+import useOnline from "../hooks/useOnline.jsx";
+import { validateEmail } from '../utils/helper';
+import { signInWithPopup } from "firebase/auth";
+import React, { useEffect, useState } from 'react';
+import { auth, googleProvider } from '../services/firebase';
+import { faWarning } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Login = () => {
+    const isOnline = useOnline();
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         email: '',
@@ -17,7 +18,7 @@ const Login = () => {
     })
 
     useEffect(() => {
-         const clearErrorTimer = setTimeout(() => setError(""), 3000);
+        const clearErrorTimer = setTimeout(() => setError(""), 3000);
         return () => clearTimeout(clearErrorTimer);
     }, [error])
 
@@ -30,6 +31,11 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if (!formData.email || !formData.password) {
             setError("Fill all the forms")
             return
@@ -51,6 +57,11 @@ const Login = () => {
     }
 
     const handleGoogleSignup = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         try {
             const userData = await signInWithPopup(auth, googleProvider)
             formData.email = userData.user.email

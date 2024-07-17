@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import axiosInstance from '../axiosConfig.js';
-import { isKannur, validateEmail, validatePhoneNumber } from '../utils/helper.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faWarning } from '@fortawesome/free-solid-svg-icons';
 import ErrorToast from './ErrorToast.jsx';
+import axiosInstance from '../axiosConfig.js';
+import useOnline from '../hooks/useOnline.jsx';
+import React, { useEffect, useState } from 'react';
+import { isKannur, validateEmail, validatePhoneNumber } from '../utils/helper.js';
 
 const UpdateUser = ({ userData, userFun }) => {
+    const isOnline = useOnline();
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         firstName: userData.firstName,
@@ -30,6 +30,12 @@ const UpdateUser = ({ userData, userFun }) => {
 
     const handleUpdateUser = async (e) => {
         e.preventDefault();
+
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
         if (!formData.firstName || !formData.email || !formData.pincode) {
             setError("Fill all the forms")
         }
@@ -58,6 +64,7 @@ const UpdateUser = ({ userData, userFun }) => {
             setError(error.response?.data?.err)
         }
     }
+
     return (
         <div>
             <div className='mt-5'>
