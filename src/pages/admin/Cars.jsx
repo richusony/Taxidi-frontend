@@ -1,5 +1,6 @@
 import AddCar from '../../components/AddCar';
 import axiosInstance from '../../axiosConfig';
+import { validateAdmin } from '../../utils/helper';
 import React, { useEffect, useState } from 'react';
 import ErrorToast from '../../components/ErrorToast';
 import AdminNavbar from '../../components/AdminNavbar';
