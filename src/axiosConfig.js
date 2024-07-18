@@ -2,8 +2,11 @@
 
 import axios from 'axios';
 
+const domain = import.meta.env.VITE_ENV == "development" ? "http://localhost:8080" : "https://taxidi-z3d0.onrender.com";
+
 const axiosInstance = axios.create({
-  baseURL: 'https://taxidi-z3d0.onrender.com', // Replace with your API base URL
+
+  baseURL: `${domain}` , // Replace with your API base URL
   //timeout: 10000, // Set a timeout for requests (optional)
   headers: {
     'Content-Type': 'application/json',

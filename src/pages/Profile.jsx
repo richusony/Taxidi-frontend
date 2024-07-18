@@ -29,6 +29,7 @@ const Profile = () => {
 
         try {
             const res = await axiosInstance.get('/profile');
+            console.log(res);
             setUserData(res?.data?.user);
             if (res.status !== 200) window.location.href = "/login";
         } catch (error) {
