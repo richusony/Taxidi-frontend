@@ -1,12 +1,10 @@
-import ErrorToast from './ErrorToast.jsx';
+import React, { useState } from 'react';
 import axiosInstance from '../axiosConfig.js';
 import useOnline from '../hooks/useOnline.jsx';
-import React, { useEffect, useState } from 'react';
 import { isKannur, validateEmail, validatePhoneNumber } from '../utils/helper.js';
 
-const UpdateUser = ({ userData, userFun }) => {
+const UpdateUser = ({ userData, userFun, setError }) => {
     const isOnline = useOnline();
-    const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         firstName: userData.firstName,
         secondName: userData.secondName,
@@ -14,12 +12,7 @@ const UpdateUser = ({ userData, userFun }) => {
         phone: userData.phone,
         city: userData.city,
         pincode: userData.pincode,
-    })
-
-    useEffect(() => {
-        const clearErrorTimer = setTimeout(() => setError(""), 3000);
-        return () => clearTimeout(clearErrorTimer);
-    }, [error])
+    });
 
     const handleChange = (e) => {
         setFormData({
@@ -38,21 +31,22 @@ const UpdateUser = ({ userData, userFun }) => {
 
         if (!formData.firstName || !formData.email || !formData.pincode) {
             setError("Fill all the forms")
+            return;
         }
 
         if (!validateEmail(formData.email)) {
             setError("Enter valid email");
-            return
+            return;
         }
 
         if (!validatePhoneNumber(formData.phone)) {
             setError("Enter valid Phone Number")
-            return
+            return;
         }
 
         if (isKannur(Number(formData.pincode.toString().trim())) == false) {
             setError("Currently Booking is only available on Kannur")
-            return
+            return;
         }
         try {
             // console.log(formData);
@@ -61,16 +55,13 @@ const UpdateUser = ({ userData, userFun }) => {
             console.log("checking :: ", res);
             if (res.status == 200) window.location.href = "/profile"
         } catch (error) {
-            setError(error.response?.data?.err)
+            setError(error.response?.data?.error)
         }
     }
 
     return (
         <div>
             <div className='mt-5'>
-                {/* Error Display  */}
-                <ErrorToast error={error} setError={setError}/>
-
                 <h1 className='py-1 px-2 bg-[#593CFB] text-white rounded-tl rounded-tr'>1. Basic Information - UPDATE</h1>
                 <div className='px-5 py-2 border border-[#593CFB] grid grid-cols-2 gap-5'>
                     <div className='flex flex-col'>
@@ -103,8 +94,7 @@ const UpdateUser = ({ userData, userFun }) => {
                     </div>
                     <div className='flex justify-end'>
                         <button onClick={() => userFun(false)} className='px-4 py-2 border border-[#593CFB] text-[#593CFB] rounded'>Cancel</button>
-                    </div>
-                        
+                    </div>  
                 </div>
             </div>
         </div>

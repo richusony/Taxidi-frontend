@@ -89,7 +89,7 @@ const Profile = () => {
                         <span className='font-semibold'>Profile verification status:</span>
                         <span className='px-2 py-1 bg-red-500 text-white rounded-xl'>Documents upload pending</span>
                         {updateUser ? (
-                            <UpdateUser userData={userData} userFun={setUpdateUser} />
+                            <UpdateUser userData={userData} setError={setError} userFun={setUpdateUser} />
                         ) : (
                             <div className='mt-5 shadow-md'>
                                 <h1 className='py-1 px-2 bg-[#593CFB] text-white rounded-tl rounded-tr'>1. Basic Information</h1>

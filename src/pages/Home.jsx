@@ -1,43 +1,19 @@
-import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import useOnline from '../hooks/useOnline';
-import { handleLogOut } from '../utils/helper';
 import BecomeHost from '../components/BecomeHost';
 import ErrorToast from '../components/ErrorToast';
 import React, { useEffect, useState } from 'react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import DefaultNavbar from '../components/DefaultNavbar';
 import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
 
 const Home = () => {
     const isOnline = useOnline();
     const [error, setError] = useState("");
-    const [menu, setMenu] = useState(false);
     const [brands, setBrands] = useState([]);
-    const [userData, setUserData] = useState(null);
-
-    const handleMenu = () => setMenu(prev => !prev);
 
     useEffect(() => {
-        getUserDetails();
         getAllBrands();
     }, []);
-
-    const getUserDetails = async () => {
-        if (!isOnline) {
-            setError("You are offline");
-            return;
-        }
-
-        try {
-            const res = await axiosInstance.get('/profile');
-            setUserData(res?.data?.user);
-            // if (res.status !== 200) window.location.href = "/login";
-        } catch (error) {
-            // window.location.href = "/login";
-            // console.error('Error fetching profile:', error);
-        }
-    };
 
     const getAllBrands = async () => {
         if (!isOnline) {
@@ -60,34 +36,7 @@ const Home = () => {
             </div>
 
             {/* Navbar  */}
-            <nav className='px-10 py-5 flex justify-between'>
-                <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
-
-                <div className='flex items-center'>
-                    <button className='mr-4 px-4 py-1 border-2 border-gray-500'>Become a host</button>
-                    <div className='relative'>
-                        <FontAwesomeIcon className='text-2xl cursor-pointer' onClick={handleMenu} icon={faBars} />
-                        <div className={`${menu ? 'absolute' : 'hidden'} top-14 right-0 w-48 px-5 py-2 z-10 bg-white rounded shadow-md border`}>
-                            <div className='my-4'>
-                                <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
-                            </div>
-                            <div className='my-4'>
-                                <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>
-                            </div>
-                            <div className='my-4'>
-                                <Link className='hover:text-[#593CFB] text-lg' to="/bookings">Bookings</Link>
-                            </div>
-                            {userData ? <div className='my-4'>
-                                <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
-                            </div>
-                                :
-                                <div className='my-4'>
-                                    <Link className='hover:text-[#593CFB] text-lg' to="/login">Login</Link>
-                                </div>}
-                        </div>
-                    </div>
-                </div>
-            </nav>
+            <DefaultNavbar />
 
             {/* Date selection */}
             <div className="h-screen relative">

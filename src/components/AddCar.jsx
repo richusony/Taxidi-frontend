@@ -106,7 +106,7 @@ const AddCar = ({ setError, setAddCar }) => {
             });
             // console.log(formDataForUpload.getAll());
 
-            res = await fetch('http://localhost:8080/admin/add-vehicle', {
+            res = await fetch(`${import.meta.env.VITE_BACKEND}/admin/add-vehicle`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formDataForUpload

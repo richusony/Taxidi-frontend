@@ -39,6 +39,10 @@
     {
       "src": "/signup",
       "dest": "/"
+    },
+    {
+      "src": "/become-host",
+      "dest": "/"
     }
   ]
 }
