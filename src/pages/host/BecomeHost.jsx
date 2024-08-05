@@ -2,13 +2,15 @@ import useOnline from '../../hooks/useOnline';
 import React, { useRef, useState } from 'react';
 import ErrorToast from "../../components/ErrorToast.jsx";
 import DefaultNavbar from '../../components/DefaultNavbar';
-import { HOST_BG_IMAGE, isValidKeralaRegistrationNumber } from '../../constants';
+import { HOST_BG_IMAGE, isValidKeralaRegistrationNumber, isValidLicenseNumber } from '../../constants';
 import { isKannur, validateEmail, validatePhoneNumber } from '../../utils/helper';
+import SuccessToast from '../../components/SuccessToast.jsx';
 
 const BecomeHost = () => {
-    const errorMessageRef = useRef();
     const isOnline = useOnline();
+    const errorMessageRef = useRef();
     const [error, setError] = useState("");
+    const [successMsg, setSuccessMsg] = useState("");
     const [formData, setFormData] = useState({
         fullname: "",
         email: "",
@@ -18,6 +20,15 @@ const BecomeHost = () => {
         licenseNumber: "",
         registrationNumber: "",
         model: "",
+        brand: "",
+        bodyType: "",
+        transmission: "",
+        fuel: "",
+        mileage: "",
+        seats: "",
+        color: "",
+        rent: null,
+        vehicleImages: null,
         licenseFrontImage: null,
         licenseBackImage: null,
         registrationCertificateFrontImage: null,
@@ -31,6 +42,14 @@ const BecomeHost = () => {
         setFormData({
             ...formData,
             [name]: files[0],
+        });
+    };
+
+    const handleVehicleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        setFormData({
+            ...formData,
+            vehicleImages: files,
         });
     };
 
@@ -56,7 +75,15 @@ const BecomeHost = () => {
             !formData.pincode ||
             !formData.licenseNumber ||
             !formData.registrationNumber ||
-            !formData.model
+            !formData.model ||
+            !formData.brand ||
+            !formData.bodyType ||
+            !formData.transmission ||
+            !formData.fuel ||
+            !formData.mileage ||
+            !formData.seats ||
+            !formData.color ||
+            !formData.rent
         ) {
             errorMessageRef.current.scrollIntoView();
             setError("Fill all the forms");
@@ -78,6 +105,12 @@ const BecomeHost = () => {
         if (!isKannur(Number(formData.pincode.trim()))) {
             errorMessageRef.current.scrollIntoView();
             setError("Currently Booking is only available in Kannur");
+            return;
+        }
+
+        if (!isValidLicenseNumber(formData.licenseNumber.trim())) {
+            errorMessageRef.current.scrollIntoView();
+            setError("Please Enter a valid license number");
             return;
         }
 
@@ -113,17 +146,27 @@ const BecomeHost = () => {
 
         const formDataToSubmit = new FormData();
         for (const key in formData) {
-            formDataToSubmit.append(key, formData[key]);
+            if (key === 'vehicleImages' && formData[key]) {
+                formData[key].forEach((file) => {
+                    formDataToSubmit.append('vehicleImages', file);
+                });
+            } else {
+                formDataToSubmit.append(key, formData[key]);
+            }
         }
 
         try {
+            console.log(formData);
+            console.log(formDataToSubmit.get("vehicleImages"));
             const res = await fetch(`${import.meta.env.VITE_BACKEND}/host/host-request`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formDataToSubmit
             });
-            setError("request sent successfully");
+            errorMessageRef.current.scrollIntoView();
+            setSuccessMsg("request sent successfully");
         } catch (error) {
+            errorMessageRef.current.scrollIntoView();
             setError(error.response?.data?.error);
         }
     };
@@ -153,10 +196,11 @@ const BecomeHost = () => {
             <div className='mt-20 px-5 md:px-60'>
                 <div ref={errorMessageRef} className='relative'>
                     <ErrorToast error={error} setError={setError} />
+                    <SuccessToast msg={successMsg} setSuccessMsg={setSuccessMsg} />
                 </div>
                 <h1 className='text-xl md:text-2xl font-semibold capitalize'>Send request to become a host</h1>
                 <form onSubmit={handleSubmit} encType="multipart/form-data" className='mt-2 mx-auto border px-5 py-4 border-[#593CFB] rounded-md shadow-md'>
-                    <div className='grid md:grid-cols-2 gap-3'>
+                    <div className='grid md:grid-cols-3 gap-3'>
                         <div className='flex flex-col'>
                             <label htmlFor="fullname">Full Name</label>
                             <input type="text" id='fullname' name='fullname' value={formData.fullname} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
@@ -190,6 +234,51 @@ const BecomeHost = () => {
                         <div className='flex flex-col'>
                             <label htmlFor="model">Vehicle (Model)</label>
                             <input type="text" id='model' name='model' value={formData.model} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="brand">Brand</label>
+                            <input type="text" id='brand' name='brand' value={formData.brand} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="bodyType">Body Type</label>
+                            <input type="text" id='bodyType' name='bodyType' value={formData.bodyType} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="transmission">Transmission</label>
+                            <input type="text" id='transmission' name='transmission' value={formData.transmission} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="fuel">Fuel</label>
+                            <input type="text" id='fuel' name='fuel' value={formData.fuel} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="mileage">Mileage</label>
+                            <input type="text" id='mileage' name='mileage' value={formData.mileage} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="seats">Seat Capcity</label>
+                            <select onChange={handleInputChange} name="seats" id="seats" className='border-2  px-2 py-1 rounded'>
+                                <option value="none">None</option>
+                                <option className='' value="2">Two-Seater</option>
+                                <option className='' value="4">Four-Seater</option>
+                                <option className='' value="5">Five-Seater</option>
+                                <option className='' value="6">Six-Seater</option>
+                                <option className='' value="7">Seven-Seater</option>
+                                <option className='' value="8">Eight-Seater</option>
+                                <option className='' value="9">Nine-Seater</option>
+                            </select>
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="color">Colour</label>
+                            <input type="text" id='color' name='color' value={formData.color} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="rent">Rent (per hour)</label>
+                            <input type="tel" id='rent' name='rent' value={formData.rent} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
+                        </div>
+                        <div className='flex flex-col'>
+                            <label htmlFor="vehicleImages">Images</label>
+                            <input type="file" id='vehicleImages' multiple name='vehicleImages' onChange={handleVehicleFileChange} className='outline-none py-1 px-2 border-2 border-[#593CFB] rounded' />
                         </div>
                     </div>
                     <h1 className='md:hidden my-10 text-center text-gray-500'>------------ Documents ------------</h1>

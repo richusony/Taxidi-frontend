@@ -1,10 +1,16 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import React, { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import AdminSideBar from '../../components/AdminSideBar'
-import AdminNavbar from '../../components/AdminNavbar'
+import axios from 'axios'
 import useOnline from '../../hooks/useOnline.jsx';
 import ErrorToast from "../../components/ErrorToast.jsx";
+import HostSideBar from '../../components/HostSideBar.jsx'
+import HostNavbar from '../../components/HostNavBar.jsx'
+import { faCar, faGear, faGlobe, faList, faUsers } from '@fortawesome/free-solid-svg-icons'
+import { validateHost } from '../../utils/helper.js'
 
-const AdminDashboard = () => {
+const HostDashboard = () => {
     const isOnline = useOnline();
     const [error, setError] = useState("");
     const [page, setPage] = useState("Dashboard");
@@ -14,15 +20,17 @@ const AdminDashboard = () => {
             setError("You are offline");
             return;
         }
+
+        // validateHost();
     }, [])
 
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
-            <AdminSideBar />
+            <HostSideBar />
 
             <div className='w-[80%]'>
                 {/* Navbar  */}
-                <AdminNavbar page={page} />
+                <HostNavbar page={page} />
 
                 {/* Cards  */}
                 <div className='mt-10 grid grid-cols-4 gap-5'>
@@ -58,4 +66,4 @@ const AdminDashboard = () => {
     )
 }
 
-export default AdminDashboard
+export default HostDashboard

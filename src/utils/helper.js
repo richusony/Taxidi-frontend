@@ -29,11 +29,41 @@ export const validateAdmin = async () => {
   }
 };
 
-export const handleAdminLogOut = async () => await axiosInstance.get("/admin/logout").then(() => window.location.reload());
+export const validateHost = async () => {
+  try {
+    const res = await axiosInstance.get("/host");
+    console.log(res.status);
+    if (res.status !== 200) window.location.href = "/host-login";
+  } catch (error) {
+    window.location.href = "/host-login";
+  }
+};
 
-export const handleLogOut = async () => await axiosInstance.get("/logout").then(() => window.location.reload());
+export const handleAdminLogOut = async () =>
+  await axiosInstance.get("/admin/logout").then(() => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.reload();
+  });
+
+export const handleHostLogOut = async () =>
+  await axiosInstance.get("/host/logout").then(() => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.reload();
+  });
+
+export const handleLogOut = async () =>
+  await axiosInstance.get("/logout").then(() => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    window.location.reload();
+  });
 
 export const validatePassword = (password) => {
-    const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
-    return regex.test(password);
+  const regex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  return regex.test(password);
 };

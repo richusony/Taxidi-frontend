@@ -1,25 +1,50 @@
-import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
 import useOnline from '../hooks/useOnline';
 import { handleLogOut } from '../utils/helper';
 import UpdateUser from '../components/UpdateUser';
 import ErrorToast from '../components/ErrorToast';
-import React, { useEffect, useState } from 'react';
+import AuthContext from '../contexts/AuthContext';
+import { isValidLicenseNumber } from '../constants';
+import { Link, useNavigate } from 'react-router-dom';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import LicenseRequestDocuments from '../components/LicenseRequestDocuments';
 
 const Profile = () => {
     const isOnline = useOnline();
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     const [menu, setMenu] = useState(false);
+    const { user } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
     const [updateBox, setUpdateBox] = useState(false);
     const [updateUser, setUpdateUser] = useState(false);
     const [updateLicense, setUpdateLicense] = useState(false);
+    const [formData, setFormData] = useState({
+        licenseNumber: null,
+        licenseFrontImage: null,
+        licenseBackImage: null
+    })
 
     useEffect(() => {
         getUserDetails();
     }, []);
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.id]: e.target.value
+        })
+    }
+
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        setFormData({
+            ...formData,
+            [name]: files[0],
+        });
+    };
 
     const getUserDetails = async () => {
         if (!isOnline) {
@@ -28,12 +53,11 @@ const Profile = () => {
         }
 
         try {
-            const res = await axiosInstance.get('/profile');
-            console.log(res);
-            setUserData(res?.data?.user);
-            if (res.status !== 200) window.location.href = "/login";
+            // const res = await axiosInstance.get('/profile');
+            // console.log(res);
+            setUserData(user);
         } catch (error) {
-            window.location.href = "/login";
+            console.log(error?.response?.data?.error);
             setError(error?.response?.data?.error);
         }
     };
@@ -53,6 +77,48 @@ const Profile = () => {
             setUpdateLicense(true);
         }
     };
+
+    const handleUploadLicense = async (e) => {
+        e.preventDefault();
+
+        if (!formData.licenseNumber) {
+            window.scrollTo(0, 0);
+            setError("Enter License Number");
+            return;
+        }
+
+        if (!formData.licenseFrontImage || !formData.licenseBackImage) {
+            window.scrollTo(0, 0);
+            setError("Upload both Front & Back image of the license");
+            return;
+        }
+
+        if (!isValidLicenseNumber(formData.licenseNumber.trim())) {
+            window.scrollTo(0, 0);
+            setError("Enter a valid License Number");
+            return;
+        }
+
+        const formDataToSubmit = new FormData();
+        for (const key in formData) {
+            formDataToSubmit.append(key, formData[key]);
+        }
+
+        try {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND}/upload-driving-license`, {
+                method: 'POST',
+                credentials: 'include',
+                body: formDataToSubmit
+            });
+
+            if (res.status == 200) {
+                alert("license uploaded");
+            }
+        } catch (error) {
+            window.scrollTo(0, 0);
+            setError(error);
+        }
+    }
 
     return (
         <div>
@@ -87,7 +153,7 @@ const Profile = () => {
                 {userData ? (
                     <>
                         <span className='font-semibold'>Profile verification status:</span>
-                        <span className='px-2 py-1 bg-red-500 text-white rounded-xl'>Documents upload pending</span>
+                        {userData.licenseNumber === null ? <span className='ml-2 px-2 py-1 bg-red-500 text-white rounded-xl'>Documents upload pending</span> : <span className='ml-2 px-4 py-1 bg-green-500 text-white rounded'>License Verified</span>}
                         {updateUser ? (
                             <UpdateUser userData={userData} setError={setError} userFun={setUpdateUser} />
                         ) : (
@@ -124,35 +190,39 @@ const Profile = () => {
                                 </div>
                             </div>
                         )}
-                        <div className='mt-10 shadow-md'>
+                        {userData.licenseNumber === null ? <div className='mt-10 shadow-md'>
                             <h1 className='py-1 px-2 bg-[#593CFB] text-white rounded-tl rounded-tr'>2. Driving License</h1>
                             <div className='px-5 py-2 border border-[#593CFB] rounded-b-md'>
-                                <div className='flex flex-col'>
-                                    <label htmlFor="licenseNumber">Driving License Number</label>
-                                    <input type="text" id='licenseNumber' placeholder='Add your license number' name='licenseNumber' className='px-2 py-2 border-2 rounded' />
-                                </div>
-                                <div className='mt-2 grid grid-cols-2 gap-5'>
+                                <form onSubmit={handleUploadLicense}>
                                     <div className='flex flex-col'>
-                                        <label htmlFor="drivingLicenseFront">License front image</label>
-                                        <input type="file" id='drivingLicenseFront' name='drivingLicenseFront' className='border-2' />
+                                        <label htmlFor="licenseNumber">Driving License Number</label>
+                                        <input type="text" onChange={handleChange} id='licenseNumber' placeholder='Add your license number' name='licenseNumber' className='px-2 py-2 border-2 rounded' />
                                     </div>
-                                    <div className='flex flex-col'>
-                                        <label htmlFor="drivingLicenseBack">License back image</label>
-                                        <input type="file" id='drivingLicenseBack' name='drivingLicenseBack' className='border-2' />
+                                    <div className='mt-2 grid grid-cols-2 gap-5'>
+                                        <div className='flex flex-col'>
+                                            <label htmlFor="licenseFrontImage">License front image</label>
+                                            <input type="file" onChange={handleFileChange} id='licenseFrontImage' name='licenseFrontImage' className='border-2' />
+                                        </div>
+                                        <div className='flex flex-col'>
+                                            <label htmlFor="licenseBackImage">License back image</label>
+                                            <input type="file" onChange={handleFileChange} id='licenseBackImage' name='licenseBackImage' className='border-2' />
+                                        </div>
                                     </div>
-                                </div>
-                                <div className='mt-5'>
-                                    <button className='px-4 py-2 bg-[#593CFB] text-white rounded'>UPDATE</button>
-                                </div>
+                                    <div className='mt-5'>
+                                        <button type='submit' className='px-4 py-2 bg-[#593CFB] text-white rounded'>UPDATE</button>
+                                    </div>
+                                </form>
                             </div>
-                        </div>
+                        </div> : <div className='mt-10 grid grid-cols-2'>
+                        <LicenseRequestDocuments data={userData} />
+                    </div>}
                     </>
                 ) : (
                     <div>Loading...</div>
                 )}
             </div>
             <ErrorToast error={error} setError={setError} />
-        </div>
+        </div >
     );
 };
 

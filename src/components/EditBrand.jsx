@@ -3,10 +3,10 @@ import useOnline from '../hooks/useOnline';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const AddBrand = ({ setError, setAddBrand }) => {
+const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
     const isOnline = useOnline();
     const [formData, setFormData] = useState({
-        brandName: '',
+        brandName: editBrandData.brandName,
         brandImage: null
     });
 
@@ -33,17 +33,18 @@ const AddBrand = ({ setError, setAddBrand }) => {
             return;
         }
 
-        if (!formData.brandImage || !formData.brandName) {
+        if (!formData.brandName) {
             setError("Fill All the fields");
             return;
         }
 
         try {
             const formDataForUpload = new FormData();
+            formDataForUpload.append("brandId", editBrandData._id);
             formDataForUpload.append("brandName", formData.brandName);
             formDataForUpload.append("brandImage", formData.brandImage);
 
-            const res = await fetch(`${import.meta.env.VITE_BACKEND}/admin/add-brand`, {
+            const res = await fetch(`${import.meta.env.VITE_BACKEND}/admin/edit-brand`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formDataForUpload
@@ -52,7 +53,8 @@ const AddBrand = ({ setError, setAddBrand }) => {
             if (!res.ok) {
                 throw new Error("Failed to upload brand");
             }
-
+            setEditBrand(false);
+            window.location.reload();
             // Handle success (e.g., clear form, show success message, etc.)
         } catch (error) {
             setError(error.message);
@@ -62,14 +64,15 @@ const AddBrand = ({ setError, setAddBrand }) => {
     return (
         <div className='absolute top-[20%] px-10 py-5 bg-white rounded-md shadow-md'>
             <div className='my-5 flex justify-between'>
-                <h1 className='text-gray-500 font-bold text-2xl'>Add Brand <FontAwesomeIcon icon={faCar} /></h1>
-                <button onClick={() => setAddBrand(false)} className='border border-[#593CFB] px-2 py-1 rounded'>Cancel</button>
+                <h1 className='text-gray-500 font-bold text-2xl'>Edit Brand <FontAwesomeIcon icon={faCar} /></h1>
+                <button onClick={() => setEditBrand(false)} className='border border-[#593CFB] px-2 py-1 rounded'>Cancel</button>
             </div>
             <form onSubmit={handleSubmit}>
                 <div className='grid grid-cols-2 gap-5'>
                     <div className='flex flex-col'>
                         <label htmlFor="brandName">Brand</label>
-                        <input type="text" id='brandName' onChange={handleChange} name='brandName' className='border-2  px-2 py-1 rounded' />
+                        <input type="text" value={formData.brandName} id='brandName' onChange={handleChange} name='brandName' className='border-2  px-2 py-1 rounded' />
+                        <input type="text" value={editBrandData._id} id='brandId' onChange={handleChange} name='brandId' className='hidden border-2  px-2 py-1 rounded' />
                     </div>
 
                     <div className='flex flex-col'>
@@ -84,4 +87,4 @@ const AddBrand = ({ setError, setAddBrand }) => {
     );
 }
 
-export default AddBrand;
+export default EditBrand;

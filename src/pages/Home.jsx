@@ -5,15 +5,36 @@ import ErrorToast from '../components/ErrorToast';
 import React, { useEffect, useState } from 'react';
 import DefaultNavbar from '../components/DefaultNavbar';
 import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const isOnline = useOnline();
+    const navigate = useNavigate();
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
+    const [formData, setFormData] = useState({
+        bookingStarts: null,
+        bookingEnds: null
+    })
 
     useEffect(() => {
         getAllBrands();
     }, []);
+
+    const handleInputChange = (e) => {
+        setFormData({
+        ...formData,
+        [e.target.id]: e.target.value
+        })
+    }
+
+    const handleSearch = (e) => {
+        try {
+            navigate(`/search?tripStarts=${formData.bookingStarts}&tripEnds=${formData.bookingEnds}`);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getAllBrands = async () => {
         if (!isOnline) {
@@ -46,19 +67,19 @@ const Home = () => {
                     <div>
                         <h2 className='font-semibold'>Start Date and Time</h2>
                         <div className='mt-2'>
-                            <input type="datetime-local" placeholder='date and time' className='px-4 py-2 outline-none border-2 rounded' />
+                            <input onChange={handleInputChange} type="datetime-local" id='bookingStarts' name='bookingStarts' placeholder='date and time' className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
                     <div className='mt-4 md:mt-0 md:ml-8'>
                         <h2 className='font-semibold'>End Date and Time</h2>
                         <div className='mt-2'>
-                            <input type="datetime-local" className='px-4 py-2 outline-none border-2 rounded' />
+                            <input onChange={handleInputChange} type="datetime-local" id='bookingEnds' name='bookingEnds' className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
                     <div className='mt-4 md:mt-0 md:ml-8'>
-                        <button className='px-8 py-2 bg-[#593CFB] text-white rounded-lg'>Search</button>
+                        <button onClick={handleSearch} className='px-8 py-2 bg-[#593CFB] text-white rounded-lg'>Search</button>
                     </div>
                 </div>
             </div>
@@ -93,8 +114,8 @@ const Home = () => {
 
                     {brands.length > 0 && brands.map((brand) => (
                         <div key={brand._id} className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                            <div>
-                                <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
+                            <div className='mx-auto h-[80%] w-[80%]'>
+                                <img className='w-full h-full rounded-t-md' src={brand?.brandImage} alt="car" />
                             </div>
                             <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>{brand.brandName}</h1>
                         </div>
@@ -218,7 +239,7 @@ const Home = () => {
                 </div>
             </footer>
 
-            <ErrorToast error={error} setError={setError}/>
+            <ErrorToast error={error} setError={setError} />
         </div>
     )
 }

@@ -37,12 +37,28 @@
       "dest": "/"
     },
     {
+      "src": "/admin/host-requests",
+      "dest": "/"
+    },
+    {
       "src": "/signup",
       "dest": "/"
     },
     {
       "src": "/become-host",
       "dest": "/"
+    },
+    {
+      "src": "/admin/verify-users",
+      "dest": "/"
+    },
+    {
+      "src": "/admin/host-requests/(.*)",
+      "dest": "/admin/host-requests/$1"
+    },
+    {
+      "src": "/admin/cars/(.*)",
+      "dest": "/admin/cars/$1"
     }
   ]
 }

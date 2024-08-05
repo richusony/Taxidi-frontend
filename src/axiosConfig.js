@@ -1,50 +1,59 @@
-// src/axiosConfig.js
+import axios from "axios";
 
-import axios from 'axios';
-
-const domain = import.meta.env.VITE_ENV == "development" ? "http://localhost:8080" : "https://taxidi-z3d0.onrender.com";
+const domain =  import.meta.env.VITE_BACKEND;
 
 const axiosInstance = axios.create({
-
-  baseURL: `${domain}` , // Replace with your API base URL
-  //timeout: 10000, // Set a timeout for requests (optional)
+  baseURL: `${domain}`, // Replace with your API base URL
   headers: {
-    'Content-Type': 'application/json',
-    // Add any other headers you need
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 axiosInstance.defaults.withCredentials = true;
 
-// // You can also set up interceptors here if needed
-// axiosInstance.interceptors.request.use(
-//   (config) => {
-//     // Modify request config before sending the request
-//     // For example, add an authorization token
-//     const token = localStorage.getItem('token');
-//     if (token) {
-//       config.headers['Authorization'] = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     // Handle request error
-//     return Promise.reject(error);
-//   }
-// );
+axiosInstance.interceptors.request.use(
+  (config) => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-// axiosInstance.interceptors.response.use(
-//   (response) => {
-//     // Handle successful responses
-//     return response;
-//   },
-//   (error) => {
-//     // Handle response error
-//     if (error.response && error.response.status === 401) {
-//       // Handle unauthorized error (e.g., redirect to login)
-//     }
-//     return Promise.reject(error);
-//   }
-// );
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
+    if (error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      const storedUser = localStorage.getItem("user");
+      const currentRoleData =
+        storedUser != "undefined" ? JSON.parse(storedUser) : null;
+      console.log("axios Interpreter", currentRoleData);
+      const refreshTokenEndpoint =
+        currentRoleData.role == "user"
+          ? "/refresh-token"
+          : `/${currentRoleData.role}/refresh-token`;
+      try {
+        const { data } = await axiosInstance.post(refreshTokenEndpoint);
+        const newAccessToken = data.accessToken;
+        const newRefreshToken = data.refreshToken;
+        localStorage.setItem("token", newAccessToken);
+        localStorage.setItem("refreshToken", newRefreshToken);
+        axiosInstance.defaults.headers.common["Authorization"] =
+          `Bearer ${newAccessToken}`;
+        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
+        return axiosInstance(originalRequest);
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
+export const cancelTokenSource = axios.CancelToken.source();
 
 export default axiosInstance;

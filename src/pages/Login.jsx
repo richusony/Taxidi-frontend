@@ -1,15 +1,19 @@
-import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosConfig.js';
 import useOnline from "../hooks/useOnline.jsx";
 import { validateEmail } from '../utils/helper';
 import { signInWithPopup } from "firebase/auth";
-import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../contexts/AuthContext.jsx';
 import { auth, googleProvider } from '../services/firebase';
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 
 const Login = () => {
     const isOnline = useOnline();
+    const navigate = useNavigate();
+    const { login } = useContext(AuthContext);
     const [error, setError] = useState("");
     const [formData, setFormData] = useState({
         email: '',
@@ -19,7 +23,9 @@ const Login = () => {
 
     useEffect(() => {
         const clearErrorTimer = setTimeout(() => setError(""), 3000);
-        return () => clearTimeout(clearErrorTimer);
+        return () => {
+            clearTimeout(clearErrorTimer);
+        }
     }, [error])
 
     const handleChange = (e) => {
@@ -49,10 +55,12 @@ const Login = () => {
         try {
             // console.log(formData);
             // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
-            const res = await axiosInstance.post('/login', formData)
-            if (res.status == 200) window.location.href = "/"
+            const res = await axiosInstance.post('/login', formData);
+            login(res?.data?.user, res?.data?.accessToken);
+            localStorage.setItem("refreshToken", res?.data?.refreshToken);
+            navigate("/");
         } catch (error) {
-            setError(error?.response?.data?.error)
+            setError(error?.response?.data?.error);
         }
     }
 
@@ -68,8 +76,10 @@ const Login = () => {
             formData.password = null
             formData.googleLogin = true
 
-            const res = await axios.post('http://localhost:8080/login', formData)
-            if (res.status == 200) window.location.href = "/"
+            const res = await axiosInstance.post('/login', formData);
+
+            login(res?.data?.user, res?.data?.accessToken,res?.data?.refreshToken);
+            navigate("/");
         } catch (error) {
             console.log(error)
         }

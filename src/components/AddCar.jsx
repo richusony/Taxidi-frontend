@@ -3,29 +3,40 @@ import useOnline from '../hooks/useOnline.jsx';
 import React, { useEffect, useState } from 'react';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { isValidKeralaRegistrationNumber } from "../constants/index.js";
 
 const AddCar = ({ setError, setAddCar }) => {
     const isOnline = useOnline();
     const [body, setBody] = useState([]);
+    const [hosts, setHosts] = useState(null);
     const [brands, setBrands] = useState([]);
+    const [taxidiHostData, setTaxidiHostData] = useState(null);
     const [formData, setFormData] = useState({
-        model: '',
-        brand: '',
-        color: '',
-        bodyType: '',
-        fuel: '',
-        transmission: '',
-        seats: '',
-        registerationNumber: '',
-        mileage: '',
-        pickUpLocation: 'TAXIDI SERVICE CENTER',
-        host: 'TAXIDI',
-        images: [],
+        model: "",
+        brand: "",
+        bodyType: "",
+        transmission: "",
+        fuel: "",
+        mileage: "",
+        seats: "",
+        color: "",
+        host: "TAXIDI",
+        rent: null,
+        city: "",
+        pincode: "",
+        pickUpLocation: "TAXIDI SERVICE CENTER",
+        vehicleImages: null,
+        vehicleRegistrationNumber: "",
+        registrationCertificateFrontImage: null,
+        registrationCertificateBackImage: null,
+        insuranceCertificateImage: null,
+        pollutionCertificateImage: null,
     });
 
     useEffect(() => {
         getAllBrands();
         getAllBodys();
+        getAllHosts();
     }, [])
 
     const getAllBrands = async () => {
@@ -42,7 +53,19 @@ const AddCar = ({ setError, setAddCar }) => {
             const res = await axiosInstance.get("/admin/body-types");
             setBody(res.data);
         } catch (error) {
-            setError(error?.response?.data?.error)
+            setError(error?.response?.data?.error);
+        }
+    }
+
+    const getAllHosts = async () => {
+        try {
+            const res = await axiosInstance.get('/admin/hosts');
+            console.log(res.data);
+            setHosts(res.data);
+            const taxidiData = res.data.find((host) => host.email == "taxidi@gmail.com");
+            setTaxidiHostData(taxidiData);
+        } catch (error) {
+            setError(error?.response?.data?.error);
         }
     }
 
@@ -54,11 +77,19 @@ const AddCar = ({ setError, setAddCar }) => {
         });
     };
 
-    const handleFileChange = (e) => {
+    const handleCertificateFileChange = (e) => {
+        const { name, files } = e.target;
+        setFormData({
+            ...formData,
+            [name]: files[0],
+        });
+    };
+
+    const handleVehicleImageFileChange = (e) => {
         const files = Array.from(e.target.files);
         setFormData({
             ...formData,
-            images: files,
+            vehicleImages: files,
         });
     };
 
@@ -70,18 +101,18 @@ const AddCar = ({ setError, setAddCar }) => {
             return;
         }
 
-        if (!formData.model || !formData.brand || !formData.color || !formData.bodyType || !formData.registerationNumber ||
+        if (!formData.model || !formData.brand || !formData.color || !formData.bodyType || !formData.vehicleRegistrationNumber ||
             !formData.fuel || !formData.transmission || !formData.mileage || !formData.host || !formData.pickUpLocation) {
             setError("Fill All the fields");
             return;
         }
 
-        if (formData.registerationNumber.trim().length !== 12) {
+        if (!isValidKeralaRegistrationNumber(formData.vehicleRegistrationNumber.trim())) {
             setError("Enter a valid RC number");
             return;
         }
 
-        if (formData.images.length < 4) {
+        if (formData.vehicleImages.length < 4) {
             setError("Upload atleast 4 images");
             return;
         }
@@ -90,22 +121,19 @@ const AddCar = ({ setError, setAddCar }) => {
         try {
             // Prepare FormData for file upload
             const formDataForUpload = new FormData();
-            formDataForUpload.append('model', formData.model);
-            formDataForUpload.append('brand', formData.brand);
-            formDataForUpload.append('color', formData.color);
-            formDataForUpload.append('bodyType', formData.bodyType);
-            formDataForUpload.append('fuel', formData.fuel);
-            formDataForUpload.append('transmission', formData.transmission);
-            formDataForUpload.append('seats', formData.seats);
-            formDataForUpload.append('registerationNumber', formData.registerationNumber);
-            formDataForUpload.append('pickUpLocation', formData.pickUpLocation);
-            formDataForUpload.append('mileage', formData.mileage);
-            formDataForUpload.append('host', formData.host);
-            formData.images.forEach((file) => {
-                formDataForUpload.append('images', file);
-            });
+            formData.host = taxidiHostData._id;
+            for (const key in formData) {
+                if (key === 'vehicleImages' && formData[key]) {
+                    formData[key].forEach((file) => {
+                        formDataForUpload.append('vehicleImages', file);
+                    });
+                } else {
+                    formDataForUpload.append(key, formData[key]);
+                }
+            }
             // console.log(formDataForUpload.getAll());
-
+            console.log(formData);
+            // return;q
             res = await fetch(`${import.meta.env.VITE_BACKEND}/admin/add-vehicle`, {
                 method: 'POST',
                 credentials: 'include',
@@ -124,27 +152,27 @@ const AddCar = ({ setError, setAddCar }) => {
             }
         } catch (error) {
             // const data = await res.json()
-            console.log(data);
+            console.log(error);
             // setError(error?.response?.data?.error);
 
         }
     }
 
     return (
-        <div className='absolute top-[20%] px-10 py-5 bg-white rounded-md shadow-md'>
+        <div className='absolute top-[5%] px-10 py-5 bg-white rounded-md shadow-md'>
             <div className='my-5 flex justify-between'>
                 <h1 className='text-gray-500 font-bold text-2xl'>Add Car <FontAwesomeIcon icon={faCar} /></h1>
                 <button onClick={() => setAddCar(false)} className='border border-[#593CFB] px-2 py-1 rounded'>Cancel</button>
             </div>
             <form className='grid grid-cols-3 gap-5'>
-                <div className='flex flex-col'>
+                <div key={"formInput#1"} className='flex flex-col'>
                     <label htmlFor="model">Model</label>
                     <input onChange={handleInputChange} type="text" id='model' name='model' className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#2"} className='flex flex-col'>
                     <label htmlFor="brand">Brand</label>
                     <select onChange={handleInputChange} name="brand" id="brand" className='border-2  px-2 py-1 rounded'>
-                        <option value="none">None</option>
+                        <option key={"formInputValue#1"} value="none">None</option>
                         {brands ? brands.map((brand) => (<>
                             <option key={brand._id} className='' value={brand._id}>{brand.brandName}</option>
                         </>
@@ -154,14 +182,14 @@ const AddCar = ({ setError, setAddCar }) => {
                     </select>
                     {/* <input type="text" id='brand' name='brand' className='border-2  px-2 py-1 rounded' /> */}
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#3"} className='flex flex-col'>
                     <label htmlFor="color">Colour</label>
                     <input onChange={handleInputChange} type="text" id='color' placeholder='eg: Coffie-Brown' name='color' className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#4"} className='flex flex-col'>
                     <label htmlFor="bodyType">Body Type</label>
-                    <select onChange={handleInputChange} name="bodyType" id="bodyType" className='border-2  px-2 py-1 rounded'>
-                        <option value="none">None</option>
+                    <select key={"formInputSelect#2"} onChange={handleInputChange} name="bodyType" id="bodyType" className='border-2  px-2 py-1 rounded'>
+                        <option key={"formInputValue#2"} value="none">None</option>
                         {body ? body.map((type) => (<>
                             <option key={type._id} className='' value={type._id}>{type.bodyType}</option>
                         </>
@@ -171,7 +199,7 @@ const AddCar = ({ setError, setAddCar }) => {
                     </select>
                     {/* <input type="text" id='bodyType' name='bodyType' className='border-2  px-2 py-1 rounded' /> */}
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#5"} className='flex flex-col'>
                     <label htmlFor="fuel">Fuel</label>
                     <select onChange={handleInputChange} name="fuel" id="fuel" className='border-2  px-2 py-1 rounded'>
                         <option value="none">None</option>
@@ -182,7 +210,7 @@ const AddCar = ({ setError, setAddCar }) => {
                     </select>
                     {/* <input type="text" id='fuel' name='fuel' className='border-2  px-2 py-1 rounded' /> */}
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#6"} className='flex flex-col'>
                     <label htmlFor="transmission">Transmission</label>
                     <select onChange={handleInputChange} name="transmission" id="transmission" className='border-2  px-2 py-1 rounded'>
                         <option value="none">None</option>
@@ -193,40 +221,67 @@ const AddCar = ({ setError, setAddCar }) => {
                     </select>
                     {/* <input type="text" id='transmission' name='transmission' className='border-2  px-2 py-1 rounded' /> */}
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#7"} className='flex flex-col'>
                     <label htmlFor="seats">No.Seats</label>
                     <select onChange={handleInputChange} name="seats" id="seats" className='border-2  px-2 py-1 rounded'>
-                        <option value="seats">None</option>
-                        <option className='' value="two-seater">Two-Seater</option>
-                        <option className='' value="four-seater">Four-Seater</option>
-                        <option className='' value="five-seater">Five-Seater</option>
-                        <option className='' value="six-seater">Six-Seater</option>
-                        <option className='' value="seven-seater">Seven-Seater</option>
-                        <option className='' value="eight-seater">Eight-Seater</option>
-                        <option className='' value="nine-seater">Nine-Seater</option>
-                        {/* <option className='' value="manual-transmission">Manual Transmission - MT</option> */}
+                        <option value="none">None</option>
+                        <option className='' value="2">Two-Seater</option>
+                        <option className='' value="4">Four-Seater</option>
+                        <option className='' value="5">Five-Seater</option>
+                        <option className='' value="6">Six-Seater</option>
+                        <option className='' value="7">Seven-Seater</option>
+                        <option className='' value="8">Eight-Seater</option>
+                        <option className='' value="9">Nine-Seater</option>
                     </select>
                     {/* <input type="text" id='seats' name='seats' className='border-2  px-2 py-1 rounded' /> */}
                 </div>
-                <div className='flex flex-col'>
-                    <label htmlFor="registerationNumber">Registeration Number</label>
-                    <input onChange={handleInputChange} type="text" id='registerationNumber' name='registerationNumber' className='border-2  px-2 py-1 rounded' />
+                <div key={"formInput#8"} className='flex flex-col'>
+                    <label htmlFor="vehicleRegistrationNumber">Registeration Number</label>
+                    <input onChange={handleInputChange} type="text" id='vehicleRegistrationNumber' name='vehicleRegistrationNumber' className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#9"} className='flex flex-col'>
+                    <label htmlFor="city">City</label>
+                    <input onChange={handleInputChange} type="text" id='city' name='city' className='border-2  px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#219"} className='flex flex-col'>
+                    <label htmlFor="pincode">Pincode</label>
+                    <input onChange={handleInputChange} type="tel" id='pincode' name='pincode' className='border-2  px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#239"} className='flex flex-col'>
                     <label htmlFor="pickUpLocation">Pick Up Locaton</label>
                     <input onChange={handleInputChange} type="text" id='pickUpLocation' name='pickUpLocation' value="TAXIDI SERVICE CENTER" disabled className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#10"} className='flex flex-col'>
                     <label htmlFor="mileage">Mileage</label>
                     <input onChange={handleInputChange} type="tel" id='mileage' placeholder='km/L' name='mileage' className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
+                <div key={"formInput#11"} className='flex flex-col'>
                     <label htmlFor="host">Host</label>
                     <input onChange={handleInputChange} type="text" id='host' name='host' value="TAXIDI" disabled className='border-2  px-2 py-1 rounded' />
                 </div>
-                <div className='flex flex-col'>
-                    <label htmlFor="images">Images</label>
-                    <input onChange={handleFileChange} type="file" id='images' name='images' multiple className='border-2  bg-white px-2 py-1 rounded' />
+                <div key={"formInput#12"} className='flex flex-col'>
+                    <label htmlFor="rent">Rent</label>
+                    <input onChange={handleInputChange} type="tel" id='rent' name='rent' className='border-2  px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#13"} className='flex flex-col'>
+                    <label htmlFor="vehicleImages">Vehicle Images</label>
+                    <input onChange={handleVehicleImageFileChange} type="file" id='vehicleImages' name='vehicleImages' multiple className='border-2  bg-white px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#14"} className='flex flex-col'>
+                    <label htmlFor="registrationCertificateFrontImage">RC Front</label>
+                    <input onChange={handleCertificateFileChange} type="file" id='registrationCertificateFrontImage' name='registrationCertificateFrontImage' className='border-2  bg-white px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#15"} className='flex flex-col'>
+                    <label htmlFor="registrationCertificateBackImage">RC Back</label>
+                    <input onChange={handleCertificateFileChange} type="file" id='registrationCertificateBackImage' name='registrationCertificateBackImage' className='border-2  bg-white px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#16"} className='flex flex-col'>
+                    <label htmlFor="insuranceCertificateImage">Insurance Certificate</label>
+                    <input onChange={handleCertificateFileChange} type="file" id='insuranceCertificateImage' name='insuranceCertificateImage' className='border-2  bg-white px-2 py-1 rounded' />
+                </div>
+                <div key={"formInput#17"} className='flex flex-col'>
+                    <label htmlFor="pollutionCertificateImage">Pollution Certificate</label>
+                    <input onChange={handleCertificateFileChange} type="file" id='pollutionCertificateImage' name='pollutionCertificateImage' className='border-2  bg-white px-2 py-1 rounded' />
                 </div>
             </form>
             <div className='mt-5 text-end'><button onClick={handleSubmit} className='bg-[#593CFB] text-white text-xl px-6 py-1 rounded'>Add</button></div>

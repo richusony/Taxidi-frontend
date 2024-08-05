@@ -1,39 +1,42 @@
 import AddCar from '../../components/AddCar';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
+import { validateHost } from '../../utils/helper';
 import React, { useEffect, useState } from 'react';
 import ErrorToast from '../../components/ErrorToast';
-import AdminNavbar from '../../components/AdminNavbar';
-import AdminSideBar from '../../components/AdminSideBar';
+import HostSideBar from '../../components/HostSideBar';
+import HostNavbar from '../../components/HostNavBar';
 
-const Cars = () => {
+const MyVehicles = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
-    const [page, setPage] = useState("Cars");
+    const [page, setPage] = useState("My Vehicles");
     const [addCar, setAddCar] = useState(false);
     const [vehicles, setVehicles] = useState([]);
 
 
     useEffect(() => {
-        getAllVehicles();
+        // validateHost();
+        getHostVehicles();
     }, [])
 
-const getAllVehicles = async () => {
+const getHostVehicles = async () => {
     try {
-        const res = await axiosInstance.get("/admin/cars");
+        const res = await axiosInstance.get("/host/host-vehicles");
         console.log(res.data);
         setVehicles(res.data);
     } catch (error) {
+        console.log(error?.response?.data?.error);
         setError(error?.response?.data?.error)
     }
 }
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
-            <AdminSideBar />
+            <HostSideBar />
 
             <div className='w-[80%] relative'>
                 {/* Navbar  */}
-                <AdminNavbar page={page} />
+                <HostNavbar page={page} />
 
                 <div className='mt-10 text-end'><button onClick={() => setAddCar(prev => !prev)} className='px-6 py-2 bg-[#593CFB] text-white rounded'>Add Car</button></div>
                 <div className="flex justify-center my-8">
@@ -48,12 +51,12 @@ const getAllVehicles = async () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {vehicles.map((item) => (
-                                <tr onClick={()=>navigate(`/admin/cars/${item.vehicleRegistrationNumber}`)} key={item.vehicleRegistrationNumber} className="hover:bg-gray-100">
+                            {vehicles.map((item, index) => (
+                                <tr onClick={()=>navigate(`/host/cars/${item.vehicleRegistrationNumber}`)} key={index} className="hover:bg-gray-100">
                                     <td className="py-2 px-4 border-b text-center">{item?.model}</td>
                                     <td className="py-2 px-4 border-b text-center">{item?.brand?.brandName}</td>
                                     <td className="py-2 px-4 border-b text-center">{item?.bodyType?.bodyType}</td>
-                                    <td className="py-2 px-4 border-b text-center">{item?.host.fullname}</td>
+                                    <td className="py-2 px-4 border-b text-center">{item?.host?.fullname}</td>
                                     <td className="py-2 px-4 border-b text-center">{item?.vehicleRegistrationNumber}</td>
                                 </tr>
                             ))}
@@ -67,4 +70,4 @@ const getAllVehicles = async () => {
     )
 }
 
-export default Cars
+export default MyVehicles

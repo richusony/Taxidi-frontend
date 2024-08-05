@@ -1,7 +1,6 @@
 import AddBody from '../../components/AddBody';
 import axiosInstance from '../../axiosConfig.js';
 import React, { useEffect, useState } from 'react';
-import { validateAdmin } from '../../utils/helper';
 import AdminSideBar from '../../components/AdminSideBar';
 import ErrorToast from '../../components/ErrorToast.jsx';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +16,6 @@ const BodyTypes = () => {
     const handleAddBody = () => setAddBody(prev => !prev);
 
     useEffect(() => {
-        validateAdmin();
         getAllBodys();
     }, [])
 
