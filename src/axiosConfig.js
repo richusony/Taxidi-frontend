@@ -33,7 +33,7 @@ axiosInstance.interceptors.response.use(
         storedUser != "undefined" ? JSON.parse(storedUser) : null;
       console.log("axios Interpreter", currentRoleData);
       const refreshTokenEndpoint =
-        currentRoleData.role == "user"
+        currentRoleData?.role == "user"
           ? "/refresh-token"
           : `/${currentRoleData.role}/refresh-token`;
       try {

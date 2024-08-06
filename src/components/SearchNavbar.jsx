@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars }) => {
+const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, endDateFn  }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
@@ -56,11 +56,11 @@ const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars }) => {
             <div className='flex justify-between'>
                 <div className='border-b-2 pb-1 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>From</span>
-                    <input value={tripStarts} type="datetime-local" className='outline-none' />
+                    <input value={tripStarts} min={startDateFn()} type="datetime-local" className='outline-none' />
                 </div>
                 <div className='ml-8 border-b-2 pb-1 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>Until</span>
-                    <input value={tripEnds} type="datetime-local" className='outline-none' />
+                    <input value={tripEnds} min={endDateFn(tripStarts)} type="datetime-local" className='outline-none' />
                 </div>
             </div>
 

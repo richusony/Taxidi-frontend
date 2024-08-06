@@ -49,6 +49,23 @@ const Home = () => {
             // console.error('Error fetching brands:', error);
         }
     }
+
+    // Get current date in the format 'YYYY-MM-DDTHH:MM'
+    const getTodayDateTime = () => {
+        const today = new Date();
+        today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+        return today.toISOString().slice(0, 16);
+    };
+
+    // Get the date and time one day after the provided date
+    const getMinEndDateTime = (startDateTime) => {
+        if (!startDateTime) return getTodayDateTime();
+        const startDate = new Date(startDateTime);
+        startDate.setDate(startDate.getDate() + 1);
+        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+        return startDate.toISOString().slice(0, 16);
+    };
+
     return (
         <div className='overflow-x-hidden'>
             {/* Announcements */}
@@ -67,14 +84,14 @@ const Home = () => {
                     <div>
                         <h2 className='font-semibold'>Start Date and Time</h2>
                         <div className='mt-2'>
-                            <input onChange={handleInputChange} type="datetime-local" id='bookingStarts' name='bookingStarts' placeholder='date and time' className='px-4 py-2 outline-none border-2 rounded' />
+                            <input onChange={handleInputChange} min={getTodayDateTime()} type="datetime-local" id='bookingStarts' name='bookingStarts' placeholder='date and time' className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
                     <div className='mt-4 md:mt-0 md:ml-8'>
                         <h2 className='font-semibold'>End Date and Time</h2>
                         <div className='mt-2'>
-                            <input onChange={handleInputChange} type="datetime-local" id='bookingEnds' name='bookingEnds' className='px-4 py-2 outline-none border-2 rounded' />
+                            <input onChange={handleInputChange} min={getMinEndDateTime(formData.bookingStarts)} type="datetime-local" id='bookingEnds' name='bookingEnds' className='px-4 py-2 outline-none border-2 rounded' />
                         </div>
                     </div>
 
@@ -145,55 +162,6 @@ const Home = () => {
                         </div>
                         <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
                     </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    {/* Repeat similar divs for other items */}
                 </div>
 
             </div>

@@ -1,43 +1,63 @@
-import { json, Link, useParams } from 'react-router-dom';
-import useOnline from '../hooks/useOnline';
-import { handleLogOut } from '../utils/helper';
-import React, { useEffect, useState } from 'react';
-import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
+import useOnline from '../hooks/useOnline';
 import axiosInstance from '../axiosConfig';
+import { handleLogOut } from '../utils/helper';
+import AuthContext from '../contexts/AuthContext';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
+  const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
-  const {registrationNumber} = useParams();
+  const { user } = useContext(AuthContext);
+  const { registrationNumber } = useParams();
   const [userData, setUserData] = useState(null);
   const [responseId, setResposeId] = useState(null);
   const [vehicleData, setVehicleData] = useState(null);
   const [responseState, setResposeState] = useState(null);
+  const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
+
+  axios.defaults.withCredentials = true;
+
+  const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+  };
+  const query = useQuery();
+  const queryStartDate = query.get('startDate');
+  const queryEndDate = query.get('endDate');
+
+  // Retrieve start and end dates from the query parameters
+  const tripStartsObj = new Date(queryStartDate);
+  const tripEndsObj = new Date(queryEndDate);
+
+  // Define a function to format the date in "DD/MM/YYYY" and 12-hour time with AM/PM
+  const formatDateTime = (date) => {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = date.getFullYear();
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+
+    hours = hours % 12 || 12; // Convert to 12-hour format
+    const hoursStr = String(hours).padStart(2, '0');
+
+    return `${day}/${month}/${year}, ${hoursStr}:${minutes} ${ampm}`;
+  };
+
+  // Format the start and end dates
+  const tripStarts = formatDateTime(tripStartsObj);
+  const tripEnds = formatDateTime(tripEndsObj);
 
   useEffect(() => {
     // getUserDetails();
     getVehicleDetails();
   }, []);
 
-  const getUserDetails = async () => {
-    if (!isOnline) {
-      setError("You are offline");
-      return;
-    }
-
-    try {
-      const res = await axiosInstance.get('/profile');
-      // console.log(res);
-      setUserData(res?.data?.user);
-    } catch (error) {
-      // window.location.href = "/login";
-      // setError(error?.response?.data?.error);
-    }
-  };
-
-  const getVehicleDetails = async () =>{
+  const getVehicleDetails = async () => {
     try {
       const res = await axiosInstance.get(`/car/${registrationNumber}`);
       console.log(res?.data);
@@ -47,10 +67,20 @@ const CarDetailedPage = () => {
     }
   }
 
+  // Function to calculate the total amount based on hours and rate
+  const calculateTotalAmount = () => {
+    if (tripStartsObj && tripEndsObj && vehicleData?.rent) {
+      const diffInMs = tripEndsObj - tripStartsObj; // Difference in milliseconds
+      const diffInHours = diffInMs / (1000 * 60 * 60); // Convert to hours
+      return Math.floor(diffInHours * vehicleData.rent); // Total amount
+    }
+    return 0;
+  };
+
   const handleMenu = () => setMenu(prev => !prev);
 
   const loadScript = (src) => {
-    return new Promise((resolve) =>{
+    return new Promise((resolve) => {
       const script = document.createElement("script");
       script.src = src;
 
@@ -66,18 +96,20 @@ const CarDetailedPage = () => {
     })
   }
 
-  const createRazorpayOrder = (amount) => {
+  const totalAmount = calculateTotalAmount();
+
+  const createRazorpayOrder = async (amount) => {
     let data = JSON.stringify({
       amount: amount * 100,
       currency: "INR"
     })
-
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${import.meta.env.VITE_BACKEND}/orders`,
+      url: `${import.meta.env.VITE_BACKEND}/book-vehicle`,
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`
       },
       data: data
     }
@@ -88,34 +120,50 @@ const CarDetailedPage = () => {
     }).catch((error) => console.log(error))
   }
 
-const handleRazorpayScreen = async (amount) => {
-  const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
+  const handleRazorpayScreen = async (amount) => {
+    const res = await loadScript("https://checkout.razorpay.com/v1/checkout.js");
 
-  if(!res) {
-    alert("some error at screen");
-  }
-
-  const options = {
-    key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-    amount: amount,
-    currency: "INR",
-    name: "TAXIDI PAYMENT",
-    description: "trying to pay",
-    handler: function(response){
-      setResposeId(response.razorpay_payment_id)
-    },
-    prefill: {
-      name: "Richu Sony",
-      email: "sonyrichu4@gmail.com"
-    },
-    theme: {
-      color: "#593CFB"
+    if (!res) {
+      alert("some error at screen");
     }
+    const verifyRequestData = {
+      vehicleId: vehicleData._id,
+      queryStartDate,
+      queryEndDate,
+      paymentDetails: null
+    }
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: amount,
+      currency: "INR",
+      name: "TAXIDI PAYMENT",
+      description: "trying to pay",
+      handler: async function verifyBooking(response) {
+        try {
+          verifyRequestData.paymentDetails = response;
+          const res = await axiosInstance.post("/verify-booking", verifyRequestData)
+          alert("booking verified");
+        } catch (error) {
+          console.log("error while verifying the order", error);
+        }
+      },
+      prefill: {
+        name: "Richu Sony",
+        email: "sonyrichu4@gmail.com"
+      },
+      theme: {
+        color: "#593CFB"
+      }
+    }
+
+    const paymentObject = new window.Razorpay(options)
+    paymentObject.open()
   }
 
-  const paymentObject = new window.Razorpay(options)
-  paymentObject.open()
-}
+  const handleBooking = async () => {
+    if (!user) return navigate("/login");
+    await createRazorpayOrder(totalAmount)
+  }
 
   return (
     <div className='pb-10'>
@@ -185,17 +233,17 @@ const handleRazorpayScreen = async (amount) => {
 
           {/* payment details  */}
           <div className='w-[30%]'>
-            <h1 className='text-xl font-bold'>₹{vehicleData?.rent}/hour</h1>
+            <h1 className='text-xl font-bold'><span className='text-[#593CFB]'>₹</span>{totalAmount} <span className='text-gray-500 font-semibold'>({vehicleData?.rent}/hour)</span></h1>
 
             <h1 className='mt-2 font-semibold'>Trip Starts</h1>
-            <h1 className='text-gray-700'>06/07/2024 - 2:30 AM</h1>
+            <h1 className='text-gray-700'>{tripStarts}</h1>
             <h1 className='font-semibold'>Trip Ends</h1>
-            <h1 className='text-gray-700'>07/07/2024 - 2:30 AM</h1>
+            <h1 className='text-gray-700'>{tripEnds}</h1>
 
             <h1 className='mt-2 font-semibold'>Pickup Location</h1>
             <h1 className='text-gray-700'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
 
-            <button onClick={() => createRazorpayOrder(100)} className='mt-5 mx-auto px-14 py-2 bg-[#593CFB] text-white rounded-md'>Continue</button>
+            <button onClick={handleBooking} className='mt-5 mx-auto px-14 py-2 bg-[#593CFB] text-white rounded-md'>Continue</button>
           </div>
         </div>
       </div>

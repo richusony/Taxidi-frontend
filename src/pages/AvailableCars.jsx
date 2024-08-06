@@ -16,10 +16,27 @@ const AvailableCars = () => {
     const tripStarts = query.get('tripStarts');
     const tripEnds = query.get('tripEnds');
     console.log(tripStarts, tripEnds);
+
+    // Get current date in the format 'YYYY-MM-DDTHH:MM'
+    const getTodayDateTime = () => {
+        const today = new Date();
+        today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+        return today.toISOString().slice(0, 16);
+    };
+
+    // Get the date and time one day after the provided date
+    const getMinEndDateTime = (startDateTime) => {
+        if (!startDateTime) return getTodayDateTime();
+        const startDate = new Date(startDateTime);
+        startDate.setDate(startDate.getDate() + 1);
+        startDate.setMinutes(startDate.getMinutes() - startDate.getTimezoneOffset());
+        return startDate.toISOString().slice(0, 16);
+    };
+
     return (
         <div>
             {/* Navbar */}
-            <SearchNavbar tripStarts={tripStarts} tripEnds={tripEnds} setAvailableCars={setAvailableCars} />
+            <SearchNavbar tripStarts={tripStarts} startDateFn={getTodayDateTime} tripEnds={tripEnds} endDateFn={getMinEndDateTime} setAvailableCars={setAvailableCars} />
 
             {/* Filters */}
             <div className='border-y-2 px-5 py-3 flex'>
@@ -58,7 +75,7 @@ const AvailableCars = () => {
             <div className='mt-2 px-5 pb-5 flex justify-between'>
                 <div className='md:w-[50] h-[500px] overflow-y-scroll hideScrollBar'>
                     {availableCars ? availableCars.map((car) => (
-                        <div onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}`)} className='mb-5 border flex justify-between rounded shadow-md'>
+                        <div onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
                             <div className='w-[30%] h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                             <div className='w-[70%] px-5'>
