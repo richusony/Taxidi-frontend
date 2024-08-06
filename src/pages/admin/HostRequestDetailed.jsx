@@ -12,7 +12,9 @@ import HostRequestDocuments from '../../components/HostRequestDocuments.jsx';
 const HostRequestDetailed = () => {
     const [error, setError] = useState("");
     const { registrationNumber } = useParams();
+    const [rejectMsg, setRejectMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
+    const [rejectBox, setRejectBox] = useState(false);
     const [documentsView, setDocumentsView] = useState(false);
     const [hostRequestDetails, setHostRequestDetails] = useState(null);
     const [hostInformationView, setHostInformationView] = useState(true);
@@ -33,7 +35,7 @@ const HostRequestDetailed = () => {
     }
 
     const handleApproveHostRequest = async () => {
-        console.log({...hostRequestDetails});
+        console.log({ ...hostRequestDetails });
         // return;
         try {
             const res = await axiosInstance.post("/admin/approve-host-request", { ...hostRequestDetails })
@@ -45,11 +47,13 @@ const HostRequestDetailed = () => {
     }
 
     const handleRejectHostRequest = async () => {
-        console.log({...hostRequestDetails});
-        // return;
+
+        console.log({ ...hostRequestDetails });
         try {
-            const res = await axiosInstance.post("/admin/reject-host-request", { ...hostRequestDetails })
+            const res = await axiosInstance.post("/admin/reject-host-request", { rejectMsg: rejectMsg.trim(), ...hostRequestDetails })
             setSuccessMsg("Request Rejected");
+            setRejectMsg("");
+            setRejectBox(false);
         } catch (error) {
             console.log(error?.response?.data?.error);
             setError(error?.response?.data?.error);
@@ -80,7 +84,12 @@ const HostRequestDetailed = () => {
                         <div>
                             <div>
                                 <button onClick={handleApproveHostRequest} className='px-4 py-1 border border-[#593CFB] text-[#593CFB] rounded-md shadow-md'>Approve</button>
-                                <button onClick={handleRejectHostRequest} className='ml-4 px-6 py-1 border border-red-500 text-red-500 rounded-md shadow-md'>Reject</button>
+                                <button onClick={() => setRejectBox(true)} className='ml-4 px-6 py-1 border border-red-500 text-red-500 rounded-md shadow-md'>Reject</button>
+                                {rejectBox && <div className='mt-5 px-5 py-4 bg-white rounded-md shadow-md flex flex-col'>
+                                    <div className='text-end mb-2'><button onClick={() => setRejectBox(false)} className='px-4 py-1 border border-[#593CFB] text-[#593CFB] rounded-md shadow-md'>cancel</button></div>
+                                    <textarea onChange={(e) => setRejectMsg(e.target.value)} className='border-2 rounded px-2 py-1 min-h-20 outline-gray-600' cols="32" placeholder='Reason' name="rejectMsg" id="rejectMsg">{rejectMsg}</textarea>
+                                    <button onClick={handleRejectHostRequest} className='mt-2 px-4 py-1 bg-[#593CFB] text-white rounded shadow-md'>reject</button>
+                                </div>}
                             </div>
                         </div>
                     </div>

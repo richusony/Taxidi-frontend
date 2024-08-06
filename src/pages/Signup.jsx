@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../axiosConfig.js';
+import axios from 'axios';
 import useOnline from "../hooks/useOnline.jsx";
 import { signInWithPopup } from "firebase/auth";
 import ErrorToast from '../components/ErrorToast';
@@ -70,7 +70,7 @@ const Signup = () => {
             // const response = await createUserWithEmailAndPassword(auth, formData.email, formData.password)
             console.log(typeof formData);
             sessionStorage.setItem("userData", JSON.stringify(formData));
-            const res = await axiosInstance.post('/send-otp', { email: formData.email })
+            const res = await axios.post(`${import.meta.env.VITE_BACKEND}/send-otp`, { email: formData.email })
             // console.log("checking :: ",res);
             window.location.href = "/otp"
         } catch (error) {
