@@ -134,7 +134,7 @@ const route = createBrowserRouter([
     element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookings /></Suspense></PrivateRoute>
   },
   {
-    path: "/booking-details/:payment-id",
+    path: "/booking-details/:paymentId",
     element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookingDetailed /></Suspense></PrivateRoute>
   }
 ]);
