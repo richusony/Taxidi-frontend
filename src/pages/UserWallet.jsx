@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import ErrorToast from '../components/ErrorToast';
 import DefaultNavbar from "../components/DefaultNavbar";
@@ -7,14 +7,28 @@ import axios from 'axios';
 const UserWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
+    const [walletData, setWalletData] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState([]);
     const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
 
     axios.defaults.withCredentials = true;
 
+    useEffect(()=> {
+        getWalletData();
+    },[])
+
     const handleAddMoney = async (amount) => {
         try {
             await createRazorpayOrder(amount);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getWalletData = async () => {
+        try {
+            const res = await axiosInstance.get("/wallet");
+            setWalletData(res?.data);
         } catch (error) {
             console.log(error);
         }
@@ -66,7 +80,7 @@ const UserWallet = () => {
         if (!res) {
             alert("some error at screen");
         }
-        
+
         const options = {
             key: import.meta.env.VITE_RAZORPAY_KEY_ID,
             amount: amount,
@@ -109,7 +123,7 @@ const UserWallet = () => {
                             caused by the banks</p>
                     </div>
                     <div className='text-center'>
-                        <h1 className='text-2xl font-semibold'>Balance <span className='text-[#593CFB]'>₹</span>5000</h1>
+                        <h1 className='text-2xl font-semibold'>Balance <span className='text-[#593CFB]'>₹</span>{walletData ? walletData?.balance : 0}</h1>
                         <div className='mt-5 flex justify-center items-center'>
                             <button onClick={() => handleAddMoney(500)} className='transition delay-150 ease-linear hover:scale-105 mx-1 border border-[#593CFB] px-4 py-1 w-fit text-[#593CFB] rounded shadow-md'>500</button>
                             <button onClick={() => handleAddMoney(1000)} className='transition delay-150 ease-linear hover:scale-105 mx-1 border border-[#593CFB] px-4 py-1 w-fit text-[#593CFB] rounded shadow-md'>1000</button>

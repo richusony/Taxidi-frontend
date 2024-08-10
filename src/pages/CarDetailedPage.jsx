@@ -7,6 +7,8 @@ import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
+import RatingList from '../components/RatingList';
+import Reviews from '../components/Reviews';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
@@ -18,7 +20,6 @@ const CarDetailedPage = () => {
   const [responseId, setResposeId] = useState(null);
   const [vehicleData, setVehicleData] = useState(null);
   const [responseState, setResposeState] = useState(null);
-  const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
 
   axios.defaults.withCredentials = true;
 
@@ -99,6 +100,7 @@ const CarDetailedPage = () => {
   const totalAmount = calculateTotalAmount();
 
   const createRazorpayOrder = async (amount) => {
+    const accessToken =  localStorage.getItem("accessToken");
     let data = JSON.stringify({
       amount: amount * 100,
       currency: "INR"
@@ -162,6 +164,7 @@ const CarDetailedPage = () => {
 
   const handleBooking = async () => {
     if (!user) return navigate("/login");
+    
     await createRazorpayOrder(totalAmount)
   }
 
@@ -180,7 +183,7 @@ const CarDetailedPage = () => {
                 <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>
               </div>
               <div className='my-4'>
-                <Link className='hover:text-[#593CFB] text-lg' to="/bookings">Bookings</Link>
+                <Link className='hover:text-[#593CFB] text-lg' to="/my-bookings">Bookings</Link>
               </div>
               {userData ? <div className='my-4'>
                 <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
@@ -213,7 +216,7 @@ const CarDetailedPage = () => {
             <h1 className='mt-2 text-xl text-gray-500 font-semibold'>{vehicleData?.model}</h1>
             <h1 className='mt-2 text-xl font-semibold'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /> (5 trips)</h1>
 
-            <div className='mt-5 w-72 grid grid-cols-2 gap-y-4'>
+            <div className='mt-5 grid grid-cols-2 gap-y-4'>
               <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faOilCan} /> <span>{vehicleData?.fuel}</span></div>
               <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faCar} /> <span>{vehicleData?.transmission}</span></div>
               <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faUsers} /> <span>{vehicleData?.seats} seats</span></div>
@@ -226,6 +229,17 @@ const CarDetailedPage = () => {
                 <div className='w-16 h-16 rounded-full shadow-md'><img className='w-full h-full object-cover rounded-full' src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww" alt="" /></div>
                 <div className='ml-2'><h1 className='text-xl font-semibold'>{vehicleData?.host?.fullname}</h1></div>
               </div>
+            </div>
+
+            {/* Rating and Reviews */}
+            <div className='mt-5'>
+              <h1 className='font-semibold'>RATING AND REVIEWS</h1>
+              <h1 className='mt-2 px-2 text-3xl font-bold'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></h1>
+              <h1 className='mt-1 px-2'>(4 ratings)</h1>
+
+              <RatingList />
+
+              <Reviews vehicleId={vehicleData?._id} vehicleRegistrationNumber={registrationNumber} user={user} />
             </div>
           </div>
 

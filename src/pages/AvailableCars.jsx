@@ -1,20 +1,24 @@
-import React, { useState } from 'react'
-import SearchNavbar from '../components/SearchNavbar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
-import { faHeart, faLocation, faLocationDot } from '@fortawesome/free-solid-svg-icons'
-import { useLocation, useNavigate } from 'react-router-dom'
+import React, { useState } from 'react';
+import ErrorToast from '../components/ErrorToast';
+import SearchNavbar from '../components/SearchNavbar';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
+import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const AvailableCars = () => {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [availableCars, setAvailableCars] = useState(null);
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     };
 
     const query = useQuery();
-    const tripStarts = query.get('tripStarts');
-    const tripEnds = query.get('tripEnds');
+    // setTripStarts(query.get('tripStarts'));
+    // setTripEnds(query.get('tripEnds'));
+    const [tripEnds, setTripEnds] = useState(query.get('tripEnds'));
+    const [tripStarts, setTripStarts] = useState(query.get('tripStarts'));
     console.log(tripStarts, tripEnds);
 
     // Get current date in the format 'YYYY-MM-DDTHH:MM'
@@ -33,10 +37,38 @@ const AvailableCars = () => {
         return startDate.toISOString().slice(0, 16);
     };
 
+    const handleSearch = (e) => {
+        e.preventDefault();
+
+        if (!tripStarts || !tripEnds) {
+            setError("Please select both start and end date");
+            return;
+        }
+        const startDateTime = new Date(tripStarts);
+        const endDateTime = new Date(tripEnds);
+        const now = new Date();
+
+        if (startDateTime < now || endDateTime < now) {
+            setError("Dates cannot be in the past");
+            return;
+        }
+
+        if ((endDateTime - startDateTime) < (24 * 60 * 60 * 1000)) {
+            setError("The time difference between start and end date must be at least 24 hours");
+            return;
+        }
+
+        try {
+            navigate(`/search?tripStarts=${tripStarts}&tripEnds=${tripEnds}`);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     return (
         <div>
             {/* Navbar */}
-            <SearchNavbar tripStarts={tripStarts} startDateFn={getTodayDateTime} tripEnds={tripEnds} endDateFn={getMinEndDateTime} setAvailableCars={setAvailableCars} />
+            <SearchNavbar tripStarts={tripStarts} setTripStarts={setTripStarts} startDateFn={getTodayDateTime} tripEnds={tripEnds} setTripEnds={setTripEnds} endDateFn={getMinEndDateTime} setAvailableCars={setAvailableCars} setError={setError} />
 
             {/* Filters */}
             <div className='border-y-2 px-5 py-3 flex'>
@@ -134,6 +166,7 @@ const AvailableCars = () => {
                     <img className='w-full h-full object-cover rounded' src="https://thumbs.dreamstime.com/b/south-coast-england-map-13987361.jpg" alt="" />
                 </div>
             </div>
+            <ErrorToast setError={setError} error={error} />
         </div>
     )
 }

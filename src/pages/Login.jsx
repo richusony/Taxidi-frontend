@@ -108,7 +108,7 @@ const Login = () => {
                     </div>
 
                     <div className='mt-5 w-full text-center'>
-                        <button onClick={handleSubmit} className='mx-auto w-[70%] px-4 py-2 bg-violet-500 text-white font-semibold rounded shadow-md'>LOGIN</button>
+                        <button onClick={handleSubmit} className={`mx-auto w-[70%] px-4 py-2 ${formData.email && formData.password ? "bg-violet-500" : "bg-gray-400 cursor-not-allowed"} text-white font-semibold rounded shadow-md`}>LOGIN</button>
                         <p className='mt-3'>Don't have an account? <Link to="/signup" className='font-semibold cursor-pointer hover:underline'>Sign in</Link></p>
                     </div>
 
@@ -117,8 +117,8 @@ const Login = () => {
                     </div>
 
                     <div className='flex justify-center'>
-                        <div onClick={handleGoogleSignup} className='px-3 py-2 border-2 w-fit cursor-pointer rounded shadow-md'>
-                            <span>Login with Google</span>
+                        <div onClick={handleGoogleSignup} className='transition delay-150 ease-in px-3 py-1 border-2 w-fit cursor-pointer rounded shadow-md hover:-translate-y-1 group'>
+                            <span className='flex items-center justify-between'><span className='mr-2 text-xl text-gray-500 group-hover:text-violet-500 font-bold rounded-full'>G</span> Login with Google</span>
                         </div>
                     </div>
                 </div>

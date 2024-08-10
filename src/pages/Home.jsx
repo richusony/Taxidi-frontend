@@ -15,7 +15,7 @@ const Home = () => {
     const [formData, setFormData] = useState({
         bookingStarts: null,
         bookingEnds: null
-    })
+    });
 
     useEffect(() => {
         getAllBrands();
@@ -23,18 +23,38 @@ const Home = () => {
 
     const handleInputChange = (e) => {
         setFormData({
-        ...formData,
-        [e.target.id]: e.target.value
-        })
-    }
+            ...formData,
+            [e.target.id]: e.target.value
+        });
+    };
 
     const handleSearch = (e) => {
-        try {
-            navigate(`/search?tripStarts=${formData.bookingStarts}&tripEnds=${formData.bookingEnds}`);
-        } catch (error) {
-            console.log(error)
+        e.preventDefault();
+        const { bookingStarts, bookingEnds } = formData;
+        if (!bookingStarts || !bookingEnds) {
+            setError("Please select both start and end date");
+            return;
         }
-    }
+        const startDateTime = new Date(bookingStarts);
+        const endDateTime = new Date(bookingEnds);
+        const now = new Date();
+
+        if (startDateTime < now || endDateTime < now) {
+            setError("Dates cannot be in the past");
+            return;
+        }
+
+        if ((endDateTime - startDateTime) < (24 * 60 * 60 * 1000)) {
+            setError("The time difference between start and end date must be at least 24 hours");
+            return;
+        }
+
+        try {
+            navigate(`/search?tripStarts=${bookingStarts}&tripEnds=${bookingEnds}`);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const getAllBrands = async () => {
         if (!isOnline) {
@@ -46,18 +66,16 @@ const Home = () => {
             const res = await axiosInstance.get("/brands");
             setBrands(res.data);
         } catch (error) {
-            // console.error('Error fetching brands:', error);
+            console.error('Error fetching brands:', error);
         }
-    }
+    };
 
-    // Get current date in the format 'YYYY-MM-DDTHH:MM'
     const getTodayDateTime = () => {
         const today = new Date();
         today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
         return today.toISOString().slice(0, 16);
     };
 
-    // Get the date and time one day after the provided date
     const getMinEndDateTime = (startDateTime) => {
         if (!startDateTime) return getTodayDateTime();
         const startDate = new Date(startDateTime);
@@ -68,15 +86,12 @@ const Home = () => {
 
     return (
         <div className='overflow-x-hidden'>
-            {/* Announcements */}
             <div className='py-2 bg-[#FBF9F6] text-center'>
                 <p className='text-gray-500 text-sm'>Taxidi launched on Kozhikode!!</p>
             </div>
 
-            {/* Navbar  */}
             <DefaultNavbar />
 
-            {/* Date selection */}
             <div className="h-screen relative">
                 <img className='h-full w-full object-cover' src={HOME_BG_IMAGE_URL} alt="" />
 
@@ -101,7 +116,6 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Text  */}
             <div className='px-10 py-14 text-center'>
                 <div className='my-5'>
                     <h1 className='text-3xl font-bold text-gray-700'>Skip the rental car counters</h1>
@@ -109,7 +123,6 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Explore Cars for any occasion */}
             <div className='py-10 md:pr-10 bg-[#E8E6E6] flex flex-col md:flex-row justify-center md:justify-evenly items-center'>
                 <div className='w-96 rounded'>
                     <img className='w-full h-full object-cover rounded' src={CAR_COLLECTIONS} alt="car-collections" />
@@ -123,12 +136,10 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Browse by Make */}
             <div className='mt-5 px-5 md:px-10 py-5'>
                 <h1 className='font-bold text-gray-700 text-xl'>Browse by make</h1>
 
                 <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
-
                     {brands.length > 0 && brands.map((brand) => (
                         <div key={brand._id} className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
                             <div className='mx-auto h-[80%] w-[80%]'>
@@ -163,16 +174,12 @@ const Home = () => {
                         <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
                     </div>
                 </div>
-
             </div>
 
-            {/* Become a host | Book a car */}
             <div className='mt-5 py-2 px-5 flex justify-center items-center'>
-                {/* <img className='w-full h-full' src="../assets/images/becomehost.jpg" alt="image" /> */}
                 <BecomeHost />
             </div>
 
-            {/* Footer */}
             <footer className='mt-10 px-5 md:px-10 py-10 bg-[#F2F1F1] grid grid-cols-3 gap-x-5'>
                 <div className='w-52'>
                     <h1 className='md:text-xl font-bold'>Location</h1>
@@ -212,4 +219,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Home;

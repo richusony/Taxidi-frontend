@@ -6,20 +6,44 @@ import React, { useEffect, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, endDateFn  }) => {
+const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, endDateFn, setError, setTripStarts, setTripEnds }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
-    
+
 
     useEffect(() => {
-        getUserDetails();
+        // getUserDetails();
         getAvailableCars();
-    }, []);
+    }, [tripStarts, tripEnds]);
 
     const handleMenu = () => setMenu(prev => !prev);
 
     const getAvailableCars = async () => {
+        if (!isOnline) {
+            setError("You are offline");
+            return;
+        }
+
+        if (!tripStarts || !tripEnds) {
+            setError("Please select both start and end date");
+            return;
+        }
+
+        const startDateTime = new Date(tripStarts);
+        const endDateTime = new Date(tripEnds);
+        const now = new Date();
+
+        if (startDateTime < now || endDateTime < now) {
+            setError("Dates cannot be in the past");
+            return;
+        }
+
+        if ((endDateTime - startDateTime) < (24 * 60 * 60 * 1000)) {
+            setError("Booking should be at least 24 hours");
+            return;
+        }
+
         try {
             const res = await axiosInstance.get(`/get-available-cars`, {
                 params: {
@@ -34,21 +58,6 @@ const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, end
         }
     }
 
-    const getUserDetails = async () => {
-        if (!isOnline) {
-            setError("You are offline");
-            return;
-        }
-
-        try {
-            const res = await axiosInstance.get('/profile');
-            setUserData(res?.data?.user);
-            // if (res.status !== 200) window.location.href = "/login";
-        } catch (error) {
-            // window.location.href = "/login";
-            // console.error('Error fetching profile:', error);
-        }
-    };
     return (
         <nav className='px-10 py-5 flex justify-between'>
             <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
@@ -56,11 +65,11 @@ const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, end
             <div className='flex justify-between'>
                 <div className='border-b-2 pb-1 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>From</span>
-                    <input value={tripStarts} min={startDateFn()} type="datetime-local" className='outline-none' />
+                    <input value={tripStarts} min={startDateFn()} onChange={(e) => setTripStarts(e.target.value)} type="datetime-local" className='outline-none' />
                 </div>
                 <div className='ml-8 border-b-2 pb-1 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>Until</span>
-                    <input value={tripEnds} min={endDateFn(tripStarts)} type="datetime-local" className='outline-none' />
+                    <input value={tripEnds} min={endDateFn(tripStarts)} onChange={(e) => setTripEnds(e.target.value)} type="datetime-local" className='outline-none' />
                 </div>
             </div>
 
