@@ -17,6 +17,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 // users
 const Profile = lazy(() => import('./pages/Profile.jsx'));
 const UserBookings = lazy(() => import("./pages/UserBookings.jsx"));
+const UserBookingDetailed = lazy(() => import("./pages/UserBookingDetailed.jsx"));
 
 // admin
 const Brands = lazy(() => import('./pages/admin/Brands.jsx'));
@@ -131,6 +132,10 @@ const route = createBrowserRouter([
   {
     path: "/my-bookings",
     element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookings /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/booking-details/:payment-id",
+    element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookingDetailed /></Suspense></PrivateRoute>
   }
 ]);
 

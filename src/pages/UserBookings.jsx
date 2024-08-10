@@ -1,10 +1,12 @@
 import axiosInstance from '../axiosConfig';
+import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DefaultNavbar from "../components/DefaultNavbar";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const UserBookings = () => {
+    const navigate = useNavigate();
     const [bookings, setBookings] = useState(null);
 
     useEffect(() => {
@@ -29,8 +31,16 @@ const UserBookings = () => {
     // }
     function formatDatetimeLocal(utcDatetime) {
         const date = new Date(utcDatetime);
-        // Convert the date to local time in ISO format and remove the seconds and milliseconds
+        
         return date.toDateString() + ", " + date.toLocaleTimeString();
+    }
+
+    const handleCancelBooking = async(e) => {
+        e.stopPropagation();
+    }
+
+    const navigateTo = url => {
+        navigate(url);
     }
 
     return (
@@ -49,7 +59,7 @@ const UserBookings = () => {
 
                 <div className='mt-5 h-96 overflow-y-scroll hideScrollBar'>
                     {bookings?.length > 0 ? bookings.map((book) => (
-                        <div className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
+                        <div onClick={()=>navigateTo(`/booking-details/${book.paymentId}`)} key={book._id} className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
                             <div className='border-r-2 pr-2 w-fit'>
                                 <div className='w-14 h-14'>
                                     <img className='w-full h-full object-cover rounded shadow-sm' src={book.vehicleId.vehicleImages[0]} alt="" />
@@ -78,124 +88,12 @@ const UserBookings = () => {
                                 </div>
 
                                 <div className='ml-10 absolute right-10'>
-                                    <button className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
+                                    <button onClick={handleCancelBooking} className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
                                 </div>
                             </div>
                         </div>
                     ))
                         : <h1>No booking yet</h1>}
-                    <div className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
-                        <div className='border-r-2 pr-2 w-fit'>
-                            <div className='w-14 h-14'>
-                                <img className='w-full h-full object-cover rounded shadow-sm' src="https://res.cloudinary.com/dwswpaf4r/image/upload/v1722446659/host-uploads/maruti-swift_600x400.webp.webp" alt="" />
-                            </div>
-                        </div>
-
-                        <div className='ml-5'>
-                            <h1>MARUTI SUZUKI SWIFT</h1>
-                            <h1 className='mt-1 text-gray-500 text-sm'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
-                        </div>
-
-                        <div className='ml-10 text-sm text-gray-500'>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" /> <span className='mx-1 text-[#593CFB] font-semibold'>to</span>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" />
-                        </div>
-
-                        <div className='flex justify-center items-center'>
-                            <div className='w-12 h-12'>
-                                <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
-                            </div>
-                            <span className='ml-3 text-gray-600'>Richu Sony</span>
-                        </div>
-
-                        <div className='ml-10 absolute right-10'>
-                            <button className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
-                        </div>
-                    </div>
-                    <div className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
-                        <div className='border-r-2 pr-2 w-fit'>
-                            <div className='w-14 h-14'>
-                                <img className='w-full h-full object-cover rounded shadow-sm' src="https://res.cloudinary.com/dwswpaf4r/image/upload/v1722446659/host-uploads/maruti-swift_600x400.webp.webp" alt="" />
-                            </div>
-                        </div>
-
-                        <div className='ml-5'>
-                            <h1>MARUTI SUZUKI SWIFT</h1>
-                            <h1 className='mt-1 text-gray-500 text-sm'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
-                        </div>
-
-                        <div className='ml-10 text-sm text-gray-500'>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" /> <span className='mx-1 text-[#593CFB] font-semibold'>to</span>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" />
-                        </div>
-
-                        <div className='flex justify-center items-center'>
-                            <div className='w-12 h-12'>
-                                <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
-                            </div>
-                            <span className='ml-3 text-gray-600'>Richu Sony</span>
-                        </div>
-
-                        <div className='ml-10 absolute right-10'>
-                            <button className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
-                        </div>
-                    </div>
-                    <div className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
-                        <div className='border-r-2 pr-2 w-fit'>
-                            <div className='w-14 h-14'>
-                                <img className='w-full h-full object-cover rounded shadow-sm' src="https://res.cloudinary.com/dwswpaf4r/image/upload/v1722446659/host-uploads/maruti-swift_600x400.webp.webp" alt="" />
-                            </div>
-                        </div>
-
-                        <div className='ml-5'>
-                            <h1>MARUTI SUZUKI SWIFT</h1>
-                            <h1 className='mt-1 text-gray-500 text-sm'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
-                        </div>
-
-                        <div className='ml-10 text-sm text-gray-500'>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" /> <span className='mx-1 text-[#593CFB] font-semibold'>to</span>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" />
-                        </div>
-
-                        <div className='flex justify-center items-center'>
-                            <div className='w-12 h-12'>
-                                <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
-                            </div>
-                            <span className='ml-3 text-gray-600'>Richu Sony</span>
-                        </div>
-
-                        <div className='ml-10 absolute right-10'>
-                            <button className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
-                        </div>
-                    </div>
-                    <div className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
-                        <div className='border-r-2 pr-2 w-fit'>
-                            <div className='w-14 h-14'>
-                                <img className='w-full h-full object-cover rounded shadow-sm' src="https://res.cloudinary.com/dwswpaf4r/image/upload/v1722446659/host-uploads/maruti-swift_600x400.webp.webp" alt="" />
-                            </div>
-                        </div>
-
-                        <div className='ml-5'>
-                            <h1>MARUTI SUZUKI SWIFT</h1>
-                            <h1 className='mt-1 text-gray-500 text-sm'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
-                        </div>
-
-                        <div className='ml-10 text-sm text-gray-500'>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" /> <span className='mx-1 text-[#593CFB] font-semibold'>to</span>
-                            <input type="datetime-local" className='' disabled value={"2024-08-17T02:55"} name="" id="" />
-                        </div>
-
-                        <div className='flex justify-center items-center'>
-                            <div className='w-12 h-12'>
-                                <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
-                            </div>
-                            <span className='ml-3 text-gray-600'>Richu Sony</span>
-                        </div>
-
-                        <div className='ml-10 absolute right-10'>
-                            <button className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
