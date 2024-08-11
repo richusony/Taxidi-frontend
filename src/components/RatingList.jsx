@@ -21,7 +21,7 @@ const RatingList = () => {
 
     return (
         <div className='mt-5'>
-            {ratings.map(rate => <Rating label={rate.label} value={rate.value}/>)}
+            {ratings.map(rate => <Rating key={rate.label} label={rate.label} value={rate.value}/>)}
             {/* <div className='text-lg'>
             <h1 className='my-2'>Cleanliness</h1>
             <h1 className='my-2'>Maintenance</h1>

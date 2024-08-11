@@ -1,14 +1,14 @@
 import axios from 'axios';
 import useOnline from '../hooks/useOnline';
 import axiosInstance from '../axiosConfig';
+import Reviews from '../components/Reviews';
 import { handleLogOut } from '../utils/helper';
 import AuthContext from '../contexts/AuthContext';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import RatingList from '../components/RatingList';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
-import RatingList from '../components/RatingList';
-import Reviews from '../components/Reviews';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
