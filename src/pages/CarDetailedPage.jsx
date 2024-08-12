@@ -15,6 +15,7 @@ const CarDetailedPage = () => {
   const navigate = useNavigate();
   const [menu, setMenu] = useState(false);
   const { user } = useContext(AuthContext);
+  const [rating, setRating] = useState(null);
   const { registrationNumber } = useParams();
   const [userData, setUserData] = useState(null);
   const [responseId, setResposeId] = useState(null);
@@ -100,7 +101,7 @@ const CarDetailedPage = () => {
   const totalAmount = calculateTotalAmount();
 
   const createRazorpayOrder = async (amount) => {
-    const accessToken =  localStorage.getItem("accessToken");
+    const accessToken = localStorage.getItem("accessToken");
     let data = JSON.stringify({
       amount: amount * 100,
       currency: "INR"
@@ -164,7 +165,7 @@ const CarDetailedPage = () => {
 
   const handleBooking = async () => {
     if (!user) return navigate("/login");
-    
+
     await createRazorpayOrder(totalAmount)
   }
 
@@ -234,12 +235,12 @@ const CarDetailedPage = () => {
             {/* Rating and Reviews */}
             <div className='mt-5'>
               <h1 className='font-semibold'>RATING AND REVIEWS</h1>
-              <h1 className='mt-2 px-2 text-3xl font-bold'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></h1>
-              <h1 className='mt-1 px-2'>(4 ratings)</h1>
+              <h1 className='mt-2 px-2 text-3xl font-bold'>{rating ? rating?.TotalAverage : <span className='text-gray-500 font-normal'>No rating yet</span>} <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></h1>
+              <h1 className='mt-1 px-2'>{rating ? (rating?.TotalNumberOfRatings + " ratings") : ""}</h1>
 
-              <RatingList />
+              <RatingList ratingsData={rating} />
 
-              <Reviews vehicleId={vehicleData?._id} vehicleRegistrationNumber={registrationNumber} user={user} />
+              <Reviews vehicleId={vehicleData?._id} vehicleRegistrationNumber={registrationNumber} user={user} setRatingData={setRating} />
             </div>
           </div>
 

@@ -5,8 +5,8 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const location = window.location.href.split("/");
-  console.log(location);
-  console.log(location.includes("admin"));
+  // console.log(location);
+  // console.log(location.includes("admin"));
   const storedUser = localStorage.getItem('user');
   const initialUserData = storedUser != "undefined" ? JSON.parse(storedUser) : null;
   const [user, setUser] = useState(initialUserData);
@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axiosInstance.get("/profile");
       setUser(res?.data?.user);
-      console.log("auth :", res?.data?.user);
+      // console.log("auth :", res?.data?.user);
     } catch (error) {
       setUser(null);
       console.log(error);
@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
     try {
       console.log("called..");
       const res = await axiosInstance.get("/admin/auth");
-      console.log("auth :", res?.data?.admin);
+      // console.log("auth :", res?.data?.admin);
       setUser(res?.data?.admin);
     } catch (error) {
       setUser(null);
@@ -47,7 +47,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const res = await axiosInstance.get("/host/auth");
       setUser(res?.data?.host);
-      console.log("auth :", res?.data?.host);
+      // console.log("auth :", res?.data?.host);
     } catch (error) {
       setUser(null);
       console.log(error);
