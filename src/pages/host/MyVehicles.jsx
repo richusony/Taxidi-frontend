@@ -1,11 +1,10 @@
 import AddCar from '../../components/AddCar';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
-import { validateHost } from '../../utils/helper';
 import React, { useEffect, useState } from 'react';
 import ErrorToast from '../../components/ErrorToast';
-import HostSideBar from '../../components/HostSideBar';
 import HostNavbar from '../../components/HostNavBar';
+import HostSideBar from '../../components/HostSideBar';
 
 const MyVehicles = () => {
     const navigate = useNavigate();
