@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom';
 import DefaultNavbar from '../components/DefaultNavbar';
 
 const UserBookingDetailed = () => {
-  const {paymentId} = useParams();
+  const { paymentId } = useParams();
   const [bookingDetails, setBookingDetails] = useState(null);
 
-  useEffect(()=> {
+  useEffect(() => {
     fetchBookingDetails();
-  },[])
+  }, [])
 
   const handleCancelBooking = async (e) => {
     e.stopPropagation();
@@ -27,9 +27,9 @@ const UserBookingDetailed = () => {
 
   function formatDatetimeLocal(utcDatetime) {
     const date = new Date(utcDatetime);
-    
+
     return date.toDateString() + ", " + date.toLocaleTimeString();
-}
+  }
 
   return (
     <div>
@@ -55,22 +55,22 @@ const UserBookingDetailed = () => {
             </div>
 
             <div className='mt-5 grid grid-cols-2 gap-y-3'>
-            <div className=''>
-              <h1 className='text-gray-500 font-semibold'>Trip Start</h1>
-              <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingStarts)}</span>
-              <h1 className='mt-2 text-gray-500 font-semibold'>Trip Ends</h1>
-              <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingEnds)}</span>
-            </div>
+              <div className=''>
+                <h1 className='text-gray-500 font-semibold'>Trip Start</h1>
+                <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingStarts)}</span>
+                <h1 className='mt-2 text-gray-500 font-semibold'>Trip Ends</h1>
+                <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingEnds)}</span>
+              </div>
 
-            <div className='mt-5'>
-              <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
-              <span>{bookingDetails?.totalAmount}</span>
-            </div>
+              <div className='mt-5'>
+                <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
+                <span>{bookingDetails?.totalAmount}</span>
+              </div>
 
-            <div className='mt-5'>
-              <h1 className='text-gray-500 font-semibold'>Payment Id</h1>
-              <span>{bookingDetails?.paymentId}</span>
-            </div>
+              <div className='mt-5'>
+                <h1 className='text-gray-500 font-semibold'>Payment Id</h1>
+                <span>{bookingDetails?.paymentId}</span>
+              </div>
             </div>
 
             <div className='mt-8 text-center'>
