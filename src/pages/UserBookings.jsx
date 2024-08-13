@@ -24,11 +24,6 @@ const UserBookings = () => {
         }
     }
 
-    // function formatDatetimeLocal(utcDatetime) {
-    //     const date = new Date(utcDatetime);
-    //     // Convert the date to local time in ISO format and remove the seconds and milliseconds
-    //     return date.toISOString().slice(0, 16);
-    // }
     function formatDatetimeLocal(utcDatetime) {
         const date = new Date(utcDatetime);
         
@@ -46,6 +41,7 @@ const UserBookings = () => {
     return (
         <div className='mb-10'>
             <DefaultNavbar />
+            
             <div className='mt-5 px-10'>
                 <h1 className='text-2xl font-semibold '>Bookings</h1>
                 <p className='mt-2 text-gray-500'>See all your bookings. Note: No charges for cancelling 24 hrs before the trip start date. </p>
