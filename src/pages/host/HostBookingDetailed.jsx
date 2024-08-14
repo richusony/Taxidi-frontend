@@ -3,11 +3,13 @@ import axiosInstance from '../../axiosConfig';
 import React, { useEffect, useState } from 'react';
 import HostNavbar from '../../components/HostNavBar';
 import HostSideBar from '../../components/HostSideBar';
+import CancelReasonBox from '../../components/CancelReasonBox';
 
 const UserBookingDetailed = () => {
     const { paymentId } = useParams();
-    const [page, setPage] = useState(`Booking of ${paymentId}`);
+    const [cancelWindow, setCancelWindow] = useState(false);
     const [bookingDetails, setBookingDetails] = useState(null);
+    const [page, setPage] = useState(`Booking of ${paymentId}`);
 
     useEffect(() => {
         fetchBookingDetails();
@@ -15,6 +17,8 @@ const UserBookingDetailed = () => {
 
     const handleCancelBooking = async (e) => {
         e.stopPropagation();
+
+        setCancelWindow(true);
     }
 
     const fetchBookingDetails = async () => {
@@ -84,6 +88,7 @@ const UserBookingDetailed = () => {
                         </div>
                     </div>
                 </div>
+                {cancelWindow && <CancelReasonBox/>}
             </div>
         </div>
     )
