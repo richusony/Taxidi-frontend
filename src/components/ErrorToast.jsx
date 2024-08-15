@@ -12,7 +12,7 @@ const ErrorToast = ({ error, setError }) => {
     <>
       {error &&
         <div
-          className={`transition delay-150 absolute ease-linear ${error ? "left-40 top-1" : "right-full"
+          className={`transition-all delay-150 absolute ease-linear ${error ? "left-40 top-1" : "right-full"
             } px-4 py-2 bg-white border-2 border-violet-500 w-fit rounded shadow-md`}
         >
           <span className="text-violet-600">

@@ -2,24 +2,20 @@ import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 import React, { useEffect, useState } from 'react';
 import HostNavbar from '../../components/HostNavBar';
+import ErrorToast from "../../components/ErrorToast";
 import HostSideBar from '../../components/HostSideBar';
 import CancelReasonBox from '../../components/CancelReasonBox';
 
 const UserBookingDetailed = () => {
     const { paymentId } = useParams();
+    const [error, setError] = useState("");
     const [cancelWindow, setCancelWindow] = useState(false);
     const [bookingDetails, setBookingDetails] = useState(null);
     const [page, setPage] = useState(`Booking of ${paymentId}`);
 
     useEffect(() => {
         fetchBookingDetails();
-    }, [])
-
-    const handleCancelBooking = async (e) => {
-        e.stopPropagation();
-
-        setCancelWindow(true);
-    }
+    }, []);
 
     const fetchBookingDetails = async () => {
         try {
@@ -73,23 +69,29 @@ const UserBookingDetailed = () => {
 
                                 <div className='mt-5'>
                                     <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
-                                    <span>{bookingDetails?.totalAmount}</span>
+                                    <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.totalAmount}</span>
                                 </div>
 
                                 <div className='mt-5'>
                                     <h1 className='text-gray-500 font-semibold'>Payment Id</h1>
                                     <span>{bookingDetails?.paymentId}</span>
                                 </div>
+
+                                <div className='mt-5'>
+                                    <h1 className='text-gray-500 font-semibold'>Booking Status</h1>
+                                    <span>{bookingDetails?.vehicleDetails?.bookingStatus?"Booked": "Cancelled"}</span>
+                                </div>
                             </div>
 
                             <div className='mt-8 text-center'>
-                                <button onClick={handleCancelBooking} className='transition delay-100 ease-in border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md'>Cancel</button>
+                                <button onClick={() => setCancelWindow(true)} className={`transition delay-100 ease-in ${bookingDetails?.vehicleDetails?.bookingStatus? "" : "cursor-not-allowed"} border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md`}>Cancel</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                {cancelWindow && <CancelReasonBox/>}
+                {cancelWindow && <CancelReasonBox setCancelBox={setCancelWindow} paymentId={paymentId} bookingStatus={bookingDetails?.vehicleDetails?.bookingStatus} setError={setError}/>}
             </div>
+            <ErrorToast error={error} setError={setError}/>
         </div>
     )
 }

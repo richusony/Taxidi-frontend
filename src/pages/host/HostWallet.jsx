@@ -1,12 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import HostNavbar from '../../components/HostNavBar'
 import HostSideBar from '../../components/HostSideBar'
 import ErrorToast from '../../components/ErrorToast';
+import axiosInstance from '../../axiosConfig';
 
 const HostWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
+    const [wallet, setWallet] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState([]);
+
+    useEffect(()=>{
+        fetchWalletInfo();
+    },[]);
+
+    const fetchWalletInfo = async () => {
+        try {
+            const res = await axiosInstance.get("/host/wallet");
+            // console.log(res);
+            setWallet(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <HostSideBar />
@@ -25,7 +42,7 @@ const HostWallet = () => {
                                 caused by the banks</p>
                         </div>
                         <div className='text-center'>
-                            <h1 className='text-2xl font-semibold'>Balance <span className='text-[#593CFB]'>₹</span>5000</h1>
+                            <h1 className='text-2xl font-semibold'>Balance <span className='text-[#593CFB]'>₹</span>{wallet?.balance}</h1>
                             <button className='mt-5 px-4 py-2 bg-[#593CFB] text-white rounded '>Withdraw</button>
                         </div>
                     </div>

@@ -58,12 +58,11 @@ const HostBookings = () => {
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Id</th>
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Method</th>
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Paid on</th>
-                                <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {bookings.map((book, index) => (
-                                <tr onClick={() => navigate(`/host/booking-details/${book?.paymentId}`)} key={book._id} className="hover:bg-gray-100">
+                                <tr onClick={() => navigate(`/host/booking-details/${book?.paymentId}`)} key={book._id} className="hover:bg-gray-100 cursor-pointer">
                                     <td className="py-2 px-4 border-b text-center">{book?.vehicleDetails[0]?.model}</td>
                                     <td className="py-2 px-4 border-b text-center">{book?.userDetails[0]?.firstName + " " + book?.userDetails[0]?.secondName}</td>
                                     <td className="py-2 px-4 border-b text-center text-xs">{formatDatetimeLocal(book?.bookingStarts)}</td>
@@ -72,7 +71,6 @@ const HostBookings = () => {
                                     <td className="py-2 px-4 border-b text-center text-gray-700">{book?.paymentId}</td>
                                     <td className="py-2 px-4 border-b text-center uppercase">{book?.paymentMethod}</td>
                                     <td className="py-2 px-4 border-b text-center">{formatDateLocal(book?.createdAt)}</td>
-                                    <td className="py-2 px-4 border-b text-center">{book?.vehicleRegistrationNumber}</td>
                                 </tr>
                             ))}
                         </tbody>
