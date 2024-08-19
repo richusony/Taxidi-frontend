@@ -70,9 +70,9 @@ const UserBookings = () => {
 
                                 <div className='ml-10 text-sm text-center text-gray-500 flex justify-between items-center'>
                                     {/* <input type="datetime-local" className='bg-blue-500 w-fit' disabled value={formatDatetimeLocal(book.vehicleId.bookingStarts)} name="" id="" /> */}
-                                    <span className='mx-2 w-32'>{formatDatetimeLocal(book.vehicleId.bookingStarts)}</span>
+                                    <span className='mx-2 w-32'>{formatDatetimeLocal(book?.bookingStarts)}</span>
                                     <span className='mx-2 text-[#593CFB] font-semibold'>_ _ _ _<FontAwesomeIcon icon={faCarSide}/>_ _ _</span>
-                                    <span className='mx-2 w-32'>{formatDatetimeLocal(book.vehicleId.bookingEnds)}</span>
+                                    <span className='mx-2 w-32'>{formatDatetimeLocal(book?.bookingEnds)}</span>
                                     {/* <input type="datetime-local" className='bg-blue-500 w-fit' disabled value={formatDatetimeLocal(book.vehicleId.bookingEnds)} name="" id="" /> */}
                                 </div>
 

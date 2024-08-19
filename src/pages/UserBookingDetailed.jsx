@@ -42,7 +42,7 @@ const UserBookingDetailed = () => {
           </div>
 
           <div className='px-4 md:w-1/2'>
-            <h1 className='text-2xl font-semibold'>{bookingDetails?.brandDetails[0]?.brandName + " " + bookingDetails?.vehicleDetails?.model}</h1>
+            <h1 className='text-2xl font-semibold uppercase'>{bookingDetails?.brandDetails[0]?.brandName + " " + bookingDetails?.vehicleDetails?.model}</h1>
 
             <div className='mt-5'>
               <h1 className='text-gray-500 font-semibold'>Host</h1>
@@ -57,14 +57,14 @@ const UserBookingDetailed = () => {
             <div className='mt-5 grid grid-cols-2 gap-y-3'>
               <div className=''>
                 <h1 className='text-gray-500 font-semibold'>Trip Start</h1>
-                <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingStarts)}</span>
+                <span>{formatDatetimeLocal(bookingDetails?.bookingStarts)}</span>
                 <h1 className='mt-2 text-gray-500 font-semibold'>Trip Ends</h1>
-                <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingEnds)}</span>
+                <span>{formatDatetimeLocal(bookingDetails?.bookingEnds)}</span>
               </div>
 
               <div className='mt-5'>
                 <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
-                <span>{bookingDetails?.totalAmount}</span>
+                <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.totalAmount}</span>
               </div>
 
               <div className='mt-5'>

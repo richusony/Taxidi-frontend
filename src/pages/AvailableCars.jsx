@@ -111,7 +111,7 @@ const AvailableCars = () => {
                             <div className='w-[30%] h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                             <div className='w-[70%] px-5'>
-                                <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>{car.brandDetails?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
+                                <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>{car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
                                 <div className='my-2'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
                                 <div className='my-2'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
                                 <div className=''>
