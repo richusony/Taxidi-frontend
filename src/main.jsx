@@ -20,6 +20,7 @@ const UserBookings = lazy(() => import("./pages/UserBookings.jsx"));
 const UserBookingDetailed = lazy(() => import("./pages/UserBookingDetailed.jsx"));
 
 // admin
+const Hosts = lazy(() => import('./pages/admin/Hosts.jsx'));
 const Brands = lazy(() => import('./pages/admin/Brands.jsx'));
 const BodyTypes = lazy(() => import('./pages/admin/BodyTypes.jsx'));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.jsx"));
@@ -27,6 +28,7 @@ const VerifyUsers = lazy(() => import('./pages/admin/VerifyUsers.jsx'));
 const HostRequests = lazy(() => import('./pages/admin/HostRequests.jsx'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
 const AdminCarDetailed = lazy(() => import('./pages/admin/AdminCarDetailed.jsx'));
+const AdminHostChatPage = lazy(() => import("./pages/admin/AdminHostChatPage.jsx"));
 const HostRequestDetailed = lazy(() => import('./pages/admin/HostRequestDetailed.jsx'));
 const LicenseRequestDetailed = lazy(() => import('./pages/admin/LicenseRequestDetailed.jsx'));
 
@@ -36,6 +38,7 @@ const HostWallet = lazy(() => import("./pages/host/HostWallet.jsx"));
 const BecomeHost = lazy(() => import("./pages/host/BecomeHost.jsx"));
 const MyVehicles = lazy(() => import("./pages/host/MyVehicles.jsx"));
 const HostBookings = lazy(() => import("./pages/host/HostBookings.jsx"));
+const ChatWithAdmin = lazy(() => import("./pages/host/ChatWithAdmin.jsx"));
 const HostDashboard = lazy(() => import("./pages/host/HostDashboard.jsx"));
 const HostCarDetailed = lazy(() => import("./pages/host/HostCarDetailedPage.jsx"));
 const HostBookingDetailed = lazy(() => import("./pages/host/HostBookingDetailed.jsx"));
@@ -101,7 +104,7 @@ const route = createBrowserRouter([
   },
   {
     path: "/host-login",
-    element:<Suspense fallback={"Lazy Loading..."}><HostLogin /></Suspense>
+    element: <Suspense fallback={"Lazy Loading..."}><HostLogin /></Suspense>
   },
   {
     path: "/host",
@@ -141,12 +144,24 @@ const route = createBrowserRouter([
   },
   {
     path: "/host/bookings",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookings/></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookings /></Suspense></PrivateRoute>
   },
   {
     path: "/host/booking-details/:paymentId",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookingDetailed/></Suspense></PrivateRoute>
-  }
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookingDetailed /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/admin/hosts",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><Hosts /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/admin/chat/:email",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminHostChatPage /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/host/chat",
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><ChatWithAdmin /></Suspense></PrivateRoute>
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
