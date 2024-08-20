@@ -10,7 +10,7 @@ const AdminSideBar = () => {
         navigate(url.trim());
     }
     return (
-        <div className='w-[20%]'>
+        <div className='h-screen w-[20%] overflow-y-scroll hideScrollBar scroll-smooth'>
             {/* Heading  */}
             <div className='mt-5 mr-5 pb-2 text-center border-b-2'>
                 <Link to="/admin" className='text-2xl font-bold px-5'>Taxid<span className='text-[#593CFB]'>i</span></Link>
