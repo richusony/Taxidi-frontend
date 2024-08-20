@@ -11,6 +11,7 @@ import PrivateRoute from './routes/PrivateRoute.jsx';
 import AvailableCars from './pages/AvailableCars.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import CarDetailedPage from './pages/CarDetailedPage.jsx';
+import { SocketContextProvider } from "./contexts/SocketContext.jsx";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 
 // Lazy loads
@@ -156,11 +157,11 @@ const route = createBrowserRouter([
   },
   {
     path: "/admin/chat/:email",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminHostChatPage /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><AdminHostChatPage /></SocketContextProvider></Suspense></PrivateRoute>
   },
   {
     path: "/host/chat",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><ChatWithAdmin /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><ChatWithAdmin /></SocketContextProvider></Suspense></PrivateRoute>
   },
 ]);
 
