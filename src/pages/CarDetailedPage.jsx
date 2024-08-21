@@ -5,7 +5,9 @@ import Reviews from '../components/Reviews';
 import { handleLogOut } from '../utils/helper';
 import AuthContext from '../contexts/AuthContext';
 import RatingList from '../components/RatingList';
+import useNotification from '../hooks/useNotification';
 import React, { useContext, useEffect, useState } from 'react';
+import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
@@ -21,6 +23,7 @@ const CarDetailedPage = () => {
   const [responseId, setResposeId] = useState(null);
   const [vehicleData, setVehicleData] = useState(null);
   const [responseState, setResposeState] = useState(null);
+  const { notificationBox, setNotificationBox } = useNotification();
 
   axios.defaults.withCredentials = true;
 
@@ -181,6 +184,9 @@ const CarDetailedPage = () => {
                 <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
               </div>
               <div className='my-4'>
+                <Link className='hover:text-[#593CFB] text-lg' onClick={() => setNotificationBox(true)}>Notifications</Link>
+              </div>
+              <div className='my-4'>
                 <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>
               </div>
               <div className='my-4'>
@@ -262,6 +268,7 @@ const CarDetailedPage = () => {
           </div>
         </div>
       </div>
+      {notificationBox && <UserNotifications />}
     </div>
   )
 }

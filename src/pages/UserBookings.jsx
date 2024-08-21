@@ -1,13 +1,16 @@
 import axiosInstance from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
+import useNotification from '../hooks/useNotification';
 import DefaultNavbar from "../components/DefaultNavbar";
+import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const UserBookings = () => {
     const navigate = useNavigate();
     const [bookings, setBookings] = useState(null);
+    const { notificationBox, toggleNotificationBox } = useNotification();
 
     useEffect(() => {
         getBookings();
@@ -26,11 +29,11 @@ const UserBookings = () => {
 
     function formatDatetimeLocal(utcDatetime) {
         const date = new Date(utcDatetime);
-        
+
         return date.toDateString() + ", " + date.toLocaleTimeString();
     }
 
-    const handleCancelBooking = async(e) => {
+    const handleCancelBooking = async (e) => {
         e.stopPropagation();
     }
 
@@ -41,7 +44,7 @@ const UserBookings = () => {
     return (
         <div className='mb-10'>
             <DefaultNavbar />
-            
+
             <div className='mt-5 px-10'>
                 <h1 className='text-2xl font-semibold '>Bookings</h1>
                 <p className='mt-2 text-gray-500'>See all your bookings. Note: No charges for cancelling 24 hrs before the trip start date. </p>
@@ -55,7 +58,7 @@ const UserBookings = () => {
 
                 <div className='mt-5 h-96 overflow-y-scroll hideScrollBar'>
                     {bookings?.length > 0 ? bookings.map((book) => (
-                        <div onClick={()=>navigateTo(`/booking-details/${book.paymentId}`)} key={book._id} className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
+                        <div onClick={() => navigateTo(`/booking-details/${book.paymentId}`)} key={book._id} className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
                             <div className='border-r-2 pr-2 w-fit'>
                                 <div className='w-14 h-14'>
                                     <img className='w-full h-full object-cover rounded shadow-sm' src={book.vehicleId.vehicleImages[0]} alt="" />
@@ -71,7 +74,7 @@ const UserBookings = () => {
                                 <div className='ml-10 text-sm text-center text-gray-500 flex justify-between items-center'>
                                     {/* <input type="datetime-local" className='bg-blue-500 w-fit' disabled value={formatDatetimeLocal(book.vehicleId.bookingStarts)} name="" id="" /> */}
                                     <span className='mx-2 w-32'>{formatDatetimeLocal(book?.bookingStarts)}</span>
-                                    <span className='mx-2 text-[#593CFB] font-semibold'>_ _ _ _<FontAwesomeIcon icon={faCarSide}/>_ _ _</span>
+                                    <span className='mx-2 text-[#593CFB] font-semibold'>_ _ _ _<FontAwesomeIcon icon={faCarSide} />_ _ _</span>
                                     <span className='mx-2 w-32'>{formatDatetimeLocal(book?.bookingEnds)}</span>
                                     {/* <input type="datetime-local" className='bg-blue-500 w-fit' disabled value={formatDatetimeLocal(book.vehicleId.bookingEnds)} name="" id="" /> */}
                                 </div>
@@ -92,6 +95,7 @@ const UserBookings = () => {
                         : <h1>No booking yet</h1>}
                 </div>
             </div>
+            {notificationBox && <UserNotifications setNotificationBox={setNotificationBox} />}
         </div>
     )
 }

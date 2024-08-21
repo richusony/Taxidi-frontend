@@ -3,19 +3,22 @@ import axiosInstance from '../axiosConfig';
 import ErrorToast from '../components/ErrorToast';
 import DefaultNavbar from "../components/DefaultNavbar";
 import axios from 'axios';
+import UserNotifications from '../components/UserNotifications';
+import useNotification from '../hooks/useNotification';
 
 const UserWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
+    const { notificationBox } = useNotification();
     const [walletData, setWalletData] = useState(null);
     const [paymentHistory, setPaymentHistory] = useState([]);
     const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
 
     axios.defaults.withCredentials = true;
-
-    useEffect(()=> {
+   
+    useEffect(() => {
         getWalletData();
-    },[])
+    }, [])
 
     const handleAddMoney = async (amount) => {
         try {
@@ -167,6 +170,7 @@ const UserWallet = () => {
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />
+            {notificationBox && <UserNotifications />}
         </div>
     )
 }

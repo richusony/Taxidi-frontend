@@ -6,8 +6,10 @@ import ErrorToast from '../components/ErrorToast';
 import AuthContext from '../contexts/AuthContext';
 import { isValidLicenseNumber } from '../constants';
 import { Link, useNavigate } from 'react-router-dom';
+import useNotification from '../hooks/useNotification';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import React, { useContext, useEffect, useState } from 'react';
+import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LicenseRequestDocuments from '../components/LicenseRequestDocuments';
 
@@ -21,6 +23,7 @@ const Profile = () => {
     const [updateBox, setUpdateBox] = useState(false);
     const [updateUser, setUpdateUser] = useState(false);
     const [updateLicense, setUpdateLicense] = useState(false);
+    const { notificationBox, setNotificationBox } = useNotification();
     const [formData, setFormData] = useState({
         licenseNumber: null,
         licenseFrontImage: null,
@@ -132,6 +135,9 @@ const Profile = () => {
                                 <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
                             </div>
                             <div className='my-4'>
+                                <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={() => setNotificationBox(true)}>Notifications</h1>
+                            </div>
+                            <div className='my-4'>
                                 <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>
                             </div>
                             <div className='my-4'>
@@ -214,14 +220,15 @@ const Profile = () => {
                                 </form>
                             </div>
                         </div> : <div className='mt-10 grid grid-cols-2'>
-                        <LicenseRequestDocuments data={userData} />
-                    </div>}
+                            <LicenseRequestDocuments data={userData} />
+                        </div>}
                     </>
                 ) : (
                     <div>Loading...</div>
                 )}
             </div>
             <ErrorToast error={error} setError={setError} />
+            {notificationBox && <UserNotifications />}
         </div >
     );
 };
