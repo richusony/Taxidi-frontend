@@ -13,6 +13,8 @@ import { AuthProvider } from './contexts/AuthContext.jsx';
 import CarDetailedPage from './pages/CarDetailedPage.jsx';
 import { SocketContextProvider } from "./contexts/SocketContext.jsx";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
+import { NotificationContextProvider } from './contexts/NotificationContext';
+import { NotificationSocketContextProvider } from './contexts/NotificationSocketContext';
 
 // Lazy loads
 // users
@@ -168,7 +170,11 @@ const route = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={route} />
+      <NotificationSocketContextProvider>
+        <NotificationContextProvider>
+          <RouterProvider router={route} />
+        </NotificationContextProvider>
+      </NotificationSocketContextProvider>
     </AuthProvider>
   </React.StrictMode>,
 );

@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from 'react';
 import axiosInstance from '../axiosConfig';
 import { useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 import DefaultNavbar from '../components/DefaultNavbar';
+import { useNotificationContext } from '../contexts/NotificationContext';
+import UserNotifications from '../components/UserNotifications';
 
 const UserBookingDetailed = () => {
   const { paymentId } = useParams();
   const [bookingDetails, setBookingDetails] = useState(null);
+  const { notificationBox, setNotficationBox } = useNotificationContext();
 
   useEffect(() => {
     fetchBookingDetails();
@@ -79,6 +82,7 @@ const UserBookingDetailed = () => {
           </div>
         </div>
       </div>
+      {notificationBox && <UserNotifications/>}
     </div>
   )
 }

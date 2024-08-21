@@ -12,6 +12,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import LicenseRequestDocuments from '../components/LicenseRequestDocuments';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const Profile = () => {
     const isOnline = useOnline();
@@ -23,7 +24,7 @@ const Profile = () => {
     const [updateBox, setUpdateBox] = useState(false);
     const [updateUser, setUpdateUser] = useState(false);
     const [updateLicense, setUpdateLicense] = useState(false);
-    const { notificationBox, setNotificationBox } = useNotification();
+    const { notificationBox, setNotificationBox } = useNotificationContext();
     const [formData, setFormData] = useState({
         licenseNumber: null,
         licenseFrontImage: null,

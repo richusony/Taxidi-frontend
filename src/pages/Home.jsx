@@ -6,12 +6,15 @@ import React, { useEffect, useState } from 'react';
 import DefaultNavbar from '../components/DefaultNavbar';
 import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
 import { useNavigate } from 'react-router-dom';
+import UserNotifications from '../components/UserNotifications';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const Home = () => {
     const isOnline = useOnline();
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
+    const {notificationBox} = useNotificationContext();
     const [formData, setFormData] = useState({
         bookingStarts: null,
         bookingEnds: null
@@ -213,7 +216,7 @@ const Home = () => {
                     </div>
                 </div>
             </footer>
-
+            {notificationBox && <UserNotifications />}
             <ErrorToast error={error} setError={setError} />
         </div>
     )

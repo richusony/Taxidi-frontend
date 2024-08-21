@@ -1,19 +1,17 @@
 import { Link } from 'react-router-dom';
 import useOnline from '../hooks/useOnline';
-import axiosInstance from '../axiosConfig';
 import { handleLogOut } from '../utils/helper';
-import AuthContext from '../contexts/AuthContext';
+import React, { useEffect, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useNotification from '../hooks/useNotification';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const DefaultNavbar = () => {
     const isOnline = useOnline();
     // const {logout} = useContext(AuthContext);
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
-    const { toggleNotificationBox } = useNotification();
+    const { setNotificationBox } = useNotificationContext();
 
     useEffect(() => {
         getUserDetails();
@@ -34,11 +32,13 @@ const DefaultNavbar = () => {
 
         }
     };
+    
     return (
         <nav className='px-10 py-5 flex justify-between'>
             <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
 
             <div className='flex items-center'>
+                {/* <button className='mr-5'><FontAwesomeIcon icon={faBell} /></button> */}
                 <Link to="/become-host" className='mr-4 px-4 py-1 border-2 border-gray-500'>Become a host</Link>
                 <div className='relative'>
                     <FontAwesomeIcon className='text-2xl cursor-pointer' onClick={handleMenu} icon={faBars} />
@@ -47,7 +47,7 @@ const DefaultNavbar = () => {
                             <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
                         </div>
                         <div className='my-4'>
-                            <Link className='hover:text-[#593CFB] text-lg' to="#" onClick={toggleNotificationBox}>Notifications</Link>
+                            <Link className='hover:text-[#593CFB] text-lg' to="#" onClick={() => setNotificationBox(true)}>Notifications</Link>
                         </div>
                         <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>

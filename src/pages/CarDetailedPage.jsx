@@ -11,6 +11,7 @@ import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
@@ -23,7 +24,7 @@ const CarDetailedPage = () => {
   const [responseId, setResposeId] = useState(null);
   const [vehicleData, setVehicleData] = useState(null);
   const [responseState, setResposeState] = useState(null);
-  const { notificationBox, setNotificationBox } = useNotification();
+  const { notificationBox, setNotificationBox } = useNotificationContext();
 
   axios.defaults.withCredentials = true;
 

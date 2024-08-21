@@ -1,16 +1,16 @@
 import axiosInstance from '../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
-import useNotification from '../hooks/useNotification';
 import DefaultNavbar from "../components/DefaultNavbar";
 import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCarSide, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const UserBookings = () => {
     const navigate = useNavigate();
     const [bookings, setBookings] = useState(null);
-    const { notificationBox, toggleNotificationBox } = useNotification();
+    const { notificationBox } = useNotificationContext();
 
     useEffect(() => {
         getBookings();
@@ -95,7 +95,7 @@ const UserBookings = () => {
                         : <h1>No booking yet</h1>}
                 </div>
             </div>
-            {notificationBox && <UserNotifications setNotificationBox={setNotificationBox} />}
+            {notificationBox && <UserNotifications />}
         </div>
     )
 }
