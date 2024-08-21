@@ -11,7 +11,7 @@ const DefaultNavbar = () => {
     // const {logout} = useContext(AuthContext);
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
-    const { setNotificationBox } = useNotificationContext();
+    const { setNotificationBox, notificationCount } = useNotificationContext();
 
     useEffect(() => {
         getUserDetails();
@@ -32,7 +32,7 @@ const DefaultNavbar = () => {
 
         }
     };
-    
+
     return (
         <nav className='px-10 py-5 flex justify-between'>
             <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
@@ -47,7 +47,7 @@ const DefaultNavbar = () => {
                             <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
                         </div>
                         <div className='my-4'>
-                            <Link className='hover:text-[#593CFB] text-lg' to="#" onClick={() => setNotificationBox(true)}>Notifications</Link>
+                            <Link className='relative hover:text-[#593CFB] text-lg' to="#" onClick={() => setNotificationBox(true)}>{notificationCount > 0 ? <span className='absolute top-1 -right-5 px-1 text-xs bg-[#593CFB] text-white rounded-full'>{notificationCount}</span> : ""}Notifications</Link>
                         </div>
                         <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>

@@ -6,11 +6,23 @@ import React, { useEffect, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, endDateFn, setError, setTripStarts, setTripEnds }) => {
+const SearchNavbar = ({
+    tripStarts,
+    tripEnds,
+    setAvailableCars,
+    startDateFn,
+    endDateFn,
+    setError,
+    setTripStarts,
+    setTripEnds,
+    selectedBrand,
+    selectedBodyType,
+    selectedFuel,
+    selectedPrice
+}) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
-
 
     useEffect(() => {
         // getUserDetails();
@@ -45,10 +57,21 @@ const SearchNavbar = ({ tripStarts, tripEnds, setAvailableCars, startDateFn, end
         }
 
         try {
-            const res = await axiosInstance.get(`/get-available-cars`, {
+            const params = new URLSearchParams();
+
+            // if (selectedBrand !== "None") params.append("brand", selectedBrand);
+            // if (selectedBodyType !== "None") params.append("bodyType", selectedBodyType);
+            // if (selectedFuel !== "None") params.append("fuel", selectedFuel);
+            // if (selectedPrice !== "None") params.append("price", selectedPrice);
+
+            const res = await axiosInstance.get(`/get-available-cars?${params.toString()}`, {
                 params: {
+                    brand: selectedBrand,
+                    bodyType: selectedBodyType,
+                    fuel: selectedFuel,
+                    price: selectedPrice,
                     bookingStarts: tripStarts,
-                    bookingEnds: tripEnds
+                    bookingEnds: tripEnds,
                 }
             });
             console.log(res?.data);

@@ -6,11 +6,12 @@ export const useNotificationContext = () => {
 }
 
 export const NotificationContextProvider = ({ children }) => {
+    const [notificationCount, setNotificationCount] = useState(0);
     const [notificationBox, setNotificationBox] = useState(false);
 
 
     return (
-        <NotificationContext.Provider value={{ notificationBox, setNotificationBox }}>
+        <NotificationContext.Provider value={{ notificationBox, setNotificationBox, notificationCount, setNotificationCount }}>
             {children}
         </NotificationContext.Provider>
     )

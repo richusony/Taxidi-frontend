@@ -1,18 +1,36 @@
-import React, { useState } from 'react';
+import axiosInstance from '../axiosConfig';
 import ErrorToast from '../components/ErrorToast';
+import React, { useEffect, useState } from 'react';
 import SearchNavbar from '../components/SearchNavbar';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import Map from '../components/Map';
 
 const AvailableCars = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [brands, setBrands] = useState([]);
+    const [logitude, setLogitude] = useState(null);
+    const [latitude, setLatitude] = useState(null);
+    const [bodyTypes, setBodyTypes] = useState([]);
     const [availableCars, setAvailableCars] = useState(null);
+
+    const [selectedBrand, setSelectedBrand] = useState("None");
+    const [selectedBodyType, setSelectedBodyType] = useState("None");
+    const [selectedFuel, setSelectedFuel] = useState("None");
+    const [selectedPrice, setSelectedPrice] = useState("None");
+
     const useQuery = () => {
         return new URLSearchParams(useLocation().search);
     };
+
+    useEffect(() => {
+        fetchBrands();
+        fetchBodyTypes();
+        fetchCoordinates();
+    }, []);
 
     const query = useQuery();
     // setTripStarts(query.get('tripStarts'));
@@ -37,70 +55,116 @@ const AvailableCars = () => {
         return startDate.toISOString().slice(0, 16);
     };
 
-    const handleSearch = (e) => {
-        e.preventDefault();
-
-        if (!tripStarts || !tripEnds) {
-            setError("Please select both start and end date");
-            return;
-        }
-        const startDateTime = new Date(tripStarts);
-        const endDateTime = new Date(tripEnds);
-        const now = new Date();
-
-        if (startDateTime < now || endDateTime < now) {
-            setError("Dates cannot be in the past");
-            return;
-        }
-
-        if ((endDateTime - startDateTime) < (24 * 60 * 60 * 1000)) {
-            setError("The time difference between start and end date must be at least 24 hours");
-            return;
-        }
-
+    const fetchBrands = async () => {
         try {
-            navigate(`/search?tripStarts=${tripStarts}&tripEnds=${tripEnds}`);
+            const res = await axiosInstance.get("/brands");
+            setBrands(res?.data);
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const fetchBodyTypes = async () => {
+        try {
+            const res = await axiosInstance.get("/body-types");
+            setBodyTypes(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleChangeBrand = async () => {
+        try {
+            const res = await axiosInstance.get("/brands?")
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleFilterChange = (setter) => (event) => {
+        const value = event.target.value;
+        setter(value);
     };
+
+    const fetchCoordinates = () => {
+        if (navigator.geolocation) {
+            navigator?.geolocation.getCurrentPosition(sucess,errorState);
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }
+
+    function sucess(position) {
+        setLatitude(position?.coords?.latitude)
+        setLogitude(position?.coords?.longitude)
+        // console.log(latitude,logitude)
+    }
+
+    function errorState(error) {
+        console.log(error)
+    }
 
     return (
         <div>
             {/* Navbar */}
-            <SearchNavbar tripStarts={tripStarts} setTripStarts={setTripStarts} startDateFn={getTodayDateTime} tripEnds={tripEnds} setTripEnds={setTripEnds} endDateFn={getMinEndDateTime} setAvailableCars={setAvailableCars} setError={setError} />
+            <SearchNavbar
+                tripStarts={tripStarts}
+                setTripStarts={setTripStarts}
+                startDateFn={getTodayDateTime}
+                tripEnds={tripEnds}
+                setTripEnds={setTripEnds}
+                endDateFn={getMinEndDateTime}
+                setAvailableCars={setAvailableCars}
+                setError={setError}
+                selectedBrand={selectedBrand}
+                selectedBodyType={selectedBodyType}
+                selectedFuel={selectedFuel}
+                selectedPrice={selectedPrice}
+            />
 
             {/* Filters */}
             <div className='border-y-2 px-5 py-3 flex'>
                 <div className='border-2 border-gray-500 px-3 py-1 rounded'>
-                    <select name="" id="">
+                    <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedBrand)}
+                        value={selectedBrand} name="" id="">
                         <option value="None">Brands</option>
-                        <option value="bmw">BMW</option>
+                        {brands?.length > 0 && brands.map((brand) => (
+                            <option className='' value={brand?._id}>{brand?.brandName}</option>
+                        ))}
                     </select>
                 </div>
                 <div className='ml-2 border-2 border-gray-500 px-3 py-1 rounded'>
-                    <select name="" id="">
+                    <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedBodyType)}
+                        value={selectedBodyType} name="" id="">
                         <option value="None">Body Type</option>
-                        <option value="bmw">BMW</option>
+                        {bodyTypes?.length > 0 && bodyTypes.map((body) => (
+                            <option className='' value={body?._id}>{body?.bodyType}</option>
+                        ))}
                     </select>
                 </div>
                 <div className='ml-2 border-2 border-gray-500 px-3 py-1 rounded'>
-                    <select name="" id="">
+                    <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedFuel)}
+                        value={selectedFuel} name="" id="">
                         <option value="None">Fuel</option>
-                        <option value="bmw">BMW</option>
+                        <option value="petrol">Petrol</option>
+                        <option value="diesel">Diesel</option>
+                        <option value="electric">EV</option>
                     </select>
                 </div>
                 <div className='ml-2 border-2 border-gray-500 px-3 py-1 rounded'>
-                    <select name="" id="">
+                    <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedPrice)}
+                        value={selectedPrice} name="" id="">
                         <option value="None">Price</option>
-                        <option value="bmw">BMW</option>
+                        <option value="[40,60]">40-60</option>
+                        <option value="[70,100]">70-100</option>
+                        <option value="[100,150]">100-150</option>
                     </select>
                 </div>
             </div>
 
             {/* Number of Cars Available */}
             <div className='mt-2 px-5'>
-                <span className='text-gray-500'>10 Cars Available</span>
+                <span className='text-gray-500'>{availableCars && availableCars.length} Cars Available</span>
             </div>
 
             {/* Cars and Map */}
@@ -163,7 +227,7 @@ const AvailableCars = () => {
 
                 {/* map */}
                 <div className='hidden md:block md:ml-4 md:w-[50%]'>
-                    <img className='w-full h-full object-cover rounded' src="https://thumbs.dreamstime.com/b/south-coast-england-map-13987361.jpg" alt="" />
+                    {logitude ? <Map latitude={latitude} logitude={logitude}/>: <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
                 </div>
             </div>
             <ErrorToast setError={setError} error={error} />
