@@ -122,7 +122,7 @@ const CarDetailedPage = () => {
     }
 
     axios.request(config).then((response) => {
-      console.log(JSON.stringify(response.data))
+      // console.log(JSON.stringify(response.data))
       handleRazorpayScreen(response.data.amount);
     }).catch((error) => console.log(error))
   }
@@ -148,8 +148,13 @@ const CarDetailedPage = () => {
       handler: async function verifyBooking(response) {
         try {
           verifyRequestData.paymentDetails = response;
-          const res = await axiosInstance.post("/verify-booking", verifyRequestData)
-          alert("booking verified");
+          const res = await axiosInstance.post("/verify-booking", verifyRequestData);
+          if (res.status === 200) {
+            // Redirect to my bookings
+            navigate("/my-bookings");
+          } else {
+            alert("Payment verification failed.");
+          }
         } catch (error) {
           console.log("error while verifying the order", error);
         }
@@ -170,7 +175,7 @@ const CarDetailedPage = () => {
   const handleBooking = async () => {
     if (!user) return navigate("/login");
 
-    await createRazorpayOrder(totalAmount)
+    await createRazorpayOrder(totalAmount);
   }
 
   return (

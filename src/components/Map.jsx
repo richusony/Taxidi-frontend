@@ -1,10 +1,9 @@
 import React from 'react';
 import "leaflet/dist/leaflet.css";
-import { divIcon } from "leaflet"
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster"
 
-const Map = ({ latitude, logitude }) => {
+const Map = ({ latitude, logitude, vehicles }) => {
     const markers = [
         {
             geocode: [48.86, 2.3522],
@@ -20,10 +19,6 @@ const Map = ({ latitude, logitude }) => {
         },
     ]
 
-    const createCustomClusterIcon = (cluster) => {
-        return new divIcon
-    }
-    console.log(latitude, logitude);
     return (
         <MapContainer center={[latitude, logitude]} zoom={13} className='h-full rounded'>
             <TileLayer
@@ -31,13 +26,11 @@ const Map = ({ latitude, logitude }) => {
                 url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'
             />
 
-            <MarkerClusterGroup
-                chunkedLoading
-                iconCreateFunction={createCustomClusterIcon}>
+            <MarkerClusterGroup>
                 {
-                    markers.map((marker) => (
-                        <Marker position={marker.geocode}>
-                            <Popup>{marker.popUp}</Popup>
+                   vehicles?.length > 0 && vehicles.map((marker) => (
+                        <Marker position={[marker?.latitude, marker?.longitude]}>
+                            <Popup>{marker?.model}</Popup>
                         </Marker>
                     ))
                 }

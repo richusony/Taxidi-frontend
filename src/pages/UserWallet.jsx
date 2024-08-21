@@ -18,6 +18,7 @@ const UserWallet = () => {
    
     useEffect(() => {
         getWalletData();
+        getWalletHistory();
     }, [])
 
     const handleAddMoney = async (amount) => {
@@ -32,6 +33,15 @@ const UserWallet = () => {
         try {
             const res = await axiosInstance.get("/wallet");
             setWalletData(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const getWalletHistory = async () => {
+        try {
+            const res = await axiosInstance.get("/wallet-history");
+            setPaymentHistory(res?.data);
         } catch (error) {
             console.log(error);
         }
@@ -154,7 +164,7 @@ const UserWallet = () => {
                                 </thead>
                                 <tbody>
                                     {paymentHistory.map(request => (
-                                        <tr onClick={() => navigate(`/admin/host-requests/${page}`)} key={request._id} className="hover:bg-gray-100 cursor-pointer">
+                                        <tr onClick={() => navigate(``)} key={request._id} className="hover:bg-gray-100 cursor-pointer">
                                             <td className="py-2 px-4 border-b text-center">{request.fullname}</td>
                                             <td className="py-2 px-4 border-b text-center">{request.model}</td>
                                             <td className="py-2 px-4 border-b text-center">{request.vehicleRegistrationNumber}</td>

@@ -11,9 +11,9 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
     const [reviewMsg, setReviewMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
     const [rating, setRating] = useState({
-        cleanliness:null,
-        maintenance:null,
-        convenience:null,
+        cleanliness: null,
+        maintenance: null,
+        convenience: null,
         timing: null
     });
 
@@ -68,75 +68,58 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
                     <div key={review?._id} className='my-2 border-b pb-5 flex'>
                         <div className='w-12 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>
                         <div className='ml-4'>
-                            <span><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /></span>
+                            {/* <span><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /></span> */}
                             <h1 className='my-2'>{review?.userId?.firstName + " " + review?.userId?.secondName}<span className='ml-2 text-sm text-gray-500'>{formatReviewDate(review?.createdAt)}</span></h1>
                             <p className=''>{review?.reviewMessage}</p>
                         </div>
                     </div>
                 ))
                 }
-
-                <div className='my-2 border-b pb-5 w-fit flex'>
-                    <div className='w-16 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>
-                    <div className='ml-4'>
-                        <span><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /></span>
-                        <h1 className='my-2'>Andrew <span className='text-gray-500'>June 6, 2024</span></h1>
-                        <p className='w-3/4'>Great service, easy and convenient. Awesome value, car was smooth and super clean. Nice guys. Definitely would use their services again!</p>
-                    </div>
-                </div>
-                <div className='my-2 border-b pb-5 w-fit flex'>
-                    <div className='w-16 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>
-                    <div className='ml-4'>
-                        <span><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faStar} /></span>
-                        <h1 className='my-2'>Andrew <span className='text-gray-500'>June 6, 2024</span></h1>
-                        <p className='w-3/4'>Great service, easy and convenient. Awesome value, car was smooth and super clean. Nice guys. Definitely would use their services again!</p>
-                    </div>
-                </div>
             </div>
             <div className='relative'>
                 <div className={`transition-all delay-150 ease-in z-0 flex ${reviewMsg == "" ? "translate-y-full invisible" : "visible"} items-center py-2 text-[#593CFB]`}>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>
                         <span className='mr-2'>Cleanliness</span>
-                        <select onChange={(e) => setRating({...rating, cleanliness:e.target.value})} className='bg-transparent outline-none' name="cleanliness" id="cleanliness">
+                        <select onChange={(e) => setRating({ ...rating, cleanliness: e.target.value })} className='bg-transparent outline-none' name="cleanliness" id="cleanliness">
                             <option value="0"></option>
-                            <option value="5">5 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="4">4 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="3">3 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="2">2 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="1">1 <FontAwesomeIcon icon={faStar}/></option>
+                            <option value="5">5 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="4">4 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="3">3 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="2">2 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="1">1 <FontAwesomeIcon icon={faStar} /></option>
                         </select>
                     </div>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>
                         <span className='mr-2'>Maintenance</span>
-                        <select onChange={(e) => setRating({...rating, maintenance:e.target.value})} className='bg-transparent outline-none' name="maintenance" id="maintenance">
+                        <select onChange={(e) => setRating({ ...rating, maintenance: e.target.value })} className='bg-transparent outline-none' name="maintenance" id="maintenance">
                             <option value="0"></option>
-                            <option value="5">5 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="4">4 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="3">3 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="2">2 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="1">1 <FontAwesomeIcon icon={faStar}/></option>
+                            <option value="5">5 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="4">4 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="3">3 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="2">2 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="1">1 <FontAwesomeIcon icon={faStar} /></option>
                         </select>
                     </div>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>
                         <span className='mr-2'>Convenience</span>
-                        <select onChange={(e) => setRating({...rating, convenience:e.target.value})} className='bg-transparent outline-none' name="convenience" id="convenience">
+                        <select onChange={(e) => setRating({ ...rating, convenience: e.target.value })} className='bg-transparent outline-none' name="convenience" id="convenience">
                             <option value="0"></option>
-                            <option value="5">5 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="4">4 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="3">3 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="2">2 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="1">1 <FontAwesomeIcon icon={faStar}/></option>
+                            <option value="5">5 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="4">4 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="3">3 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="2">2 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="1">1 <FontAwesomeIcon icon={faStar} /></option>
                         </select>
                     </div>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>
                         <span className='mr-2'>Timing</span>
-                        <select onChange={(e) => setRating({...rating, timing:e.target.value})} className='bg-transparent outline-none' name="accuracy" id="accuracy">
+                        <select onChange={(e) => setRating({ ...rating, timing: e.target.value })} className='bg-transparent outline-none' name="accuracy" id="accuracy">
                             <option value="0"></option>
-                            <option value="5">5 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="4">4 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="3">3 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="2">2 <FontAwesomeIcon icon={faStar}/></option>
-                            <option value="1">1 <FontAwesomeIcon icon={faStar}/></option>
+                            <option value="5">5 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="4">4 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="3">3 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="2">2 <FontAwesomeIcon icon={faStar} /></option>
+                            <option value="1">1 <FontAwesomeIcon icon={faStar} /></option>
                         </select>
                     </div>
                 </div>

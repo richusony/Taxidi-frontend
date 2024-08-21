@@ -8,12 +8,14 @@ import { validateHost } from '../../utils/helper';
 import HostSideBar from '../../components/HostSideBar';
 import HostNavbar from '../../components/HostNavBar';
 import HostVehiclePhotos from '../../components/HostVehiclePhotos';
+import HostVehicleUpdate from '../../components/HostVehicleUpdate';
 
 const HostCarDetailed = () => {
     const [error, setError] = useState("");
     const { registrationNumber } = useParams();
     const [vehicleData, setVehicleData] = useState(null);
     const [vehiclePhotos,setVehiclePhotos] =  useState(true);
+    const [vehicleUpdateBox, setVehicleUpdateBox] = useState(null);
     const [vehicleDocuments,setVehicleDocuments] =  useState(false);
     const [page, setPage] = useState(`Car Details - ${registrationNumber}`);
 
@@ -41,6 +43,10 @@ const HostCarDetailed = () => {
                 {/* Navbar  */}
                 <HostNavbar page={page} />
 
+                <div className='mt-5 text-end'>
+                    <button onClick={()=>setVehicleUpdateBox(true)} className='transition-all ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white rounded shadow-md'>Update</button>
+                </div>
+
                 <div className='my-10'>
                     <div className='grid grid-cols-3 gap-y-9'>
                         <div>
@@ -61,11 +67,11 @@ const HostCarDetailed = () => {
                         </div>
                         <div>
                             <h1 className='text-gray-500 w-fit'>Last Service Date</h1>
-                            <h3 className='w-fit'>Not Done</h3>
+                            <h3 className='w-fit'>{vehicleData?.lastServiceDate}</h3>
                         </div>
                         <div>
                             <h1 className='text-gray-500 w-fit'>Pick-Up Location</h1>
-                            <h3 className='w-fit'>Not Done</h3>
+                            <h3 className='w-fit'>{vehicleData?.pickUpLocation}</h3>
                         </div>
                     </div>
 
@@ -80,6 +86,7 @@ const HostCarDetailed = () => {
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />
+            {vehicleUpdateBox && <HostVehicleUpdate setVehicleUpdateBox={setVehicleUpdateBox} vehicleData={vehicleData}/>}
         </div>
     )
 }
