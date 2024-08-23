@@ -7,6 +7,7 @@ import axiosInstance from '../../axiosConfig.js'
 import ErrorToast from "../../components/ErrorToast.jsx"
 import AdminNavbar from '../../components/AdminNavbar.jsx'
 import EditBrand from '../../components/EditBrand.jsx'
+import moment from 'moment'
 
 const Brands = () => {
     const [error, setError] = useState("");
@@ -58,7 +59,7 @@ const Brands = () => {
                                     <tr key={index} className="hover:bg-gray-100">
                                         <td className="py-2 px-4 border-b"><div className='w-12 h-12'><img className='w-full h-full object-cover rounded-full' src={item?.brandImage} alt="" /></div></td>
                                         <td className="py-2 px-4 border-b">{item?.brandName}</td>
-                                        <td className="py-2 px-4 border-b text-gray-500">{item?.createdAt}</td>
+                                        <td className="py-2 px-4 border-b text-gray-500">{moment(item?.createdAt).format("DD-MM-YYYY")}</td>
                                         <td className="py-2 px-4 border-b">
                                             <div>
                                                 <button onClick={()=>{setEditBrand(true); setEditBrandData(item);}} className='px-2 py-1 bg-blue-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faPencil} /></button>

@@ -7,6 +7,7 @@ import Signup from './pages/Signup.jsx';
 import Cars from './pages/admin/Cars.jsx';
 import React, { lazy, Suspense } from 'react';
 import UserWallet from './pages/UserWallet.jsx';
+import NotFoundPage from './pages/NotFoundPage.jsx';
 import PrivateRoute from './routes/PrivateRoute.jsx';
 import AvailableCars from './pages/AvailableCars.jsx';
 import { AuthProvider } from './contexts/AuthContext.jsx';
@@ -165,6 +166,10 @@ const route = createBrowserRouter([
     path: "/host/chat",
     element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><ChatWithAdmin /></SocketContextProvider></Suspense></PrivateRoute>
   },
+{
+    path: "*",
+    element: <NotFoundPage />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

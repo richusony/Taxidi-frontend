@@ -169,8 +169,8 @@ const AvailableCars = () => {
 
             {/* Cars and Map */}
             <div className='mt-2 px-5 pb-5 flex justify-between'>
-                <div className='md:w-[50] h-[500px] overflow-y-scroll hideScrollBar'>
-                    {availableCars ? availableCars.map((car) => (
+                <div className='md:w-[50%] h-[500px] overflow-y-scroll hideScrollBar'>
+                    {availableCars?.length > 0 ? availableCars.map((car) => (
                         <div onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
                             <div className='w-[30%] h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
@@ -183,8 +183,8 @@ const AvailableCars = () => {
                                 </div>
                             </div>
 
-                        </div>)) : <h1>No Cars available</h1>}
-                    <div className='mb-5 border flex justify-between rounded shadow-md'>
+                        </div>)) : <h1 className='text-center'>No Cars available</h1>}
+                    {/* <div className='mb-5 border flex justify-between rounded shadow-md'>
                         <div className='w-[30%] h-full'><img className='w-full h-full object-cover rounded' src="https://img.freepik.com/premium-photo/3d-new-black-bmw-car_1131377-434.jpg?size=626&ext=jpg" alt="" /></div>
 
                         <div className='w-[70%] px-5'>
@@ -222,7 +222,7 @@ const AvailableCars = () => {
                             </div>
                         </div>
 
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* map */}

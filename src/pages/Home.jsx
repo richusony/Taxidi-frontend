@@ -152,7 +152,7 @@ const Home = () => {
                         </div>
                     ))}
 
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
+                    {/* <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
                         <div>
                             <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
                         </div>
@@ -175,7 +175,7 @@ const Home = () => {
                             <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
                         </div>
                         <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
+                    </div> */}
                 </div>
             </div>
 
