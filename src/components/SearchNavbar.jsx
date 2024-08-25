@@ -82,15 +82,15 @@ const SearchNavbar = ({
     }
 
     return (
-        <nav className='px-10 py-5 flex justify-between'>
-            <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
+        <nav className='px-5 md:px-10 py-2 md:py-5 flex justify-between items-center'>
+            <div className='hidden md:block'><Link to="/" className='md:text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
 
-            <div className='flex justify-between'>
-                <div className='border-b-2 pb-1 border-gray-600'>
+            <div className='flex flex-col md:flex-row gap-y-2 md:gap-y-0 md:gap-x-2 text-xs md:text-base'>
+                <div className='border-b-2 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>From</span>
                     <input value={tripStarts} min={startDateFn()} onChange={(e) => setTripStarts(e.target.value)} type="datetime-local" className='outline-none' />
                 </div>
-                <div className='ml-8 border-b-2 pb-1 border-gray-600'>
+                <div className='mt-3 md:mt-0 md:ml-8 border-b-2 pb-1 border-gray-600'>
                     <span className='text-[#593CFB] mr-2'>Until</span>
                     <input value={tripEnds} min={endDateFn(tripStarts)} onChange={(e) => setTripEnds(e.target.value)} type="datetime-local" className='outline-none' />
                 </div>

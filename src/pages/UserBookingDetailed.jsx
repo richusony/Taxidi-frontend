@@ -38,8 +38,8 @@ const UserBookingDetailed = () => {
     <div>
       <DefaultNavbar />
 
-      <div className='mt-10'>
-        <div className='flex justify-between'>
+      <div className='mt-10 mb-5'>
+        <div className='flex flex-col md:flex-row gap-y-5 md:gap-y-0 justify-between'>
           <div className='md:w-1/2'>
             <img className='w-full h-full rounded-e' src={bookingDetails?.vehicleDetails?.vehicleImages[0]} alt="car-image" />
           </div>
@@ -82,7 +82,7 @@ const UserBookingDetailed = () => {
           </div>
         </div>
       </div>
-      {notificationBox && <UserNotifications/>}
+      {notificationBox && <UserNotifications />}
     </div>
   )
 }

@@ -88,7 +88,7 @@ const AvailableCars = () => {
 
     const fetchCoordinates = () => {
         if (navigator.geolocation) {
-            navigator?.geolocation.getCurrentPosition(sucess,errorState);
+            navigator?.geolocation.getCurrentPosition(sucess, errorState);
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
@@ -123,8 +123,8 @@ const AvailableCars = () => {
             />
 
             {/* Filters */}
-            <div className='border-y-2 px-5 py-3 flex'>
-                <div className='border-2 border-gray-500 px-3 py-1 rounded'>
+            <div className='border-y-2 px-2 md:px-5 py-2 md:py-3 flex text-sm md:text-base w-screen overflow-x-scroll hideScrollBar'>
+                <div className='border-2 border-gray-500 md:px-3 py-1 rounded'>
                     <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedBrand)}
                         value={selectedBrand} name="" id="">
                         <option value="None">Brands</option>
@@ -168,66 +168,27 @@ const AvailableCars = () => {
             </div>
 
             {/* Cars and Map */}
-            <div className='mt-2 px-5 pb-5 flex justify-between'>
-                <div className='md:w-[50%] h-[500px] overflow-y-scroll hideScrollBar'>
+            <div className='mt-2 px-2 md:px-5 pb-5 flex justify-between'>
+                <div className='md:w-[50%] h-[600px] md:h-[500px] overflow-y-scroll hideScrollBar'>
                     {availableCars?.length > 0 ? availableCars.map((car) => (
                         <div onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
-                            <div className='w-[30%] h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
+                            <div className='my-auto w-[30%] h-24 md:h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                             <div className='w-[70%] px-5'>
-                                <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>{car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
-                                <div className='my-2'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
-                                <div className='my-2'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
+                                <div className='mt-2 flex justify-between gap-x-2 items-center w-full'><h1 className='text-sm md:text-xl font-semibold'>{`${car.brand?.brandName + " " + car.model}`.length > 15 ? `${car.brand?.brandName + " " + car.model}`.substring(0, 15) + "..." : car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
+                                <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
+                                <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
                                 <div className=''>
-                                    <h1 className='text-end'>₹{car?.rent}/hour</h1>
+                                    <h1 className='text-end text-sm md:text-base'>₹{car?.rent}/hour</h1>
                                 </div>
                             </div>
 
                         </div>)) : <h1 className='text-center'>No Cars available</h1>}
-                    {/* <div className='mb-5 border flex justify-between rounded shadow-md'>
-                        <div className='w-[30%] h-full'><img className='w-full h-full object-cover rounded' src="https://img.freepik.com/premium-photo/3d-new-black-bmw-car_1131377-434.jpg?size=626&ext=jpg" alt="" /></div>
-
-                        <div className='w-[70%] px-5'>
-                            <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>Maruti Swift Desire</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
-                            <div className='my-2'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
-                            <div className='my-2 text-gray-600'> <span className=''><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
-                            <div className=''>
-                                <h1 className='text-end'>₹450/hour</h1>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className='mb-5 border flex justify-between rounded shadow-md'>
-                        <div className='w-[30%] h-full'><img className='w-full h-full object-cover rounded' src="https://img.freepik.com/premium-photo/3d-new-black-bmw-car_1131377-434.jpg?size=626&ext=jpg" alt="" /></div>
-
-                        <div className='w-[70%] px-5'>
-                            <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>Maruti Swift Desire</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
-                            <div className='my-2'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
-                            <div className='my-2'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
-                            <div className=''>
-                                <h1 className='text-end'>₹450/hour</h1>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div className='mb-5 border flex justify-between rounded shadow-md'>
-                        <div className='w-[30%] h-full'><img className='w-full h-full object-cover rounded' src="https://img.freepik.com/premium-photo/3d-new-black-bmw-car_1131377-434.jpg?size=626&ext=jpg" alt="" /></div>
-
-                        <div className='w-[70%] px-5'>
-                            <div className='mt-2 flex justify-between items-center w-full'><h1 className='text-xl font-semibold'>Maruti Swift Desire</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
-                            <div className='my-2'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
-                            <div className='my-2'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
-                            <div className=''>
-                                <h1 className='text-end'>₹450/hour</h1>
-                            </div>
-                        </div>
-
-                    </div> */}
                 </div>
 
                 {/* map */}
                 <div className='hidden md:block md:ml-4 md:w-[50%]'>
-                    {logitude ? <Map latitude={latitude} logitude={logitude} vehicles={availableCars}/>: <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
+                    {logitude ? <Map latitude={latitude} logitude={logitude} vehicles={availableCars} /> : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
                 </div>
             </div>
             <ErrorToast setError={setError} error={error} />

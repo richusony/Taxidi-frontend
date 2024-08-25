@@ -179,8 +179,8 @@ const CarDetailedPage = () => {
   }
 
   return (
-    <div className='pb-10'>
-      <nav className='px-10 py-5 flex justify-between'>
+    <div className='pb-10 overflow-x-hidden'>
+      <nav className='px-5 md:px-10 py-5 flex justify-between'>
         <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
         <div className='flex items-center'>
           <div className='relative'>
@@ -210,29 +210,29 @@ const CarDetailedPage = () => {
         </div>
       </nav>
 
-      <div className='px-28 py-2'>
+      <div className='px-2 md:px-28 py-2'>
         {/* images  */}
         <div className='flex'>
-          <div className='w-[60%] h-96'>
+          <div className='md:w-[60%] h-96'>
             <img className='w-full h-full object-cover rounded-l' src={vehicleData?.vehicleImages[0]} alt="" />
           </div>
 
-          <div className='w-[40%] flex flex-col justify-between px-5 h-96'>
+          <div className='hidden w-[40%] md:flex flex-col justify-between px-5 h-96'>
             <div className='h-[47%]'><img className='w-full h-full object-cover rounded-tr' src={vehicleData?.vehicleImages[1]} alt="" /></div>
             <div className='h-[47%]'><img className='w-full h-full object-cover rounded-br' src={vehicleData?.vehicleImages[2]} alt="" /></div>
           </div>
         </div>
 
-        <div className='mt-5 flex'>
-          <div className='w-[70%]'>
-            <h1 className='text-3xl font-bold'>{vehicleData?.brand?.brandName + " " + vehicleData?.model}</h1>
-            <h1 className='mt-2 text-xl text-gray-500 font-semibold'>{vehicleData?.model}</h1>
-            <h1 className='mt-2 text-xl font-semibold'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /> (5 trips)</h1>
+        <div className='mt-5 flex flex-col md:flex-row'>
+          <div className='md:w-[70%]'>
+            <h1 className='text-xl md:text-3xl font-bold'>{vehicleData?.brand?.brandName + " " + vehicleData?.model}</h1>
+            <h1 className='mt-2 md:text-xl text-gray-500 font-semibold'>{vehicleData?.model}</h1>
+            <h1 className='mt-2 text-sm md:text-xl font-semibold'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /> (5 trips)</h1>
 
             <div className='mt-5 grid grid-cols-2 gap-y-4'>
-              <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faOilCan} /> <span>{vehicleData?.fuel}</span></div>
-              <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faCar} /> <span>{vehicleData?.transmission}</span></div>
-              <div className='text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faUsers} /> <span>{vehicleData?.seats} seats</span></div>
+              <div className='md:text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faOilCan} /> <span>{vehicleData?.fuel}</span></div>
+              <div className='md:text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faCar} /> <span>{vehicleData?.transmission}</span></div>
+              <div className='md:text-xl text-gray-500 font-semibold'><FontAwesomeIcon className='text-[#593CFB]' icon={faUsers} /> <span>{vehicleData?.seats} seats</span></div>
             </div>
 
             {/* Host */}
@@ -240,14 +240,14 @@ const CarDetailedPage = () => {
               <h1 className='font-semibold'>Hosted By</h1>
               <div className='mt-2 flex items-center'>
                 <div className='w-16 h-16 rounded-full shadow-md'><img className='w-full h-full object-cover rounded-full' src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww" alt="" /></div>
-                <div className='ml-2'><h1 className='text-xl font-semibold'>{vehicleData?.host?.fullname}</h1></div>
+                <div className='ml-2'><h1 className='md:text-xl font-semibold'>{vehicleData?.host?.fullname}</h1></div>
               </div>
             </div>
 
             {/* Rating and Reviews */}
             <div className='mt-5'>
               <h1 className='font-semibold'>RATING AND REVIEWS</h1>
-              <h1 className='mt-2 px-2 text-3xl font-bold'>{rating ? rating?.TotalAverage : <span className='text-gray-500 font-normal'>No rating yet</span>} <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></h1>
+              <h1 className='mt-2 md:text-xl font-bold'>{rating ? rating?.TotalAverage : <span className='text-gray-500 font-normal'>No rating yet</span>} <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></h1>
               <h1 className='mt-1 px-2'>{rating ? (rating?.TotalNumberOfRatings + " ratings") : ""}</h1>
 
               <RatingList ratingsData={rating} />
@@ -259,8 +259,9 @@ const CarDetailedPage = () => {
 
 
           {/* payment details  */}
-          <div className='w-[30%]'>
-            <h1 className='text-xl font-bold'><span className='text-[#593CFB]'>₹</span>{totalAmount} <span className='text-gray-500 font-semibold'>({vehicleData?.rent}/hour)</span></h1>
+          <div className='mt-10 md:mt-0 md:w-[30%]'>
+            <h1 className='md:hidden mb-2 font-bold'>Summary</h1>
+            <h1 className='md:text-xl font-bold'><span className='text-[#593CFB]'>₹</span>{totalAmount} <span className='text-gray-500 font-semibold'>({vehicleData?.rent}/hour)</span></h1>
 
             <h1 className='mt-2 font-semibold'>Trip Starts</h1>
             <h1 className='text-gray-700'>{tripStarts}</h1>
@@ -270,7 +271,7 @@ const CarDetailedPage = () => {
             <h1 className='mt-2 font-semibold'>Pickup Location</h1>
             <h1 className='text-gray-700'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
 
-            <button onClick={handleBooking} className='mt-5 mx-auto px-14 py-2 bg-[#593CFB] text-white rounded-md'>Continue</button>
+            <button onClick={handleBooking} className='mt-5 mx-auto w-full md:w-auto px-14 py-2 bg-[#593CFB] text-white rounded-md'>Continue</button>
           </div>
         </div>
       </div>

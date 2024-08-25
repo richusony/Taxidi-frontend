@@ -126,7 +126,7 @@ const Profile = () => {
 
     return (
         <div>
-            <nav className='px-10 py-5 flex justify-between'>
+            <nav className='px-5 md:px-10 py-5 flex justify-between'>
                 <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
                 <div className='flex items-center'>
                     <div className='relative'>
@@ -156,11 +156,11 @@ const Profile = () => {
                 </div>
             </nav>
 
-            <div className='mt-5 px-10 pb-10'>
+            <div className='mt-5 px-5 md:px-10 pb-10'>
                 {userData ? (
                     <>
-                        <span className='font-semibold'>Profile verification status:</span>
-                        {userData.licenseNumber === null ? <span className='ml-2 px-2 py-1 bg-red-500 text-white rounded-xl'>Documents upload pending</span> : <span className='ml-2 px-4 py-1 bg-green-500 text-white rounded'>License Verified</span>}
+                        <span className='text-sm md:text-base font-semibold'>Profile verification status:</span> <br className='md:hidden' />
+                        {userData.licenseNumber === null ? <span className='ml-2 px-2 text-sm md:text-base py-1 bg-red-500 text-white rounded-xl'>Documents upload pending</span> : <span className='ml-2 px-4 py-1 bg-green-500 text-white rounded'>License Verified</span>}
                         {updateUser ? (
                             <UpdateUser userData={userData} setError={setError} userFun={setUpdateUser} />
                         ) : (
@@ -220,7 +220,7 @@ const Profile = () => {
                                     </div>
                                 </form>
                             </div>
-                        </div> : <div className='mt-10 grid grid-cols-2'>
+                        </div> : <div className='mt-10 grid grid-rows-2 md:grid-cols-2 gap-y-2 md:gap-y-0'>
                             <LicenseRequestDocuments data={userData} />
                         </div>}
                     </>

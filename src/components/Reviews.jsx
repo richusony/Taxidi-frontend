@@ -61,9 +61,9 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
 
     return (
         <div className='mt-10'>
-            <h1 className='text-xl font-semibold'>Reviews</h1>
+            <h1 className='md:text-xl font-semibold'>Reviews</h1>
 
-            <div className='mt-2 h-96 overflow-y-scroll hideScrollBar'>
+            <div className='mt-2 h-52 md:h-96 overflow-y-scroll hideScrollBar'>
                 {reviews?.map((review) => (
                     <div key={review?._id} className='my-2 border-b pb-5 flex'>
                         <div className='w-12 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>

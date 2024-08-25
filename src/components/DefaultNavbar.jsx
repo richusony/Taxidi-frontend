@@ -1,40 +1,23 @@
 import { Link } from 'react-router-dom';
 import useOnline from '../hooks/useOnline';
 import { handleLogOut } from '../utils/helper';
-import React, { useEffect, useState } from 'react';
+import AuthContext from '../contexts/AuthContext';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
+import React, { useContext, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotificationContext } from '../contexts/NotificationContext';
 
 const DefaultNavbar = () => {
     const isOnline = useOnline();
-    // const {logout} = useContext(AuthContext);
+    const { user } = useContext(AuthContext);
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
     const { setNotificationBox, notificationCount } = useNotificationContext();
 
-    useEffect(() => {
-        getUserDetails();
-    }, []);
-
     const handleMenu = () => setMenu(prev => !prev);
 
-    const getUserDetails = async () => {
-        if (!isOnline) {
-            setError("You are offline");
-            return;
-        }
-
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            setUserData(user);
-        } catch (error) {
-
-        }
-    };
-
     return (
-        <nav className='px-10 py-5 flex justify-between'>
+        <nav className='px-5 md:px-10 py-5 flex justify-between'>
             <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
 
             <div className='flex items-center'>
@@ -55,7 +38,7 @@ const DefaultNavbar = () => {
                         <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/my-bookings">Bookings</Link>
                         </div>
-                        {userData ? <div className='my-4'>
+                        {user ? <div className='my-4'>
                             <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
                         </div>
                             :

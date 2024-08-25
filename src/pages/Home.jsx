@@ -1,27 +1,36 @@
+import { SiHyundai, SiMahindra, SiRenault, SiSuzuki, SiTata, SiToyota, SiVolkswagen } from "react-icons/si";
 import axiosInstance from '../axiosConfig';
 import useOnline from '../hooks/useOnline';
+import { useNavigate } from 'react-router-dom';
 import BecomeHost from '../components/BecomeHost';
 import ErrorToast from '../components/ErrorToast';
 import React, { useEffect, useState } from 'react';
 import DefaultNavbar from '../components/DefaultNavbar';
-import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
-import { useNavigate } from 'react-router-dom';
 import UserNotifications from '../components/UserNotifications';
+import { CAR_COLLECTIONS, HOME_BG_IMAGE_URL } from '../constants';
 import { useNotificationContext } from '../contexts/NotificationContext';
 
 const Home = () => {
     const isOnline = useOnline();
     const navigate = useNavigate();
     const [error, setError] = useState("");
-    const [brands, setBrands] = useState([]);
-    const {notificationBox} = useNotificationContext();
+    const [brands, setBrands] = useState([
+        <SiSuzuki />,
+        <SiRenault />,
+        <SiToyota />,
+        <SiTata />,
+        <SiVolkswagen />,
+        <SiHyundai />,
+        <SiMahindra />,
+    ]);
+    const { notificationBox } = useNotificationContext();
     const [formData, setFormData] = useState({
         bookingStarts: null,
         bookingEnds: null
     });
 
     useEffect(() => {
-        getAllBrands();
+        // getAllBrands();
     }, []);
 
     const handleInputChange = (e) => {
@@ -90,7 +99,7 @@ const Home = () => {
     return (
         <div className='overflow-x-hidden'>
             <div className='py-2 bg-[#FBF9F6] text-center'>
-                <p className='text-gray-500 text-sm'>Taxidi launched on Kozhikode!!</p>
+                <p className='text-gray-500 text-sm'>Taxidi launched in Kozhikode!!</p>
             </div>
 
             <DefaultNavbar />
@@ -139,51 +148,26 @@ const Home = () => {
                 </div>
             </div>
 
-            <div className='mt-5 px-5 md:px-10 py-5'>
-                <h1 className='font-bold text-gray-700 text-xl'>Browse by make</h1>
+            <div className='mt-10 px-5 md:px-10 py-5'>
+                <h1 className='font-bold text-gray-700 text-2xl'>Top Brands</h1>
 
-                <div className='mt-2 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
-                    {brands.length > 0 && brands.map((brand) => (
-                        <div key={brand._id} className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                            <div className='mx-auto h-[80%] w-[80%]'>
-                                <img className='w-full h-full rounded-t-md' src={brand?.brandImage} alt="car" />
+                <div className='mt-5 mx-auto py-2 px-2 w-[98%] flex overflow-y-hidden overflow-x-scroll hideScrollBar'>
+                    {brands.length > 0 && brands.map((brand,index) => (
+                        <div key={"brand"+index} className='mx-2 border-b-2 bg-white w-52 h-44 hover:border-b-[#593CFB] shadow-md rounded-md flex-shrink-0 cursor-pointer'>
+                            <div className='transition-all ease-linear mx-auto w-full h-full flex justify-center items-center text-[#593CFB] text-7xl hover:text-8xl'>
+                                {brand}
                             </div>
-                            <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>{brand.brandName}</h1>
+                            {/* <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>brand</h1> */}
                         </div>
                     ))}
-
-                    {/* <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div>
-                    <div className='mx-2 w-52 h-44 rounded shadow-md flex-shrink-0'>
-                        <div>
-                            <img className='w-full h-[85%] rounded-t-md' src={HOME_BG_IMAGE_URL} alt="car" />
-                        </div>
-                        <h1 className='py-2 text-center bg-[#E8E6E6] font-bold rounded-b-md'>Jeep</h1>
-                    </div> */}
                 </div>
             </div>
 
-            <div className='mt-5 py-2 px-5 flex justify-center items-center'>
+            <div className='mt-20 py-2 px-5 flex justify-center items-center'>
                 <BecomeHost />
             </div>
 
-            <footer className='mt-10 px-5 md:px-10 py-10 bg-[#F2F1F1] grid grid-cols-3 gap-x-5'>
+            <footer className='mt-20 px-5 md:px-10 py-10 bg-[#F2F1F1] grid grid-cols-3 gap-x-5'>
                 <div className='w-52'>
                     <h1 className='md:text-xl font-bold'>Location</h1>
                     <div className='mt-5'>

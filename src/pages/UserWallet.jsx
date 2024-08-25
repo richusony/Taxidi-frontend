@@ -122,15 +122,15 @@ const UserWallet = () => {
     }
 
     return (
-        <div className='px-5 pb-5 min-h-screen bg-[#EDEDED]'>
+        <div className='md:px-5 pb-5 min-h-screen bg-[#EDEDED]'>
             {/* Navbar  */}
             <DefaultNavbar />
 
             <div className='my-5 pt-14'>
                 {/* Text & Wallet Balance */}
-                <div className='mt-10 grid grid-cols-2'>
-                    <div className='px-20 text-center'>
-                        <h1 className='px-5 text-2xl font-bold'>Let's Make it easy by, Using <span className='text-[#593CFB]'>Taxidi</span> Wallet</h1>
+                <div className='mt-10 grid grid-rows-2 gap-y-10 md:gap-y-0 md:grid-cols-2'>
+                    <div className='md:px-20 text-center'>
+                        <h1 className='md:px-5 text-2xl font-bold'>Let's Make it easy by, Using <span className='text-[#593CFB]'>Taxidi</span> Wallet</h1>
                         <p className='mt-2 px-10 text-gray-500'>Taxidi Wallet allows you to make instant payments for
                             booking vehicles without any transactions issues
                             caused by the banks</p>
