@@ -5,6 +5,7 @@ import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
 import AddBrand from '../../components/AddBrand'
 import axiosInstance from '../../axiosConfig.js'
 import ErrorToast from "../../components/ErrorToast.jsx"
+import SucessToast from "../../components/SuccessToast.jsx";
 import AdminNavbar from '../../components/AdminNavbar.jsx'
 import EditBrand from '../../components/EditBrand.jsx'
 import moment from 'moment'
@@ -12,6 +13,7 @@ import moment from 'moment'
 const Brands = () => {
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
+    const [success, setSuccess] = useState("");
     const [page, setPage] = useState("Brands");
     const [addBrand, setAddBrand] = useState(false);
     const [editBrand, setEditBrand] = useState(false);
@@ -34,7 +36,7 @@ const Brands = () => {
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
 
-            <div className='w-[80%] relative'>
+            <div className='w-[80%] h-screen overflow-y-scroll hideScrollBar relative'>
                 {/* Navbar  */}
                 <AdminNavbar page={page} />
 
@@ -62,7 +64,7 @@ const Brands = () => {
                                         <td className="py-2 px-4 border-b text-gray-500">{moment(item?.createdAt).format("DD-MM-YYYY")}</td>
                                         <td className="py-2 px-4 border-b">
                                             <div>
-                                                <button onClick={()=>{setEditBrand(true); setEditBrandData(item);}} className='px-2 py-1 bg-blue-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faPencil} /></button>
+                                                <button onClick={() => { setEditBrand(true); setEditBrandData(item); }} className='px-2 py-1 bg-blue-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faPencil} /></button>
                                                 <button className='ml-4 px-2 py-1 bg-red-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faTrash} /></button>
                                             </div></td>
                                     </tr>
@@ -71,9 +73,10 @@ const Brands = () => {
                         </table>
                     </div>
                 </div>
-                {addBrand && <AddBrand setError={setError} setAddBrand={setAddBrand} />}
-                {editBrand && <EditBrand setError={setError} setEditBrand={setEditBrand}  editBrandData={editBrandData}/>}
+                {addBrand && <AddBrand setError={setError} setAddBrand={setAddBrand} setSuccess={setSuccess} />}
+                {editBrand && <EditBrand setError={setError} setEditBrand={setEditBrand} editBrandData={editBrandData} />}
             </div>
+            <SucessToast msg={success} setSuccessMsg={setSuccess} />
             <ErrorToast error={error} setError={setError} />
         </div>
     )

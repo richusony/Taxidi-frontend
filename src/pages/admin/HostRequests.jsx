@@ -31,7 +31,7 @@ const HostRequests = () => {
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
 
-            <div className='w-[80%] relative'>
+            <div className='w-[80%] h-screen overflow-y-scroll hideScrollBar relative'>
                 {/* Navbar  */}
                 <AdminNavbar page={page} />
 

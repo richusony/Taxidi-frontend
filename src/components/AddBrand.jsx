@@ -3,7 +3,7 @@ import useOnline from '../hooks/useOnline';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const AddBrand = ({ setError, setAddBrand }) => {
+const AddBrand = ({ setError, setAddBrand, setSuccess }) => {
     const isOnline = useOnline();
     const [formData, setFormData] = useState({
         brandName: '',
@@ -27,7 +27,7 @@ const AddBrand = ({ setError, setAddBrand }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        // console.log(formData);
         if (!isOnline) {
             setError("You are offline");
             return;
@@ -50,7 +50,14 @@ const AddBrand = ({ setError, setAddBrand }) => {
             });
 
             if (!res.ok) {
-                throw new Error("Failed to upload brand");
+                const data = await res.json();
+                // console.log(data);
+                setError(data?.error);
+            }
+
+            if (res?.status == 201) {
+                setSuccess("Brand Added");
+                setAddBrand(false)
             }
 
             // Handle success (e.g., clear form, show success message, etc.)

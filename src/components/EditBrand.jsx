@@ -27,7 +27,7 @@ const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
+        // console.log(formData);
         if (!isOnline) {
             setError("You are offline");
             return;
@@ -51,11 +51,12 @@ const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
             });
 
             if (!res.ok) {
-                throw new Error("Failed to upload brand");
+                const data = await res.json();
+                setError(data?.error);
             }
+
             setEditBrand(false);
             window.location.reload();
-            // Handle success (e.g., clear form, show success message, etc.)
         } catch (error) {
             setError(error.message);
         }

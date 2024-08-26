@@ -109,7 +109,7 @@ const ChatWithAdmin = () => {
                             <div key={"messagesContainer" + index}>
                                 <div key={"date" + msg._id} className="my-10 text-center">
                                     <span className="px-3 py-2 bg-white rounded-md shadow-xl text-gray-700">
-                                        {moment(msg.createdAt).format('DD-MM-YYYY') == moment(todayDate).format('DD-MM-YYYY') ? "Today" : moment(msg.createdAt).format('DD-MM-YYYY') == moment(yesterdayDate).format('DD-MM-YYYY') ? "Yesterday" : moment(msg.createdAt).format('DD-MM-YYYY')}
+                                        {moment(msg.dateString).format('DD-MM-YYYY') == moment(todayDate).format('DD-MM-YYYY') ? "Today" : moment(msg.dateString).format('DD-MM-YYYY') == moment(yesterdayDate).format('DD-MM-YYYY') ? "Yesterday" : moment(msg.createdAt).format('DD-MM-YYYY')}
                                     </span>
                                 </div>
 

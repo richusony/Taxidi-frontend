@@ -18,14 +18,21 @@ const AdminHostChatPage = () => {
     const [recentMessage, setRecentMessage] = useState([]);
     const [userIsTyping, setUserIsTyping] = useState(false);
     const [realTimeMessages, setRealTimeMessages] = useState([]);
+    const [formattedRealTimeMsg, setFormattedRealTimeMsg] = useState([]);
 
     useEffect(() => {
         fetchHostMessages();
     }, []);
 
+    useEffect(() => {
+        const grouped = groupMessagesByDate(realTimeMessages);
+        setFormattedRealTimeMsg(grouped);
+        console.log("grouped", formattedRealTimeMsg);
+    }, [realTimeMessages]);
+
     const date = new Date();
-    const todayDate = date.toDateString();
-    const yesterdayDate = getYesterdayDate();
+    // const todayDate = date.toDateString();
+    // const yesterdayDate = getYesterdayDate();
 
     // console.log(todayDate);
 
@@ -88,6 +95,12 @@ const AdminHostChatPage = () => {
         return groupedMessages;
     }
 
+    // Function to format date for comparison
+    const formatDateForComparison = (date) => moment(date).startOf('day').toDate();
+
+    const today = formatDateForComparison(new Date());
+    const yesterday = formatDateForComparison(moment().subtract(1, 'days').toDate());
+
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
@@ -114,7 +127,9 @@ const AdminHostChatPage = () => {
                             <div key={"messagesContainer" + index}>
                                 <div key={"date" + msg._id} className="my-10 text-center">
                                     <span className="px-3 py-2 bg-white rounded-md shadow-xl text-gray-700">
-                                        {moment(msg.createdAt).format('DD-MM-YYYY') == moment(todayDate).format('DD-MM-YYYY') ? "Today" : moment(msg.createdAt).format('DD-MM-YYYY') == moment(yesterdayDate).format('DD-MM-YYYY') ? "Yesterday" : moment(msg.createdAt).format('DD-MM-YYYY')}
+                                        {formatDateForComparison(msg.dateString).getTime() === today.getTime() ? "Today" :
+                                            formatDateForComparison(msg.dateString).getTime() === yesterday.getTime() ? "Yesterday" :
+                                                moment(msg.dateString).format('DD-MM-YYYY')}
                                     </span>
                                 </div>
 
@@ -143,10 +158,10 @@ const AdminHostChatPage = () => {
                                 )}
                             </div>
                         ))}
-                        {realTimeMessages && realTimeMessages.map((msgs, index) => msgs.msgFrom == "taxidi@gmail.com" ? (
+                        {formattedRealTimeMsg?.length > 0 && formattedRealTimeMsg[0]?.messages?.map((msgs, index) => msgs.msgFrom == "taxidi@gmail.com" ? (
                             <div key={index} ref={lastMessage} className="my-2 w-full flex justify-end">
                                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#FFFFFF] rounded-xl shadow-md">
-                                    <p className="text-gray-700">{msgs}</p>
+                                    <p className="text-gray-700">{msgs.message}</p>
                                     <div className="text-end text-xs">
                                         <p className="text-slate-500">{"just now"}</p>
                                     </div>
@@ -155,7 +170,7 @@ const AdminHostChatPage = () => {
                         ) : (
                             <div ref={lastMessage} key={index + 1} className="my-2 w-full flex justify-start">
                                 <div className="py-1 px-2 max-w-40 md:w-fit bg-[#7351F2] rounded-xl shadow-md">
-                                    <p className="text-white dark:text-gray-800">{msgs}</p>
+                                    <p className="text-white dark:text-gray-800">{msgs.message}</p>
                                     <div className="text-end text-xs">
                                         <p className="text-gray-200 dark:text-gray-700">
                                             {"just now"}

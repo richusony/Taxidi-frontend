@@ -49,7 +49,7 @@ const AdminCarDetailed = () => {
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
 
-            <div className='w-[80%]'>
+            <div className='w-[80%] h-screen overflow-y-scroll hideScrollBar'>
                 {/* Navbar  */}
                 <AdminNavbar page={page} />
 
