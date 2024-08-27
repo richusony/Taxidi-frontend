@@ -21,7 +21,7 @@ const useRealTimeMsg = (messages, setMessages) => {
     return () => {
       socket?.off("newMessage", handleNewMessage);
     };
-  }, [socket, setMessages]); // Remove `messages` from dependency array
+  }, [socket]); // Remove `messages` from dependency array
 };
 
 export default useRealTimeMsg;

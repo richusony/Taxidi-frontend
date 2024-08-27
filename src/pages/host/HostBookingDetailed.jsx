@@ -12,16 +12,18 @@ const UserBookingDetailed = () => {
     const [cancelWindow, setCancelWindow] = useState(false);
     const [bookingDetails, setBookingDetails] = useState(null);
     const [page, setPage] = useState(`Booking of ${paymentId}`);
+    const [bookingStatus, setBookingStatus] = useState(true);
 
     useEffect(() => {
         fetchBookingDetails();
-    }, []);
+    }, [paymentId]);
 
     const fetchBookingDetails = async () => {
         try {
             const res = await axiosInstance.get(`/host/booking-details/${paymentId}`);
             console.log(res?.data[0]);
             setBookingDetails(res?.data[0]);
+            setBookingStatus(res?.data[0].bookingStatus);
         } catch (error) {
             console.log(error);
         }
@@ -79,19 +81,19 @@ const UserBookingDetailed = () => {
 
                                 <div className='mt-5'>
                                     <h1 className='text-gray-500 font-semibold'>Booking Status</h1>
-                                    <span>{bookingDetails?.vehicleDetails?.bookingStatus?"Booked": "Cancelled"}</span>
+                                    <span>{bookingStatus ? "Booked" : "Cancelled"}</span>
                                 </div>
                             </div>
 
                             <div className='mt-8 text-center'>
-                                <button onClick={() => setCancelWindow(true)} className={`transition delay-100 ease-in ${bookingDetails?.vehicleDetails?.bookingStatus? "" : "cursor-not-allowed"} border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md`}>Cancel</button>
+                                <button onClick={() => setCancelWindow(true)} disabled={!bookingStatus} className={`transition delay-100 ease-in ${bookingStatus ? "" : "cursor-not-allowed"} border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md`}>Cancel</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                {cancelWindow && <CancelReasonBox setCancelBox={setCancelWindow} paymentId={paymentId} bookingStatus={bookingDetails?.vehicleDetails?.bookingStatus} setError={setError}/>}
+                {cancelWindow && <CancelReasonBox setCancelBox={setCancelWindow} paymentId={paymentId} bookingStatus={bookingStatus} setError={setError} />}
             </div>
-            <ErrorToast error={error} setError={setError}/>
+            <ErrorToast error={error} setError={setError} />
         </div>
     )
 }

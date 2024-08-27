@@ -1,20 +1,20 @@
 import { useEffect } from "react";
-import { useNotificationSocketContext } from "../contexts/NotificationSocketContext";
 import { useNotificationContext } from "../contexts/NotificationContext";
+import { useNotificationSocketContext } from "../contexts/NotificationSocketContext";
 
 const useRealTimeNotifications = (notifications, setNotifications) => {
-    const { notificationSocket } = useNotificationSocketContext();
     const { setNotificationCount } = useNotificationContext();
+    const { notificationSocket } = useNotificationSocketContext();
 
     useEffect(() => {
         notificationSocket?.on("notify", (notification) => {
             console.log("notifications;; ", notification);
             setNotifications(prev => [...prev, notification]);
-            setNotificationCount(notifications.length);
+            setNotificationCount(prev => prev + 1);
         });
 
         return () => { notificationSocket?.off("notify"); }
-    }, [notificationSocket, notifications, setNotifications]);
+    }, [notificationSocket]);
 };
 
 export default useRealTimeNotifications;

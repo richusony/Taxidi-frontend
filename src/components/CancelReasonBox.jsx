@@ -7,7 +7,7 @@ const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError }) =
   const handleCancelBooking = async (e) => {
     e.stopPropagation();
 
-    if(!bookingStatus) {
+    if(bookingStatus === false) {
       setError("Booking has been cancelled already");
       return;
     }
@@ -27,6 +27,7 @@ const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError }) =
       setCancelBox(false);
     } catch (error) {
       console.log(error);
+      setError(error?.response?.data?.error);
     }
   }
 
