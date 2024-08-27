@@ -42,40 +42,20 @@ const UserNotifications = () => {
                     <h1 className='font-bold text-center'>Notifications</h1>
                     <FontAwesomeIcon className='absolute right-0 text-xl cursor-pointer' onClick={() => setNotificationBox(false)} icon={faClose} />
                 </div>
-                
+
                 <div className='pb-4 h-full overflow-y-scroll hideScrollBar'>
-                    {realTimeNotifications.length > 0 && realTimeNotifications.map((notify,index) => (
-                        <div key={"notification"+index} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                            <p className='text-gray-800'>{notify}</p>
+                    {realTimeNotifications.length > 0 && realTimeNotifications.map((notify, index) => (
+                        <div key={"notification" + index} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
+                            <p className='pl-4 text-gray-800'>{notify}</p>
                             <span className='text-gray-500 text-sm'>{"just now"}</span>
                         </div>
                     ))}
                     {notifications.length > 0 ? notifications.map((notify) => (
-                        <div key={notify._id} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                            <p className='text-gray-800'>{notify.context}</p>
-                            <span className='text-gray-500 text-sm'>{moment(notify.createdAt).format("MMM DD, YYYY")}</span>
+                        <div key={notify._id} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center gap-x-2 shadow-md'>
+                            <p className='text-gray-800 text-sm w-[90%]'>{notify.context}</p>
+                            <span className='text-gray-500 text-xs w-[10%]'>{moment(notify.createdAt).format("MMM DD, YYYY")}</span>
                         </div>
-                    )) : <h1>No notifications yet</h1>}
-                    <div className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                        <p className='text-gray-800'>Your license has been approved. Happy Booking</p>
-                        <span className='text-gray-500 text-sm'>Aug 30, 2024</span>
-                    </div>
-                    <div className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                        <p className='text-gray-800'>Your license has been approved. Happy Booking</p>
-                        <span className='text-gray-500 text-sm'>Aug 30, 2024</span>
-                    </div>
-                    <div className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                        <p className='text-gray-800'>Your license has been approved. Happy Booking</p>
-                        <span className='text-gray-500 text-sm'>Aug 30, 2024</span>
-                    </div>
-                    <div className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                        <p className='text-gray-800'>Your license has been approved. Happy Booking</p>
-                        <span className='text-gray-500 text-sm'>Aug 30, 2024</span>
-                    </div>
-                    <div className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                        <p className='text-gray-800'>Your license has been approved. Happy Booking</p>
-                        <span className='text-gray-500 text-sm'>Aug 30, 2024</span>
-                    </div>
+                    )) : <h1 className="text-center text-gray-600">No notifications yet</h1>}
                 </div>
             </div>
         </div>

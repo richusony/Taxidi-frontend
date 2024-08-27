@@ -3,7 +3,7 @@ import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster"
 
-const Map = ({ latitude, logitude, vehicles }) => {
+const Map = ({ latitude, longitude, vehicles }) => {
     const markers = [
         {
             geocode: [48.86, 2.3522],
@@ -20,7 +20,7 @@ const Map = ({ latitude, logitude, vehicles }) => {
     ]
 
     return (
-        <MapContainer center={[latitude, logitude]} zoom={13} className='h-full rounded'>
+        <MapContainer center={[latitude, longitude]} zoom={13} className='h-full rounded'>
             <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url='https://tile.openstreetmap.org/{z}/{x}/{y}.png'

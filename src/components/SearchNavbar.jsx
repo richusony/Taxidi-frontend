@@ -18,7 +18,9 @@ const SearchNavbar = ({
     selectedBrand,
     selectedBodyType,
     selectedFuel,
-    selectedPrice
+    selectedPrice,
+    latitude,
+    longitude
 }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
@@ -57,14 +59,7 @@ const SearchNavbar = ({
         }
 
         try {
-            const params = new URLSearchParams();
-
-            // if (selectedBrand !== "None") params.append("brand", selectedBrand);
-            // if (selectedBodyType !== "None") params.append("bodyType", selectedBodyType);
-            // if (selectedFuel !== "None") params.append("fuel", selectedFuel);
-            // if (selectedPrice !== "None") params.append("price", selectedPrice);
-
-            const res = await axiosInstance.get(`/get-available-cars?${params.toString()}`, {
+            const res = await axiosInstance.get(`/get-available-cars?`, {
                 params: {
                     brand: selectedBrand,
                     bodyType: selectedBodyType,
@@ -72,6 +67,8 @@ const SearchNavbar = ({
                     price: selectedPrice,
                     bookingStarts: tripStarts,
                     bookingEnds: tripEnds,
+                    latitude:latitude,
+                    longitude:longitude,
                 }
             });
             console.log(res?.data);

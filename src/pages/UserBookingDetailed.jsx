@@ -2,13 +2,14 @@ import axiosInstance from '../axiosConfig';
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DefaultNavbar from '../components/DefaultNavbar';
-import { useNotificationContext } from '../contexts/NotificationContext';
 import UserNotifications from '../components/UserNotifications';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const UserBookingDetailed = () => {
   const { paymentId } = useParams();
+  const { notificationBox } = useNotificationContext();
+  const [bookingStatus, setBookingStatus] = useState(true);
   const [bookingDetails, setBookingDetails] = useState(null);
-  const { notificationBox, setNotficationBox } = useNotificationContext();
 
   useEffect(() => {
     fetchBookingDetails();
@@ -16,6 +17,15 @@ const UserBookingDetailed = () => {
 
   const handleCancelBooking = async (e) => {
     e.stopPropagation();
+    const reqData = {
+      paymentId
+    }
+    try {
+      const res = await axiosInstance.post("/cancel-booking", reqData);
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const fetchBookingDetails = async () => {
@@ -23,6 +33,7 @@ const UserBookingDetailed = () => {
       const res = await axiosInstance.get(`/booking-details/${paymentId}`);
       console.log(res?.data[0]);
       setBookingDetails(res?.data[0]);
+      setBookingStatus(res?.data[0]?.bookingStatus);
     } catch (error) {
       console.log(error);
     }
@@ -74,10 +85,15 @@ const UserBookingDetailed = () => {
                 <h1 className='text-gray-500 font-semibold'>Payment Id</h1>
                 <span>{bookingDetails?.paymentId}</span>
               </div>
+
+              <div className='mt-5'>
+                <h1 className='text-gray-500 font-semibold'>Booking Status</h1>
+                <span>{bookingStatus ? "Booked" : "Cancelled"}</span>
+              </div>
             </div>
 
             <div className='mt-8 text-center'>
-              <button onClick={handleCancelBooking} className='transition delay-100 ease-in border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md'>Cancel</button>
+              <button disabled={!bookingStatus} onClick={handleCancelBooking} className={`transition-all ${bookingStatus ? "cursor-pointer" : "cursor-not-allowed"} delay-100 ease-in border border-red-400 px-4 py-1 w-10/12 mx-auto font-semibold text-red-500 hover:bg-red-500 hover:text-white rounded shadow-md`}>Cancel</button>
             </div>
           </div>
         </div>

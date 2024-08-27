@@ -12,8 +12,8 @@ const AvailableCars = () => {
     const navigate = useNavigate();
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
-    const [logitude, setLogitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
+    const [longitude, setLongitude] = useState(null);
     const [bodyTypes, setBodyTypes] = useState([]);
     const [availableCars, setAvailableCars] = useState(null);
 
@@ -96,8 +96,8 @@ const AvailableCars = () => {
 
     function sucess(position) {
         setLatitude(position?.coords?.latitude)
-        setLogitude(position?.coords?.longitude)
-        // console.log(latitude,logitude)
+        setLongitude(position?.coords?.longitude)
+        console.log(position?.coords,latitude,longitude)
     }
 
     function errorState(error) {
@@ -120,6 +120,8 @@ const AvailableCars = () => {
                 selectedBodyType={selectedBodyType}
                 selectedFuel={selectedFuel}
                 selectedPrice={selectedPrice}
+                latitude={latitude}
+                longitude={longitude}
             />
 
             {/* Filters */}
@@ -188,7 +190,7 @@ const AvailableCars = () => {
 
                 {/* map */}
                 <div className='hidden md:block md:ml-4 md:w-[50%]'>
-                    {logitude ? <Map latitude={latitude} logitude={logitude} vehicles={availableCars} /> : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
+                    {longitude ? <Map latitude={latitude} longitude={longitude} vehicles={availableCars} /> : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
                 </div>
             </div>
             <ErrorToast setError={setError} error={error} />

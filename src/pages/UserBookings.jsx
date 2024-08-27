@@ -96,9 +96,9 @@ const UserBookings = () => {
                                     <span className='ml-3 text-gray-600'>Richu Sony</span>
                                 </div>
 
-                                <div className='md:ml-10 absolute right-2 md:right-10 text-sm md:text-base'>
+                                {book?.bookingStatus === true ? <div className='md:ml-10 absolute right-2 md:right-10 text-sm md:text-base'>
                                     <button onClick={(e) => handleCancelBooking(e, book.paymentId)} className='transition delay-100 ease-in border border-red-400 px-4 py-1 text-red-400 hover:scale-105 hover:text-red-600 rounded shadow-md'>Cancel</button>
-                                </div>
+                                </div> : <h1 className='md:ml-10 absolute right-2 md:right-10 text-sm md:text-base text-red-500'>Cancelled</h1>}
                             </div>
                         </div>
                     ))
