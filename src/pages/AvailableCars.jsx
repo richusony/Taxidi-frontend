@@ -97,6 +97,8 @@ const AvailableCars = () => {
     function sucess(position) {
         setLatitude(position?.coords?.latitude)
         setLongitude(position?.coords?.longitude)
+        localStorage.setItem("latitude",position?.coords?.latitude);
+        localStorage.setItem("longitude",position?.coords?.longitude);
         console.log(position?.coords,latitude,longitude)
     }
 

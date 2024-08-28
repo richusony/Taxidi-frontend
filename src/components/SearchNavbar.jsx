@@ -57,7 +57,8 @@ const SearchNavbar = ({
             setError("Booking should be at least 24 hours");
             return;
         }
-
+        const lat = latitude ?? localStorage.getItem("latitude");
+        const long = longitude ?? localStorage.getItem("longitude");
         try {
             const res = await axiosInstance.get(`/get-available-cars?`, {
                 params: {
@@ -67,8 +68,8 @@ const SearchNavbar = ({
                     price: selectedPrice,
                     bookingStarts: tripStarts,
                     bookingEnds: tripEnds,
-                    latitude:latitude,
-                    longitude:longitude,
+                    latitude:lat,
+                    longitude:long,
                 }
             });
             console.log(res?.data);
