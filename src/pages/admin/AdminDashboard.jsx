@@ -4,16 +4,18 @@ import AdminNavbar from '../../components/AdminNavbar'
 import useOnline from '../../hooks/useOnline.jsx';
 import ErrorToast from "../../components/ErrorToast.jsx";
 import axiosInstance from '../../axiosConfig';
+import LineGraph from '../../components/LineGraph';
 
 const AdminDashboard = () => {
     const isOnline = useOnline();
     const [error, setError] = useState("");
+    const [page, setPage] = useState("Dashboard");
     const [hostCount, setHostCount] = useState(0);
+    const [charData, setChartData] = useState(null);
     const [brandCount, setBrandCount] = useState(0);
     const [vehicleCount, setVehicleCount] = useState(0);
     const [bodyTypeCount, setBodyTypeCount] = useState(0);
     const [todayBookingsCount, setTodayBookingsCount] = useState(0);
-    const [page, setPage] = useState("Dashboard");
 
     useEffect(() => {
         if (!isOnline) {
@@ -22,6 +24,7 @@ const AdminDashboard = () => {
         }
 
         fetchTotalNumbers();
+        fetchBookingChartData("monthly")
     }, []);
 
     const fetchTotalNumbers = async () => {
@@ -33,6 +36,16 @@ const AdminDashboard = () => {
             setVehicleCount(res?.data.vehicleCount);
             setTodayBookingsCount(res?.data.todayBookingsCount);
             // console.log(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchBookingChartData = async (filter) => {
+        try {
+            const res = await axiosInstance.get(`/admin/chart-data/${filter}`);
+            setChartData(res?.data);
+            console.log(res?.data);
         } catch (error) {
             console.log(error);
         }
@@ -73,6 +86,9 @@ const AdminDashboard = () => {
                         <h2>3</h2>
                     </div>
 
+                </div>
+                <div className='mt-20 mx-auto px-5 py-2 w-4/5 bg-white rounded-xl shadow-md'>
+                    <LineGraph chartData={charData}/>
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />

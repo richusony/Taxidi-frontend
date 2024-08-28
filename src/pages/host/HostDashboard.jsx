@@ -10,11 +10,13 @@ import HostNavbar from '../../components/HostNavBar.jsx'
 import { faCar, faGear, faGlobe, faList, faUsers } from '@fortawesome/free-solid-svg-icons'
 import { validateHost } from '../../utils/helper.js'
 import axiosInstance from '../../axiosConfig'
+import LineGraph from '../../components/LineGraph'
 
 const HostDashboard = () => {
     const isOnline = useOnline();
     const [error, setError] = useState("");
     const [page, setPage] = useState("Dashboard");
+    const [charData, setChartData] = useState(null);
     const [vehicleCount, setVehicleCount] = useState(0);
     const [todayBookingsCount, setTodayBookingsCount] = useState(0);
 
@@ -25,6 +27,7 @@ const HostDashboard = () => {
         }
 
         fetchTotalNumbers();
+        fetchBookingChartData("monthly");
     }, []);
 
     const fetchTotalNumbers = async () => {
@@ -32,6 +35,16 @@ const HostDashboard = () => {
             const res = await axiosInstance.get(`/host/counts`);
             setVehicleCount(res?.data.vehicleCount);
             setTodayBookingsCount(res?.data.todayBookingsCount);
+            console.log(res?.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    const fetchBookingChartData = async (filter) => {
+        try {
+            const res = await axiosInstance.get(`/host/chart-data/${filter}`);
+            setChartData(res?.data);
             console.log(res?.data);
         } catch (error) {
             console.log(error);
@@ -74,8 +87,12 @@ const HostDashboard = () => {
                     </div> */}
 
                 </div>
+
+                <div className='mt-10 px-5 py-2'>
+                    <LineGraph chartData={charData}/>
+                </div>
             </div>
-            <ErrorToast error={error} setError={setError}/>
+            <ErrorToast error={error} setError={setError} />
         </div>
     )
 }
