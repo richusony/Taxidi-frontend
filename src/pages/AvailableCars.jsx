@@ -32,7 +32,7 @@ const AvailableCars = () => {
         fetchBrands();
         fetchBodyTypes();
         fetchCoordinates();
-    }, []);
+    }, [latitude,longitude]);
 
     const query = useQuery();
     // setTripStarts(query.get('tripStarts'));
