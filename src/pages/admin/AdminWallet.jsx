@@ -108,7 +108,7 @@ const AdminWallet = () => {
                                                         <td className="py-2 px-4 border-b">{pay?.paymentId}</td>
                                                         <td className="py-2 px-4 border-b text-center uppercase">{pay?.paymentMethod}</td>
                                                         <td className="py-2 px-4 border-b text-center">{moment(pay?.createdAt).format("DD-MM-YYYY")}</td>
-                                                        <td className="py-2 px-4 border-b text-center">{pay?.balanceAfterCommission}</td>
+                                                        <td className="py-2 px-4 border-b text-center">{pay?.commissionToAdmin}</td>
                                                         <td className="py-2 px-4 border-b text-center">{pay?.credited ? <h1 className='text-green-500'>Credited</h1> : <h1 className='text-red-500'>Debited</h1>}</td>
                                                     </tr>
                                                 ))}

@@ -71,7 +71,7 @@ const UserBookingDetailed = () => {
 
                                 <div className='mt-5'>
                                     <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
-                                    <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.totalAmount}</span>
+                                    <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.balanceAfterCommission}</span>
                                 </div>
 
                                 <div className='mt-5'>

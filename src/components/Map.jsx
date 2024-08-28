@@ -35,6 +35,10 @@ const Map = ({ latitude, longitude, vehicles }) => {
                     ))
                 }
             </MarkerClusterGroup>
+
+            <Marker position={[latitude, longitude]}>
+                            <Popup>{"You"}</Popup>
+                        </Marker>
         </MapContainer>
     )
 }
