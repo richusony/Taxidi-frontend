@@ -37,7 +37,7 @@ export const SocketContextProvider = ({children}) =>{
     },[user])
 
     return (
-        <SocketContext.Provider value={{socket, onlineUsers}}>
+        <SocketContext.Provider value={{socket}}>
             {children}
         </SocketContext.Provider>
         )
