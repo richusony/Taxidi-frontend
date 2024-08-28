@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCar, faGear, faGlobe, faList, faUsers } from '@fortawesome/free-solid-svg-icons';
+import { faCar, faGear, faGlobe, faList, faUsers, faWallet } from '@fortawesome/free-solid-svg-icons';
 
 const AdminSideBar = () => {
     const navigate = useNavigate();
@@ -26,6 +26,7 @@ const AdminSideBar = () => {
                 <h1 onClick={() => redirectTo("/admin/bookings")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList} /> <span className='ml-2'>Bookings</span></h1>
                 <h1 onClick={() => redirectTo("/admin/booking-history")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faList} /> <span className='ml-2'>Booking History</span></h1>
                 <h1 onClick={() => redirectTo("/admin/verify-users")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faUsers} /> <span className='ml-2'>Verify Users</span></h1>
+                <h1 onClick={() => redirectTo("/admin/wallet")} className='mb-4 flex items-center cursor-pointer'><FontAwesomeIcon className='bg-white w-6 h-4 p-1 rounded' icon={faWallet} /> <span className='ml-2'>Wallet</span></h1>
             </div>
 
             {/* Manage Services */}

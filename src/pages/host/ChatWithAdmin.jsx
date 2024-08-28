@@ -99,7 +99,7 @@ const ChatWithAdmin = () => {
                         </div>
 
                         <div>
-                            <button className='transition-all delay-150 ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white shadow-md rounded '><FontAwesomeIcon icon={faVideo} /> Call </button>
+                            <button className='invisible transition-all delay-150 ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white shadow-md rounded '><FontAwesomeIcon icon={faVideo} /> Call </button>
                         </div>
                     </div>
 

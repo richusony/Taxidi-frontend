@@ -105,7 +105,6 @@ const AdminHostChatPage = () => {
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
 
-
             <div className='w-[80%] relative'>
                 <div className='mt-2 h-screen relative border-2 border-y'>
                     <div className='py-2 px-2 flex justify-between items-center shadow-md rounded-b'>
@@ -117,7 +116,7 @@ const AdminHostChatPage = () => {
                         </div>
 
                         <div>
-                            <button className='transition-all delay-150 ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white shadow-md rounded '><FontAwesomeIcon icon={faVideo} /> Call </button>
+                            <button className='invisible transition-all delay-150 ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white shadow-md rounded '><FontAwesomeIcon icon={faVideo} /> Call </button>
                         </div>
                     </div>
 

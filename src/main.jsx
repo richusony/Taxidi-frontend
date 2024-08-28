@@ -28,6 +28,7 @@ const Hosts = lazy(() => import('./pages/admin/Hosts.jsx'));
 const Brands = lazy(() => import('./pages/admin/Brands.jsx'));
 const BodyTypes = lazy(() => import('./pages/admin/BodyTypes.jsx'));
 const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.jsx"));
+const AdminWallet = lazy(() => import('./pages/admin/AdminWallet.jsx'));
 const VerifyUsers = lazy(() => import('./pages/admin/VerifyUsers.jsx'));
 const HostRequests = lazy(() => import('./pages/admin/HostRequests.jsx'));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
@@ -166,7 +167,11 @@ const route = createBrowserRouter([
     path: "/host/chat",
     element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><ChatWithAdmin /></SocketContextProvider></Suspense></PrivateRoute>
   },
-{
+  {
+    path: "/admin/wallet",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminWallet /></Suspense></PrivateRoute>
+  },
+  {
     path: "*",
     element: <NotFoundPage />
   }
