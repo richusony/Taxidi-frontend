@@ -1,10 +1,11 @@
+import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useOnline from '../hooks/useOnline';
-import axiosInstance from '../axiosConfig';
 import { handleLogOut } from '../utils/helper';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import axiosInstance, { createCancelTokenSource } from '../axiosConfig.js';
 
 const SearchNavbar = ({
     tripStarts,
@@ -20,16 +21,43 @@ const SearchNavbar = ({
     selectedFuel,
     selectedPrice,
     latitude,
-    longitude
+    longitude,
+    currentPage,
+    setCurrentPage,
+    setHasMoreCars
 }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
     const [userData, setUserData] = useState(null);
 
+    // To hold the cancel token
+    const cancelTokenRef = useRef(null);
+
+    useEffect(()=>{
+        setAvailableCars([]);
+    },[tripStarts,tripEnds]);
+
     useEffect(() => {
         // getUserDetails();
         getAvailableCars();
-    }, [tripStarts, tripEnds]);
+
+        // Cleanup function to cancel the request when the component unmounts
+        return () => {
+            if (cancelTokenRef.current) {
+                cancelTokenRef.current.cancel();
+            }
+        };
+    }, [
+        tripStarts,
+        tripEnds,
+        selectedBrand,
+        selectedBodyType,
+        selectedFuel,
+        selectedPrice,
+        latitude,
+        longitude,
+        currentPage
+    ]);
 
     const handleMenu = () => setMenu(prev => !prev);
 
@@ -57,9 +85,19 @@ const SearchNavbar = ({
             setError("Booking should be at least 24 hours");
             return;
         }
+
+        if (cancelTokenRef.current) {
+            cancelTokenRef.current.cancel("Operation canceled due to new request.");
+        }
+
+        // Create a new cancel token
+        cancelTokenRef.current = createCancelTokenSource();
+
         const lat = latitude ?? localStorage.getItem("latitude");
         const long = longitude ?? localStorage.getItem("longitude");
+
         try {
+            console.log("request count")
             const res = await axiosInstance.get(`/get-available-cars?`, {
                 params: {
                     brand: selectedBrand,
@@ -68,14 +106,26 @@ const SearchNavbar = ({
                     price: selectedPrice,
                     bookingStarts: tripStarts,
                     bookingEnds: tripEnds,
-                    latitude:lat,
-                    longitude:long,
-                }
+                    latitude: lat,
+                    longitude: long,
+                    limit: 4,
+                    skip: (currentPage - 1) * 4
+                },
+                cancelToken: cancelTokenRef.current.token,
             });
             console.log(res?.data);
-            setAvailableCars(res?.data);
+            if (res?.data.length < 4) {
+                setHasMoreCars(false); // No more cars to load
+            }
+
+            setAvailableCars(prevCars => [...prevCars, ...res?.data]);
+            setCurrentPage(currentPage);
         } catch (error) {
-            console.log(error)
+            if (axios.isCancel(error)) {
+                console.log("Request canceled", error.message);
+            } else {
+                console.error("Error fetching cars", error);
+            }
         }
     }
 

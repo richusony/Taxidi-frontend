@@ -63,7 +63,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
         <div className='mt-10'>
             <h1 className='md:text-xl font-semibold'>Reviews</h1>
 
-            <div className='mt-2 h-52 md:h-96 overflow-y-scroll hideScrollBar'>
+            {reviews?.length > 0?<div className='mt-2 h-52 md:h-96 overflow-y-scroll hideScrollBar'>
                 {reviews?.map((review) => (
                     <div key={review?._id} className='my-2 border-b pb-5 flex'>
                         <div className='w-12 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>
@@ -75,7 +75,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
                     </div>
                 ))
                 }
-            </div>
+            </div>: <h1 className='text-gray-500'>No reviews yet</h1>}
             <div className='relative'>
                 <div className={`transition-all delay-150 ease-in z-0 flex ${reviewMsg == "" ? "translate-y-full invisible" : "visible"} items-center py-2 text-[#593CFB]`}>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>

@@ -1,6 +1,8 @@
+// axiosConfig.js
+
 import axios from "axios";
 
-const domain =  import.meta.env.VITE_BACKEND;
+const domain = import.meta.env.VITE_BACKEND;
 
 const axiosInstance = axios.create({
   baseURL: `${domain}`, // Replace with your API base URL
@@ -26,14 +28,13 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    if (error.response.status === 401 && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       const storedUser = localStorage.getItem("user");
-      const currentRoleData =
-        storedUser != "undefined" ? JSON.parse(storedUser) : null;
+      const currentRoleData = storedUser !== "undefined" ? JSON.parse(storedUser) : null;
       console.log("axios Interpreter", currentRoleData);
       const refreshTokenEndpoint =
-        currentRoleData?.role == "user"
+        currentRoleData?.role === "user"
           ? "/refresh-token"
           : `/${currentRoleData.role}/refresh-token`;
       try {
@@ -42,8 +43,7 @@ axiosInstance.interceptors.response.use(
         const newRefreshToken = data.refreshToken;
         localStorage.setItem("token", newAccessToken);
         localStorage.setItem("refreshToken", newRefreshToken);
-        axiosInstance.defaults.headers.common["Authorization"] =
-          `Bearer ${newAccessToken}`;
+        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${newAccessToken}`;
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axiosInstance(originalRequest);
       } catch (refreshError) {
@@ -54,6 +54,7 @@ axiosInstance.interceptors.response.use(
   }
 );
 
-export const cancelTokenSource = axios.CancelToken.source();
+// Function to create a new cancel token source
+export const createCancelTokenSource = () => axios.CancelToken.source();
 
 export default axiosInstance;
