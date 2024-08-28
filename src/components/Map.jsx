@@ -1,23 +1,22 @@
 import React from 'react';
+import { Icon } from 'leaflet';
 import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster"
+import MarkerCustomIcon from "../assets/images/markerCustomIcon.png";
+import MarkerCustomCarIcon from "../assets/images/carCustomIcon.png";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 
 const Map = ({ latitude, longitude, vehicles }) => {
-    const markers = [
-        {
-            geocode: [48.86, 2.3522],
-            popUp: "hello1"
-        },
-        {
-            geocode: [48.85, 2.3522],
-            popUp: "hello2"
-        },
-        {
-            geocode: [48.84, 2.3522],
-            popUp: "hello3"
-        },
-    ]
+
+    const customIcon = new Icon({
+        iconUrl: MarkerCustomIcon,
+        iconSize: [38, 38]
+    });
+
+    const customCarIcon = new Icon({
+        iconUrl: MarkerCustomCarIcon,
+        iconSize: [38, 38]
+    });
 
     return (
         <MapContainer center={[latitude, longitude]} zoom={13} className='h-full rounded'>
@@ -28,7 +27,7 @@ const Map = ({ latitude, longitude, vehicles }) => {
 
             <MarkerClusterGroup>
                 {
-                   vehicles?.length > 0 && vehicles.map((marker) => (
+                    vehicles?.length > 0 && vehicles.map((marker) => (
                         <Marker position={[marker?.latitude, marker?.longitude]}>
                             <Popup>{marker?.model}</Popup>
                         </Marker>
@@ -36,9 +35,9 @@ const Map = ({ latitude, longitude, vehicles }) => {
                 }
             </MarkerClusterGroup>
 
-            <Marker position={[latitude, longitude]}>
-                            <Popup>{"You"}</Popup>
-                        </Marker>
+            <Marker icon={customIcon} position={[latitude, longitude]}>
+                <Popup>{"You"}</Popup>
+            </Marker>
         </MapContainer>
     )
 }

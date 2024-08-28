@@ -157,9 +157,9 @@ const AvailableCars = () => {
                     <select className='bg-transparent outline-none' onChange={handleFilterChange(setSelectedFuel)}
                         value={selectedFuel} name="" id="">
                         <option value="None">Fuel</option>
-                        <option value="petrol">Petrol</option>
-                        <option value="diesel">Diesel</option>
-                        <option value="electric">EV</option>
+                        <option value="Petrol">Petrol</option>
+                        <option value="Diesel">Diesel</option>
+                        <option value="Electric">EV</option>
                     </select>
                 </div>
                 <div className='ml-2 border-2 border-gray-500 px-3 py-1 rounded'>
@@ -187,11 +187,11 @@ const AvailableCars = () => {
                                 <div className='my-auto w-[30%] h-24 md:h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                                 <div className='w-[70%] px-5'>
-                                    <div className='mt-2 flex justify-between gap-x-2 items-center w-full'><h1 className='text-sm md:text-xl font-semibold'>{`${car.brand?.brandName + " " + car.model}`.length > 15 ? `${car.brand?.brandName + " " + car.model}`.substring(0, 15) + "..." : car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl' icon={faHeart} /></h1></div>
+                                    <div className='mt-2 flex justify-between gap-x-2 items-center w-full'><h1 className='text-sm md:text-xl font-semibold'>{`${car.brand?.brandName + " " + car.model}`.length > 15 ? `${car.brand?.brandName + " " + car.model}`.substring(0, 15) + "..." : car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl invisible' icon={faHeart} /></h1></div>
                                     <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
-                                    <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at Thaliparamba</div>
+                                    <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at {car?.city}</div>
                                     <div className=''>
-                                        <h1 className='text-end text-sm md:text-base'>₹{car?.rent}/hour</h1>
+                                        <h1 className='text-end text-sm md:text-base'><span className='text-[#593CFB]'>₹</span>{car?.rent}/hour</h1>
                                     </div>
                                 </div>
 
