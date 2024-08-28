@@ -1,25 +1,32 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import axios from 'axios';
+import moment from 'moment';
 import axiosInstance from '../axiosConfig';
 import ErrorToast from '../components/ErrorToast';
-import DefaultNavbar from "../components/DefaultNavbar";
-import axios from 'axios';
-import UserNotifications from '../components/UserNotifications';
 import useNotification from '../hooks/useNotification';
+import DefaultNavbar from "../components/DefaultNavbar";
+import React, { useEffect, useMemo, useState } from 'react';
+import UserNotifications from '../components/UserNotifications';
 
 const UserWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
     const { notificationBox } = useNotification();
+    const [currentPage, setCurrentPage] = useState(1);
     const [walletData, setWalletData] = useState(null);
+    const [hasMoreData, setHasMoreData] = useState(true);
     const [paymentHistory, setPaymentHistory] = useState([]);
     const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
 
     axios.defaults.withCredentials = true;
-   
+
     useEffect(() => {
         getWalletData();
+    }, []);
+
+    useEffect(() => {
+        setHasMoreData(true);
         getWalletHistory();
-    }, [])
+    }, [currentPage])
 
     const handleAddMoney = async (amount) => {
         try {
@@ -40,8 +47,17 @@ const UserWallet = () => {
 
     const getWalletHistory = async () => {
         try {
-            const res = await axiosInstance.get("/wallet-history");
+            const res = await axiosInstance.get("/wallet-history", {
+                params: {
+                    limit: 2,
+                    skip: (currentPage - 1) * 2
+                }
+            });
             setPaymentHistory(res?.data);
+            if (res?.data.length < 2) {
+                setHasMoreData(false);
+            }
+            console.log(res.data);
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +97,7 @@ const UserWallet = () => {
             data: data
         }
 
-        axios.request(config).then((response) => {
+        axios.pay(config).then((response) => {
             console.log(JSON.stringify(response.data))
             handleRazorpayScreen(response.data.amount);
         }).catch((error) => console.log(error))
@@ -121,6 +137,18 @@ const UserWallet = () => {
         paymentObject.open()
     }
 
+    const changeTablePage = (action) => {
+        if (action == "add") {
+            if (hasMoreData) {
+                setCurrentPage(prev => prev + 1);
+            }
+        } else {
+            if (currentPage > 1) {
+                setCurrentPage(prev => prev - 1)
+            }
+        }
+    }
+
     return (
         <div className='md:px-5 pb-5 min-h-screen bg-[#EDEDED]'>
             {/* Navbar  */}
@@ -150,33 +178,42 @@ const UserWallet = () => {
                 {/* Payment History */}
                 <div className='mt-20'>
                     <h1 className='text-gray-500 font-semibold text-center'>Payment History</h1>
-                    {paymentHistory.length > 0 ? <div className=''>
-                        <div className="flex justify-center my-8">
-                            <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
-                                <thead>
-                                    <tr>
-                                        <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Id</th>
-                                        <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Method</th>
-                                        <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Date</th>
-                                        <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Amount</th>
-                                        <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {paymentHistory.map(request => (
-                                        <tr onClick={() => navigate(``)} key={request._id} className="hover:bg-gray-100 cursor-pointer">
-                                            <td className="py-2 px-4 border-b text-center">{request.fullname}</td>
-                                            <td className="py-2 px-4 border-b text-center">{request.model}</td>
-                                            <td className="py-2 px-4 border-b text-center">{request.vehicleRegistrationNumber}</td>
-                                            <td className="py-2 px-4 border-b text-center">{request.email}</td>
-                                            <td className="py-2 px-4 border-b text-center">{request.phone}</td>
-                                            <td className="py-2 px-4 border-b text-center">{moment(request.createdAt).format("DD-MM-YYYY")}</td>
+                    {paymentHistory.length > 0
+                        ?
+                        <div className=''>
+                            <div className="flex justify-center mt-8 w-screen md:w-full overflow-x-scroll hideScrollBar">
+                                <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+                                    <thead className='text-sm md:text-base'>
+                                        <tr>
+                                            <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Id</th>
+                                            <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Payment Method</th>
+                                            <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Date</th>
+                                            <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Amount</th>
+                                            <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Status</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody className='text-sm md:text-base'>
+                                        {paymentHistory.map(pay => (
+                                            <tr onClick={() => navigate(``)} key={pay?._id} className="hover:bg-gray-100 cursor-pointer">
+                                                <td className="py-2 px-4 border-b text-center">{pay?.paymentId}</td>
+                                                <td className="py-2 px-4 border-b text-center">{pay?.paymentMethod}</td>
+                                                <td className="py-2 px-4 border-b text-center">{moment(pay?.createdAt).format("DD-MM-YYYY")}</td>
+                                                <td className="py-2 px-4 border-b text-center">{pay?.amount}</td>
+                                                <td className="py-2 px-4 border-b text-center">{pay?.credited ? <h1 className='text-green-500'>Credited</h1> : <h1 className='text-red-500'>Debited</h1>}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                    </div> : <h1 className='text-center text-gray-500'>No Transations yet</h1>}
+                        :
+                        <h1 className='text-center text-gray-500'>No Transations yet</h1>}
+                    {paymentHistory.length > 0 &&
+                        <div className='mt-5 text-center flex gap-x-2 justify-center'>
+                            <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
+                            <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
+                        </div>
+                    }
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />

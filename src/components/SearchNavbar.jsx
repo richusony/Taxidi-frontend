@@ -147,7 +147,7 @@ const SearchNavbar = ({
             <div className='flex items-center'>
                 <div className='relative'>
                     <FontAwesomeIcon className='text-2xl cursor-pointer' onClick={handleMenu} icon={faBars} />
-                    <div className={`${menu ? 'absolute' : 'hidden'} top-14 right-0 w-48 px-5 py-2 z-10 bg-white rounded shadow-md border`}>
+                    <div className={`${menu ? 'absolute' : 'hidden'} top-14 right-0 w-48 px-5 py-2 z-50 bg-white rounded shadow-md border`}>
                         <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
                         </div>
