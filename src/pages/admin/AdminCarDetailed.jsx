@@ -8,6 +8,7 @@ import AdminVehiclePhotos from '../../components/AdminVehiclePhotos';
 import AdminVehicleDocuments from '../../components/AdminVehicleDocuments';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
+import HostVehicleUpdate from '../../components/HostVehicleUpdate';
 
 const AdminCarDetailed = () => {
     const navigate = useNavigate();
@@ -15,6 +16,7 @@ const AdminCarDetailed = () => {
     const { registrationNumber } = useParams();
     const [vehicleData, setVehicleData] = useState(null);
     const [vehiclePhotos, setVehiclePhotos] = useState(true);
+    const [vehicleUpdateBox, setVehicleUpdateBox] = useState(false);
     const [vehicleDocuments, setVehicleDocuments] = useState(false);
     const [page, setPage] = useState(`Car Details - ${registrationNumber}`);
 
@@ -34,7 +36,7 @@ const AdminCarDetailed = () => {
     const deleteTaxidiVehicle = async () => {
         const confirmDelete = confirm("Are you sure, you want delete this vehicle?");
 
-        if(!confirmDelete) return;
+        if (!confirmDelete) return;
 
         try {
             const res = await axiosInstance.delete(`/admin/car/${registrationNumber.trim()}`);
@@ -42,6 +44,32 @@ const AdminCarDetailed = () => {
         } catch (error) {
             alert(error.message);
             console.log(error.message);
+        }
+    }
+
+    const handleListVehicle = async () => {
+        const confirm = window.confirm("Are you sure");
+        if (!confirm) return;
+
+        try {
+            const res = await axiosInstance.patch(`/admin/list/${vehicleData._id}`)
+            setVehicleData(res?.data);
+        } catch (error) {
+            console.log(error?.response?.data?.error);
+            setError(error?.response?.data?.error);
+        }
+    }
+
+    const handleUnListVehicle = async () => {
+        const confirm = window.confirm("Are you sure");
+        if (!confirm) return;
+
+        try {
+            const res = await axiosInstance.patch(`/admin/unlist/${vehicleData._id}`)
+            setVehicleData(res?.data);
+        } catch (error) {
+            console.log(error?.response?.data?.error);
+            setError(error?.response?.data?.error);
         }
     }
 
@@ -54,7 +82,22 @@ const AdminCarDetailed = () => {
                 <AdminNavbar page={page} />
 
                 <div className='my-10'>
-                    {vehicleData?.host?.fullname.split(' ').includes("TAXIDI") && <div className='mb-10 flex justify-between transition delay-150 ease-linear'><div><h1 className='text-gray-500 font-bold text-xl'>Taxidi Vehicle <FontAwesomeIcon className='' icon={faCar} /></h1></div><div><button className='px-6 py-1 border border-[#593CFB] hover:bg-[#593CFB] text-[#593CFB] hover:text-white rounded'>Edit</button><button onClick={deleteTaxidiVehicle} className='ml-4 px-4 py-1 border border-red-500 hover:bg-red-500 text-red-500 hover:text-white rounded'>Delete</button></div></div>}
+                    {
+                        vehicleData?.host?.fullname?.split(' ').includes("TAXIDI") &&
+                        <div className='mb-10 flex justify-between transition delay-150 ease-linear'>
+                            <div>
+                                <h1 className='text-gray-500 font-bold text-xl'>Taxidi Vehicle <FontAwesomeIcon className='' icon={faCar} /></h1>
+                            </div>
+                            <div>
+                                {
+                                    vehicleData?.availabilityStatus === false ?
+                                        <button onClick={handleListVehicle} className='mr-3 transition-all ease-linear px-4 py-1 bg-[#593CFB] text-white rounded'>List</button> :
+                                        <button onClick={handleUnListVehicle} className='mr-3 transition-all ease-linear px-4 py-1 bg-[#593CFB] text-white rounded'>Unlist</button>
+                                }
+                                <button onClick={() => setVehicleUpdateBox(true)} className='transition-all ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white rounded shadow-md'>Update</button>
+                            </div>
+                        </div>
+                    }
                     <div className='grid grid-cols-3 gap-y-9'>
                         <div>
                             <h1 className='text-gray-500 w-fit'>Registration Number</h1>
@@ -74,11 +117,11 @@ const AdminCarDetailed = () => {
                         </div>
                         <div>
                             <h1 className='text-gray-500 w-fit'>Last Service Date</h1>
-                            <h3 className='w-fit'>Not Done</h3>
+                            <h3 className='w-fit'>{vehicleData?.lastServiceDate}</h3>
                         </div>
                         <div>
                             <h1 className='text-gray-500 w-fit'>Pick-Up Location</h1>
-                            <h3 className='w-fit'>Not Done</h3>
+                            <h3 className='w-fit'>{vehicleData?.pickUpLocation}</h3>
                         </div>
                     </div>
 
@@ -93,6 +136,7 @@ const AdminCarDetailed = () => {
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />
+            {vehicleUpdateBox && <HostVehicleUpdate setVehicleUpdateBox={setVehicleUpdateBox} vehicleData={vehicleData} role={"admin"}/>}
         </div>
     )
 }

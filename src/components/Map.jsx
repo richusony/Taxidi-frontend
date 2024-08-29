@@ -18,6 +18,7 @@ const Map = ({ latitude, longitude, vehicles }) => {
         iconSize: [38, 38]
     });
 
+console.log(latitude, longitude, "map")
     return (
         <MapContainer center={[latitude, longitude]} zoom={13} className='h-full rounded'>
             <TileLayer
@@ -28,7 +29,7 @@ const Map = ({ latitude, longitude, vehicles }) => {
             <MarkerClusterGroup>
                 {
                     vehicles?.length > 0 && vehicles.map((marker) => (
-                        <Marker key={marker._id} position={[marker?.latitude, marker?.longitude]}>
+                        <Marker key={marker._id} position={[marker?.location?.coordinates[1], marker?.location?.coordinates[0]]}>
                             <Popup>{marker?.model}</Popup>
                         </Marker>
                     ))

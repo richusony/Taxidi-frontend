@@ -1,10 +1,10 @@
-import AddCar from '../../components/AddCar';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import ErrorToast from '../../components/ErrorToast';
 import HostNavbar from '../../components/HostNavBar';
 import HostSideBar from '../../components/HostSideBar';
+import HostAddCar from '../../components/HostAddCar';
 
 const MyVehicles = () => {
     const navigate = useNavigate();
@@ -62,7 +62,7 @@ const getHostVehicles = async () => {
                         </tbody>
                     </table>
                 </div>
-                {addCar && <AddCar setError={setError} setAddCar={setAddCar} />}
+                {addCar && <HostAddCar setError={setError} setAddCar={setAddCar} />}
             </div>
             <ErrorToast error={error} setError={setError}/>
         </div>

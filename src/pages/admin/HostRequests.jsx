@@ -35,8 +35,9 @@ const HostRequests = () => {
                 {/* Navbar  */}
                 <AdminNavbar page={page} />
 
-                <div className='mt-10 text-end'><button onClick={() => setAddCar(prev => !prev)} className='px-6 py-2 bg-[#593CFB] text-white rounded'>Still figuring out!!</button></div>
+                <div className='mt-10 text-end'><button onClick={() => setAddCar(prev => !prev)} className='px-6 py-2 bg-[#593CFB] text-white rounded'>Not Done</button></div>
 
+                {hostRequests.length > 0?
                 <div className="flex justify-center my-8">
                     <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
                         <thead>
@@ -63,6 +64,7 @@ const HostRequests = () => {
                         </tbody>
                     </table>
                 </div>
+                :<h1 className="mt-10 text-center font-bold">No requests yet!!</h1>}
                 {addCar && <AddCar setError={setError} setAddCar={setAddCar} />}
             </div>
             <ErrorToast error={error} setError={setError} />

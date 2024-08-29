@@ -3,7 +3,7 @@ import useOnline from '../hooks/useOnline';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
+const EditBrand = ({ setError, setEditBrand, editBrandData }) => {
     const isOnline = useOnline();
     const [formData, setFormData] = useState({
         brandName: editBrandData.brandName,
@@ -49,16 +49,19 @@ const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
                 credentials: 'include',
                 body: formDataForUpload
             });
-
+            console.log(res);
             if (!res.ok) {
                 const data = await res.json();
-                setError(data?.error);
+                return setError(data?.error);
             }
 
-            setEditBrand(false);
-            window.location.reload();
+            if (res.status == 200) {
+                setEditBrand(false);
+                window.location.reload();
+            }
         } catch (error) {
-            setError(error.message);
+            const data = await res.json();
+            setError(data?.error);
         }
     };
 
@@ -82,7 +85,7 @@ const EditBrand = ({ setError, setEditBrand, editBrandData}) => {
                     </div>
                 </div>
 
-            <div className='mt-5 text-end'><button type="submit" className='bg-[#593CFB] text-white text-xl px-6 py-1 rounded'>Add</button></div>
+                <div className='mt-5 text-end'><button type="submit" className='bg-[#593CFB] text-white text-xl px-6 py-1 rounded'>Add</button></div>
             </form>
         </div>
     );

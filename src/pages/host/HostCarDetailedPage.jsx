@@ -17,7 +17,7 @@ const HostCarDetailed = () => {
     const { registrationNumber } = useParams();
     const [vehicleData, setVehicleData] = useState(null);
     const [vehiclePhotos, setVehiclePhotos] = useState(true);
-    const [vehicleUpdateBox, setVehicleUpdateBox] = useState(null);
+    const [vehicleUpdateBox, setVehicleUpdateBox] = useState(false);
     const [vehicleDocuments, setVehicleDocuments] = useState(false);
     const [page, setPage] = useState(`Car Details - ${registrationNumber}`);
 
@@ -120,7 +120,7 @@ const HostCarDetailed = () => {
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />
-            {vehicleUpdateBox && <HostVehicleUpdate setVehicleUpdateBox={setVehicleUpdateBox} vehicleData={vehicleData} />}
+            {vehicleUpdateBox && <HostVehicleUpdate setVehicleUpdateBox={setVehicleUpdateBox} vehicleData={vehicleData} role={"host"}/>}
         </div>
     )
 }

@@ -23,9 +23,7 @@ const Brands = () => {
 
     useEffect(() => {
         getAllBrands();
-    }, [])
-
-
+    }, []);
 
     const getAllBrands = async () => {
         const res = await axiosInstance.get("/admin/brands");
@@ -65,7 +63,7 @@ const Brands = () => {
                                         <td className="py-2 px-4 border-b">
                                             <div>
                                                 <button onClick={() => { setEditBrand(true); setEditBrandData(item); }} className='px-2 py-1 bg-blue-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faPencil} /></button>
-                                                <button className='ml-4 px-2 py-1 bg-red-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faTrash} /></button>
+                                                <button className='ml-4 hidden px-2 py-1 bg-red-500 text-white rounded shadow-md'><FontAwesomeIcon icon={faTrash} /></button>
                                             </div></td>
                                     </tr>
                                 ))}

@@ -4,7 +4,7 @@ import axiosInstance from '../axiosConfig';
 import { faCar } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-const AddBody = ({setError, setAddBody}) => {
+const AddBody = ({ setError, setAddBody }) => {
     const isOnline = useOnline();
     const [formData, setFormData] = useState({
         bodyType: ''
@@ -25,12 +25,14 @@ const AddBody = ({setError, setAddBody}) => {
             return;
         }
 
-        if(!formData.bodyType){
+        if (!formData.bodyType) {
             setError("Enter Body Type")
             return;
         }
         try {
-          const res = await axiosInstance.post("/admin/add-body", formData);  
+            const res = await axiosInstance.post("/admin/add-body", formData);
+            window.location.reload();
+            setAddBody(false);
         } catch (error) {
             setError(error?.response?.data?.error)
         }
@@ -40,7 +42,7 @@ const AddBody = ({setError, setAddBody}) => {
         <div className='absolute top-[20%] px-10 py-5 bg-white rounded-md shadow-md'>
             <div className='my-5 flex justify-between'>
                 <h1 className='text-gray-500 font-bold text-2xl'>Add Body <FontAwesomeIcon icon={faCar} /></h1>
-                <button onClick={()=>setAddBody(false)} className='border border-[#593CFB] px-2 py-1 rounded'>Cancel</button>
+                <button onClick={() => setAddBody(false)} className='border border-[#593CFB] px-2 py-1 rounded'>Cancel</button>
             </div>
             <form className='grid grid-cols-2 gap-5'>
                 <div className='flex flex-col'>

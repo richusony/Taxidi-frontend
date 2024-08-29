@@ -310,7 +310,7 @@ const CarDetailedPage = () => {
             <h1 className='text-gray-700'>{tripEnds}</h1>
 
             <h1 className='mt-2 font-semibold'>Pickup Location</h1>
-            <h1 className='text-gray-700'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
+            <h1 className='text-gray-700'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> {vehicleData?.pickUpLocation}</h1>
 
             {
               walletData !== null &&

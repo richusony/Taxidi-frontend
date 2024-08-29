@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import axiosInstance from '../axiosConfig';
 import axios from 'axios';
 
-const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData }) => {
+const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData, role }) => {
     const [longitude, setLongitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
     const [currentAddress, setCurrentAddress] = useState("");
@@ -74,7 +74,7 @@ const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData }) => {
     const handleUpdateVehicle = async () => {
         console.log(formData);
         try {
-            const res = await axiosInstance.patch("/host/update-vehicle", formData);
+            const res = await axiosInstance.patch(`/${role}/update-vehicle`, formData);
             // console.log(res);
             window.location.reload();
         } catch (error) {

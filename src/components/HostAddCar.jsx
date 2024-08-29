@@ -1,14 +1,16 @@
 import axiosInstance from "../axiosConfig.js";
 import useOnline from '../hooks/useOnline.jsx';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { faCar, faLocation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import AuthContext from "../contexts/AuthContext.jsx"
 import { isValidKeralaRegistrationNumber } from "../constants/index.js";
 
-const AddCar = ({ setError, setAddCar }) => {
+const HostAddCar = ({ setError, setAddCar }) => {
     const isOnline = useOnline();
     const [longitude, setLongitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
+    const {user} = useContext(AuthContext);
     const [body, setBody] = useState([]);
     const [hosts, setHosts] = useState(null);
     const [brands, setBrands] = useState([]);
@@ -40,12 +42,12 @@ const AddCar = ({ setError, setAddCar }) => {
     useEffect(() => {
         getAllBrands();
         getAllBodys();
-        getAllHosts();
+        // getAllHosts();
     }, [])
 
     const getAllBrands = async () => {
         try {
-            const res = await axiosInstance.get("/admin/brands");
+            const res = await axiosInstance.get("/host/brands");
             setBrands(res.data);
         } catch (error) {
             setError(error?.response?.data?.error)
@@ -54,7 +56,7 @@ const AddCar = ({ setError, setAddCar }) => {
 
     const getAllBodys = async () => {
         try {
-            const res = await axiosInstance.get("/admin/body-types");
+            const res = await axiosInstance.get("/host/body-types");
             setBody(res.data);
         } catch (error) {
             setError(error?.response?.data?.error);
@@ -63,7 +65,7 @@ const AddCar = ({ setError, setAddCar }) => {
 
     const getAllHosts = async () => {
         try {
-            const res = await axiosInstance.get('/admin/hosts');
+            const res = await axiosInstance.get('/host/hosts');
             console.log(res.data);
             setHosts(res.data);
             const taxidiData = res.data.find((host) => host.email == "taxidi@gmail.com");
@@ -125,7 +127,7 @@ const AddCar = ({ setError, setAddCar }) => {
         try {
             // Prepare FormData for file upload
             const formDataForUpload = new FormData();
-            formData.host = taxidiHostData._id;
+            formData.host = user._id
             for (const key in formData) {
                 if (key === 'vehicleImages' && formData[key]) {
                     formData[key].forEach((file) => {
@@ -138,7 +140,7 @@ const AddCar = ({ setError, setAddCar }) => {
             // console.log(formDataForUpload.getAll());
             console.log(formData);
             // return;q
-            res = await fetch(`${import.meta.env.VITE_BACKEND}/admin/add-vehicle`, {
+            res = await fetch(`${import.meta.env.VITE_BACKEND}/host/add-vehicle`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formDataForUpload
@@ -153,7 +155,7 @@ const AddCar = ({ setError, setAddCar }) => {
             // Close the add car modal or perform other actions
             if (res.status == 201) {
                 setAddCar(false);
-                window.location.href = "/admin/cars"
+                window.location.href = "/host/my-vehicles"
             }
         } catch (error) {
             // const data = await res.json()
@@ -281,7 +283,7 @@ const AddCar = ({ setError, setAddCar }) => {
                 </div>
                 <div key={"formInput#239"} className='flex flex-col'>
                     <label htmlFor="pickUpLocation">Pick Up Locaton</label>
-                    <input onChange={handleInputChange} type="text" id='pickUpLocation' name='pickUpLocation' value="TAXIDI SERVICE CENTER" disabled className='border-2  px-2 py-1 rounded' />
+                    <input onChange={handleInputChange} type="text" id='pickUpLocation' name='pickUpLocation' className='border-2  px-2 py-1 rounded' />
                 </div>
                 <div key={"formInput#10"} className='flex flex-col'>
                     <label htmlFor="mileage">Mileage</label>
@@ -289,7 +291,7 @@ const AddCar = ({ setError, setAddCar }) => {
                 </div>
                 <div key={"formInput#11"} className='flex flex-col'>
                     <label htmlFor="host">Host</label>
-                    <input onChange={handleInputChange} type="text" id='host' name='host' value="TAXIDI" disabled className='border-2  px-2 py-1 rounded' />
+                    <input onChange={handleInputChange} type="text" id='host' name='host' value={user?.fullname} disabled className='border-2  px-2 py-1 rounded' />
                 </div>
                 <div key={"formInput#12"} className='flex flex-col'>
                     <label htmlFor="rent">Rent</label>
@@ -326,4 +328,4 @@ const AddCar = ({ setError, setAddCar }) => {
     )
 }
 
-export default AddCar
+export default HostAddCar

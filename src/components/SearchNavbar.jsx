@@ -95,7 +95,8 @@ const SearchNavbar = ({
 
         const lat = latitude ?? localStorage.getItem("latitude");
         const long = longitude ?? localStorage.getItem("longitude");
-
+        console.log(lat, long);
+        if(!lat || !long) return setError("Allow Location to list all the vehicle nearby you")
         try {
             console.log("request count")
             const res = await axiosInstance.get(`/get-available-cars?`, {
