@@ -23,7 +23,7 @@ const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError, can
         cancelReason
       }
       const res = await axiosInstance.post(`/${cancelBy}/cancel-booking`, reqData);
-      console.log("cancelled ::", res);
+      // console.log("cancelled ::", res);
       setCancelBox(false);
     } catch (error) {
       console.log(error);

@@ -1,18 +1,18 @@
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 import React, { useEffect, useState } from 'react';
+import ErrorToast from '../../components/ErrorToast';
 import AdminNavbar from '../../components/AdminNavbar';
 import AdminSideBar from '../../components/AdminSideBar';
 import CancelReasonBox from '../../components/CancelReasonBox';
-import ErrorToast from '../../components/ErrorToast';
 
 const AdminBookingDetailed = () => {
     const { paymentId } = useParams();
     const [error, setError] = useState("");
     const [cancelWindow, setCancelWindow] = useState(false);
+    const [bookingStatus, setBookingStatus] = useState(true);
     const [bookingDetails, setBookingDetails] = useState(null);
     const [page, setPage] = useState(`Booking of ${paymentId}`);
-    const [bookingStatus, setBookingStatus] = useState(true);
 
     useEffect(() => {
         fetchBookingDetails();
@@ -50,16 +50,6 @@ const AdminBookingDetailed = () => {
 
                         <div className='px-4 md:w-1/2'>
                             <h1 className='text-2xl font-semibold'>{bookingDetails?.brandDetails[0]?.brandName + " " + bookingDetails?.vehicleDetails?.model}</h1>
-
-                            {/* <div className='mt-5'>
-                                <h1 className='text-gray-500 font-semibold'>Host</h1>
-                                <div className='mt-2 flex items-center'>
-                                    <div className='w-12 h-12'>
-                                        <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
-                                    </div>
-                                    <span className='ml-3 text-gray-600'>{bookingDetails?.hostDetails[0]?.fullname}</span>
-                                </div>
-                            </div> */}
 
                             <div className='mt-5 grid grid-cols-2 gap-y-3'>
                                 <div className=''>

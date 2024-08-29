@@ -45,9 +45,9 @@ const UserNotifications = () => {
 
                 <div className='pb-4 h-full overflow-y-scroll hideScrollBar'>
                     {realTimeNotifications.length > 0 && realTimeNotifications.map((notify, index) => (
-                        <div key={"notification" + index} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center shadow-md'>
-                            <p className='pl-4 text-gray-800'>{notify}</p>
-                            <span className='text-gray-500 text-sm'>{"just now"}</span>
+                        <div key={"notification" + index} className='mb-2 px-4 py-4 bg-gray-200 rounded flex justify-between items-center gap-x-2 shadow-md'>
+                            <p className='text-gray-800 text-sm w-[90%]'>{notify}</p>
+                            <span className='text-gray-500 text-xs w-[10%]'>{"just now"}</span>
                         </div>
                     ))}
                     {notifications.length > 0 ? notifications.map((notify) => (

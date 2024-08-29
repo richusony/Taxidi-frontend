@@ -8,18 +8,41 @@ const HostBookings = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(`Bookings`);
     const [bookings, setBookings] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [hasMoreData, setHasMoreData] = useState(true);
 
     useEffect(() => {
         fetchAllNewBookings();
-    }, []);
+    }, [currentPage]);
 
     const fetchAllNewBookings = async () => {
+        setHasMoreData(true);
         try {
-            const res = await axiosInstance("/host/bookings");
+            const res = await axiosInstance("/host/bookings", {
+                params: {
+                    limit: 2,
+                    skip: (currentPage - 1) * 2
+                }
+            });
             console.log(res?.data);
             setBookings(res?.data);
+            if (res?.data.length < 2) {
+                setHasMoreData(false);
+            }
         } catch (error) {
             console.log(error);
+        }
+    }
+
+const changeTablePage = (action) => {
+        if (action == "add") {
+            if (hasMoreData) {
+                setCurrentPage(prev => prev + 1);
+            }
+        } else {
+            if (currentPage > 1) {
+                setCurrentPage(prev => prev - 1)
+            }
         }
     }
 
@@ -76,6 +99,13 @@ const HostBookings = () => {
                         </tbody>
                     </table>
                 </div>
+                {
+                    bookings?.length > 0 &&
+                    <div className='mt-5 text-center flex gap-x-2 justify-center'>
+                        <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
+                        <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
+                    </div>
+                }
             </div>
         </div>
     )

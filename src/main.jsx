@@ -45,10 +45,12 @@ const HostLogin = lazy(() => import("./pages/host/HostLogin.jsx"));
 const HostWallet = lazy(() => import("./pages/host/HostWallet.jsx"));
 const BecomeHost = lazy(() => import("./pages/host/BecomeHost.jsx"));
 const MyVehicles = lazy(() => import("./pages/host/MyVehicles.jsx"));
+const HostProfile = lazy(() => import("./pages/host/HostProfile.jsx"));
 const HostBookings = lazy(() => import("./pages/host/HostBookings.jsx"));
 const ChatWithAdmin = lazy(() => import("./pages/host/ChatWithAdmin.jsx"));
 const HostDashboard = lazy(() => import("./pages/host/HostDashboard.jsx"));
 const HostCarDetailed = lazy(() => import("./pages/host/HostCarDetailedPage.jsx"));
+const HostBookingHistory = lazy(()=> import("./pages/host/HostBookingHistory.jsx"));
 const HostBookingDetailed = lazy(() => import("./pages/host/HostBookingDetailed.jsx"));
 
 const route = createBrowserRouter([
@@ -151,8 +153,16 @@ const route = createBrowserRouter([
     element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookingDetailed /></Suspense></PrivateRoute>
   },
   {
+    path: "/host/profile",
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostProfile /></Suspense></PrivateRoute>
+  },
+  {
     path: "/host/bookings",
     element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookings /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/host/booking-history",
+    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookingHistory /></Suspense></PrivateRoute>
   },
   {
     path: "/host/booking-details/:paymentId",
