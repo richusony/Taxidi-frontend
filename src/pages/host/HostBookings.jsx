@@ -1,8 +1,11 @@
+import htmlToPdf from "html2pdf.js";
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import HostNavbar from '../../components/HostNavBar';
 import HostSideBar from '../../components/HostSideBar';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 const HostBookings = () => {
     const navigate = useNavigate();
@@ -34,7 +37,7 @@ const HostBookings = () => {
         }
     }
 
-const changeTablePage = (action) => {
+    const changeTablePage = (action) => {
         if (action == "add") {
             if (hasMoreData) {
                 setCurrentPage(prev => prev + 1);
@@ -58,6 +61,11 @@ const changeTablePage = (action) => {
         return date.toDateString() + ", " + date.toLocaleTimeString();
     }
 
+    const handlePdf = () => {
+        const element = document.getElementById("bookingList");
+        htmlToPdf(element);
+    }
+
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <HostSideBar />
@@ -69,8 +77,9 @@ const changeTablePage = (action) => {
                 <h1 className='mt-5 text-2xl font-bold'>Bookings</h1>
                 <p className='text-gray-700'>See all vehicle bookings</p>
 
-                <div className="flex justify-center my-8 overflow-x-scroll hideScrollBar">
-                    <table className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
+                <div className="flex flex-col justify-center my-8 overflow-x-scroll hideScrollBar">
+                    <div className='mb-2 text-end'><button onClick={handlePdf} className='px-4 py-1 bg-[#593CFB] text-white rounded shadow-md'><FontAwesomeIcon icon={faDownload} /> Report</button></div>
+                    <table id="bookingList" className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
                         <thead>
                             <tr>
                                 <th className="py-2 px-4 bg-gray-200 text-gray-700 font-bold border-b">Vehicle</th>
