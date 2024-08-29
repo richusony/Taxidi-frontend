@@ -12,18 +12,22 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotificationContext } from '../contexts/NotificationContext';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
+import ErrorToast from '../components/ErrorToast';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
   const navigate = useNavigate();
+  const [error, setError] = useState("");
   const [menu, setMenu] = useState(false);
   const { user } = useContext(AuthContext);
   const [rating, setRating] = useState(null);
   const { registrationNumber } = useParams();
   const [userData, setUserData] = useState(null);
   const [responseId, setResposeId] = useState(null);
+  const [walletData, setWalletData] = useState(null);
   const [vehicleData, setVehicleData] = useState(null);
   const [responseState, setResposeState] = useState(null);
+  const [payUsingWallet, setPayUsingWallet] = useState(false);
   const { notificationBox, setNotificationBox } = useNotificationContext();
 
   axios.defaults.withCredentials = true;
@@ -59,8 +63,10 @@ const CarDetailedPage = () => {
   const tripEnds = formatDateTime(tripEndsObj);
 
   useEffect(() => {
-    // getUserDetails();
     getVehicleDetails();
+    if (user !== null && user !== undefined && user !== "") {
+      getWalletInfo();
+    }
   }, []);
 
   const getVehicleDetails = async () => {
@@ -70,6 +76,15 @@ const CarDetailedPage = () => {
       setVehicleData(res?.data);
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  const getWalletInfo = async () => {
+    try {
+      const res = await axiosInstance.get("/wallet");
+      setWalletData(res?.data);
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -175,7 +190,33 @@ const CarDetailedPage = () => {
   const handleBooking = async () => {
     if (!user) return navigate("/login");
 
-    await createRazorpayOrder(totalAmount);
+    if (payUsingWallet && walletData?.balance < totalAmount) {
+      scrollTo(0, 0)
+      return setError("Insufficient Balance");
+    }
+
+    if (payUsingWallet && walletData?.balance >= totalAmount) {
+      // Book using wallet
+      try {
+        const res = await axiosInstance.post("/book-vehicle-wallet", {
+          vehicleId: vehicleData._id,
+          queryStartDate: queryStartDate,
+          queryEndDate: queryEndDate,
+          amount: parseFloat(totalAmount),
+        });
+        if (res.status === 200) {
+          // Redirect to my bookings after successful wallet payment
+          navigate("/my-bookings");
+        } else {
+          setError("Booking failed using wallet.");
+        }
+      } catch (error) {
+        console.log("Error booking with wallet:", error);
+      }
+    } else {
+      // Book using Razorpay
+      await createRazorpayOrder(totalAmount);
+    }
   }
 
   return (
@@ -271,11 +312,24 @@ const CarDetailedPage = () => {
             <h1 className='mt-2 font-semibold'>Pickup Location</h1>
             <h1 className='text-gray-700'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> Thaliparamba</h1>
 
+            {
+              walletData !== null &&
+              <div className='mt-4 '>
+                <h1 className='font-semibold'>wallet balance: <span className='text-[#593CFB]'>₹</span>{walletData?.balance}</h1>
+                <div><input
+                  type="checkbox"
+                  name="payUsingWallet"
+                  id="payUsingWallet"
+                  checked={payUsingWallet}
+                  onChange={(e) => setPayUsingWallet(e.target.checked)} /> Pay using Wallet</div>
+              </div>
+            }
             <button onClick={handleBooking} className='mt-5 mx-auto w-full md:w-auto px-14 py-2 bg-[#593CFB] text-white rounded-md'>Continue</button>
           </div>
         </div>
       </div>
       {notificationBox && <UserNotifications />}
+      <ErrorToast error={error} setError={setError} />
     </div>
   )
 }

@@ -97,8 +97,8 @@ const UserWallet = () => {
             data: data
         }
 
-        axios.pay(config).then((response) => {
-            console.log(JSON.stringify(response.data))
+        axios.request(config).then((response) => {
+            // console.log(JSON.stringify(response.data))
             handleRazorpayScreen(response.data.amount);
         }).catch((error) => console.log(error))
     }
@@ -117,9 +117,13 @@ const UserWallet = () => {
             name: "TAXIDI PAYMENT",
             description: "trying to pay",
             handler: async function verifyBooking(response) {
+                console.log("response",response)
                 try {
-                    const res = await axiosInstance.post("/verify-add-money-payment", response)
-                    alert("booking verified");
+                    const res = await axiosInstance.post("/verify-add-money-payment", response);
+                    console.log("payment verified :: ",res)
+                    if (res.status === 200) {
+                        setWalletData(res?.data);
+                    }
                 } catch (error) {
                     console.log("error while verifying the order", error);
                 }

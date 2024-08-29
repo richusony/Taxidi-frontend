@@ -61,7 +61,7 @@ const HostProfile = () => {
         <HostNavbar page={page} />
 
         <div className='mt-5 px-5'>
-          <div className='relative px-5 py-5 bg-white rounded-xl shadow-md flex gap-10 overflow-hidden'>
+          <div className='relative px-5 py-5 bg-white rounded-xl shadow-md flex items-center gap-x-10 overflow-hidden'>
             {/* Image upload and view */}
             <div className='w-40 h-40 border border-[#593CFB] relative rounded-full overflow-hidden shadow-md'>
               <img className='w-full h-full object-cover rounded-full shadow-md' src={hostData?.profileImage} alt="profileImage" />
@@ -72,7 +72,7 @@ const HostProfile = () => {
             </div>
 
             {/* Host Information */}
-            {hostData && <div className='grid grid-cols-2 '>
+            {hostData && <div className='grid grid-cols-2 gap-y-5'>
               <div>
                 <label className='text-gray-500 font-bold' htmlFor="">FullName</label>
                 <p>{hostData?.fullname}</p>

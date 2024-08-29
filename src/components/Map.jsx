@@ -28,7 +28,7 @@ const Map = ({ latitude, longitude, vehicles }) => {
             <MarkerClusterGroup>
                 {
                     vehicles?.length > 0 && vehicles.map((marker) => (
-                        <Marker position={[marker?.latitude, marker?.longitude]}>
+                        <Marker key={marker._id} position={[marker?.latitude, marker?.longitude]}>
                             <Popup>{marker?.model}</Popup>
                         </Marker>
                     ))

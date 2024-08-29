@@ -92,7 +92,7 @@ const AvailableCars = () => {
 
     const fetchCoordinates = () => {
         if (navigator.geolocation) {
-            navigator?.geolocation.watchPosition(sucess, errorState);
+            navigator?.geolocation.getCurrentPosition(sucess, errorState);
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
@@ -140,7 +140,7 @@ const AvailableCars = () => {
                         value={selectedBrand} name="" id="">
                         <option value="None">Brands</option>
                         {brands?.length > 0 && brands.map((brand) => (
-                            <option className='' value={brand?._id}>{brand?.brandName}</option>
+                            <option key={brand?._id} className='' value={brand?._id}>{brand?.brandName}</option>
                         ))}
                     </select>
                 </div>
@@ -149,7 +149,7 @@ const AvailableCars = () => {
                         value={selectedBodyType} name="" id="">
                         <option value="None">Body Type</option>
                         {bodyTypes?.length > 0 && bodyTypes.map((body) => (
-                            <option className='' value={body?._id}>{body?.bodyType}</option>
+                            <option key={body?._id} className='' value={body?._id}>{body?.bodyType}</option>
                         ))}
                     </select>
                 </div>
@@ -183,7 +183,7 @@ const AvailableCars = () => {
                 <div className='md:w-[50%] h-[600px] md:h-[500px] overflow-y-scroll hideScrollBar'>
                     {availableCars?.length > 0 ?
                         availableCars.map((car) => (
-                            <div onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
+                            <div key={car._id} onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
                                 <div className='my-auto w-[30%] h-24 md:h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                                 <div className='w-[70%] px-5'>
