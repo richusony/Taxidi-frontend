@@ -45,6 +45,7 @@ const HostDashboard = () => {
         try {
             const res = await axiosInstance.get(`/host/chart-data/${filter}`);
             setChartData(res?.data);
+            localStorage.setItem("chartData", JSON.stringify(res?.data));
             console.log(res?.data);
         } catch (error) {
             console.log(error);
@@ -88,7 +89,7 @@ const HostDashboard = () => {
 
                 </div>
 
-                <div className='mt-10 px-5 py-2'>
+                <div className='mt-20 mx-auto px-5 py-2 w-4/5 bg-white rounded-xl shadow-md'>
                     <LineGraph chartData={charData}/>
                 </div>
             </div>

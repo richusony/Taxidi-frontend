@@ -17,7 +17,7 @@ const HostSideBar = () => {
             </div>
 
             <div className='mt-5 text-center'>
-                <button className='py-1 px-10 bg-[#593CFB] text-white text-xl rounded'>Dashboard</button>
+                <Link to="/host" className='py-1 px-10 bg-[#593CFB] text-white text-xl rounded'>Dashboard</Link>
             </div>
 
             {/* Manage Bookings */}
