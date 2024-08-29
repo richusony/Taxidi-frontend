@@ -187,7 +187,7 @@ const AvailableCars = () => {
                                 <div className='my-auto w-[30%] h-24 md:h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
 
                                 <div className='w-[70%] px-5'>
-                                    <div className='mt-2 flex justify-between gap-x-2 items-center w-full'><h1 className='text-sm md:text-xl font-semibold'>{`${car.brand?.brandName + " " + car.model}`.length > 15 ? `${car.brand?.brandName + " " + car.model}`.substring(0, 15) + "..." : car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl invisible' icon={faHeart} /></h1></div>
+                                    <div className='mt-2 flex justify-between gap-x-2 items-center w-full'><h1 className='text-sm md:text-xl font-semibold uppercase'>{`${car.brand?.brandName + " " + car.model}`.length > 15 ? `${car.brand?.brandName + " " + car.model}`.substring(0, 15) + "..." : car.brand?.brandName + " " + car.model}</h1> <h1><FontAwesomeIcon className='text-[#593CFB] text-xl invisible' icon={faHeart} /></h1></div>
                                     <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'>5.0 <FontAwesomeIcon className='text-[#593CFB]' icon={faStar} /></span> <span>(33 trips)</span></div>
                                     <div className='my-2 text-sm md:text-base'> <span className='text-gray-600'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /></span> Pickup at {car?.pickUpLocation}</div>
                                     <div className=''>
@@ -198,7 +198,7 @@ const AvailableCars = () => {
                             </div>
                         )) :
                         <h1 className='text-center'>No Cars available</h1>}
-                    {availableCars?.length > 4 && hasMoreCars && <h1 onClick={() => setCurrentPage(prev => prev + 1)} className="text-center text-gray-500 cursor-pointer">view more</h1>}
+                    {availableCars?.length > 2 && hasMoreCars && <h1 onClick={() => setCurrentPage(prev => prev + 1)} className="text-center text-gray-500 cursor-pointer">view more</h1>}
                 </div>
 
                 {/* map */}
