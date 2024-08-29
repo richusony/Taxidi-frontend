@@ -1,12 +1,12 @@
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../axiosConfig';
 import React, { useEffect, useState } from 'react';
-import HostNavbar from '../../components/HostNavBar';
-import ErrorToast from "../../components/ErrorToast";
-import HostSideBar from '../../components/HostSideBar';
+import AdminNavbar from '../../components/AdminNavbar';
+import AdminSideBar from '../../components/AdminSideBar';
 import CancelReasonBox from '../../components/CancelReasonBox';
+import ErrorToast from '../../components/ErrorToast';
 
-const HostBookingDetailed = () => {
+const AdminBookingDetailed = () => {
     const { paymentId } = useParams();
     const [error, setError] = useState("");
     const [cancelWindow, setCancelWindow] = useState(false);
@@ -20,7 +20,7 @@ const HostBookingDetailed = () => {
 
     const fetchBookingDetails = async () => {
         try {
-            const res = await axiosInstance.get(`/host/booking-details/${paymentId}`);
+            const res = await axiosInstance.get(`/admin/booking-details/${paymentId}`);
             console.log(res?.data[0]);
             setBookingDetails(res?.data[0]);
             setBookingStatus(res?.data[0].bookingStatus);
@@ -37,11 +37,11 @@ const HostBookingDetailed = () => {
 
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
-            <HostSideBar />
+            <AdminSideBar />
 
             <div className='w-[80%] h-screen overflow-y-scroll hideScrollBar'>
                 {/* Navbar  */}
-                <HostNavbar page={page} />
+                <AdminNavbar page={page} />
                 <div className='mt-10'>
                     <div className='flex justify-between'>
                         <div className='md:w-1/2'>
@@ -64,14 +64,14 @@ const HostBookingDetailed = () => {
                             <div className='mt-5 grid grid-cols-2 gap-y-3'>
                                 <div className=''>
                                     <h1 className='text-gray-500 font-semibold'>Trip Start</h1>
-                                    <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingStarts)}</span>
+                                    <span>{formatDatetimeLocal(bookingDetails?.bookingStarts)}</span>
                                     <h1 className='mt-2 text-gray-500 font-semibold'>Trip Ends</h1>
-                                    <span>{formatDatetimeLocal(bookingDetails?.vehicleDetails?.bookingEnds)}</span>
+                                    <span>{formatDatetimeLocal(bookingDetails?.bookingEnds)}</span>
                                 </div>
 
                                 <div className='mt-5'>
                                     <h1 className='text-gray-500 font-semibold'>Amount Paid</h1>
-                                    <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.balanceAfterCommission}</span>
+                                    <span><span className='text-[#593CFB] font-semibold'>₹</span>{bookingDetails?.commissionToAdmin}</span>
                                 </div>
 
                                 <div className='mt-5'>
@@ -91,11 +91,11 @@ const HostBookingDetailed = () => {
                         </div>
                     </div>
                 </div>
-                {cancelWindow && <CancelReasonBox setCancelBox={setCancelWindow} paymentId={paymentId} bookingStatus={bookingStatus} setError={setError} cancelBy={"host"} />}
+                {cancelWindow && <CancelReasonBox setCancelBox={setCancelWindow} paymentId={paymentId} bookingStatus={bookingStatus} setError={setError} cancelBy={"admin"} />}
             </div>
             <ErrorToast error={error} setError={setError} />
         </div>
     )
 }
 
-export default HostBookingDetailed
+export default AdminBookingDetailed

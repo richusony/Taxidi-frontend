@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axiosInstance from '../axiosConfig';
 
-const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError }) => {
+const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError, cancelBy }) => {
   const [cancelReason, setCancelReason] = useState("");
 
   const handleCancelBooking = async (e) => {
@@ -22,7 +22,7 @@ const CancelReasonBox = ({ setCancelBox, paymentId, bookingStatus, setError }) =
         paymentId,
         cancelReason
       }
-      const res = await axiosInstance.post("/host/cancel-booking", reqData);
+      const res = await axiosInstance.post(`/${cancelBy}/cancel-booking`, reqData);
       console.log("cancelled ::", res);
       setCancelBox(false);
     } catch (error) {

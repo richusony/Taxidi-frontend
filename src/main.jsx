@@ -31,10 +31,13 @@ const AdminLogin = lazy(() => import("./pages/admin/AdminLogin.jsx"));
 const AdminWallet = lazy(() => import('./pages/admin/AdminWallet.jsx'));
 const VerifyUsers = lazy(() => import('./pages/admin/VerifyUsers.jsx'));
 const HostRequests = lazy(() => import('./pages/admin/HostRequests.jsx'));
+const AdminBookings = lazy(() => import("./pages/admin/AdminBookings.jsx"));
 const AdminDashboard = lazy(() => import('./pages/admin/AdminDashboard.jsx'));
 const AdminCarDetailed = lazy(() => import('./pages/admin/AdminCarDetailed.jsx'));
 const AdminHostChatPage = lazy(() => import("./pages/admin/AdminHostChatPage.jsx"));
+const AdminBookingHistory = lazy(() => import('./pages/admin/AdminBookingHistory.jsx'));
 const HostRequestDetailed = lazy(() => import('./pages/admin/HostRequestDetailed.jsx'));
+const AdminBookingDetailed = lazy(() => import("./pages/admin/AdminBookingDetailed.jsx"));
 const LicenseRequestDetailed = lazy(() => import('./pages/admin/LicenseRequestDetailed.jsx'));
 
 // host
@@ -170,6 +173,18 @@ const route = createBrowserRouter([
   {
     path: "/admin/wallet",
     element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminWallet /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/admin/bookings",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookings /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/admin/booking-details/:paymentId",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookingDetailed /></Suspense></PrivateRoute>
+  },
+  {
+    path: "/admin/booking-history",
+    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookingHistory/></Suspense></PrivateRoute>
   },
   {
     path: "*",
