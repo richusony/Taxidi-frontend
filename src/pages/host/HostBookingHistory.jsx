@@ -77,7 +77,7 @@ const HostBookingHistory = () => {
                 <h1 className='mt-5 text-2xl font-bold'>Bookings</h1>
                 <p className='text-gray-700'>See all vehicle bookings</p>
 
-                <div className="flex flex-col justify-center my-8 overflow-x-scroll hideScrollBar">
+                {bookings.length > 0 ?<div className="flex flex-col justify-center my-8 overflow-x-scroll hideScrollBar">
                     <div className='mb-2 text-end'><button onClick={handlePdf} className='px-4 py-1 bg-[#593CFB] text-white rounded shadow-md'><FontAwesomeIcon icon={faDownload} /> Report</button></div>
                     <table id="bookingList" className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
                         <thead>
@@ -107,7 +107,7 @@ const HostBookingHistory = () => {
                             ))}
                         </tbody>
                     </table>
-                </div>
+                </div>:<h1 className="mt-10 text-center font-bold">No bookings yet!!</h1>}
                 {
                     bookings?.length > 0 &&
                     <div className='mt-5 text-center flex gap-x-2 justify-center'>

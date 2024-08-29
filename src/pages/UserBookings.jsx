@@ -35,6 +35,8 @@ const UserBookings = () => {
 
     const handleCancelBooking = async (e, paymentId) => {
         e.stopPropagation();
+        const confirm = window.confirm("Are you sure");
+        if(!confirm) return;
 
         const reqData = {
             paymentId
