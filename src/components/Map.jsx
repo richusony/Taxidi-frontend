@@ -5,8 +5,10 @@ import MarkerClusterGroup from "react-leaflet-cluster"
 import MarkerCustomIcon from "../assets/images/markerCustomIcon.png";
 import MarkerCustomCarIcon from "../assets/images/carCustomIcon.png";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { useNavigate } from 'react-router-dom';
 
-const Map = ({ latitude, longitude, vehicles }) => {
+const Map = ({ latitude, longitude, vehicles, tripStarts, tripEnds }) => {
+    const navigate = useNavigate();
 
     const customIcon = new Icon({
         iconUrl: MarkerCustomIcon,
@@ -30,14 +32,14 @@ console.log(latitude, longitude, "map")
                 {
                     vehicles?.length > 0 && vehicles.map((marker) => (
                         <Marker key={marker._id} position={[marker?.location?.coordinates[1], marker?.location?.coordinates[0]]}>
-                            <Popup>{marker?.model}</Popup>
+                            <Popup><h1 onClick={()=> navigate(`/car-details/${marker.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='text-center cursor-pointer hover:text-[#593CFB]'>{marker?.model}</h1></Popup>
                         </Marker>
                     ))
                 }
             </MarkerClusterGroup>
 
             <Marker icon={customIcon} position={[latitude, longitude]}>
-                <Popup>{"You"}</Popup>
+                <Popup><h1 onClick={()=>navigate("")} className='text-center'>You</h1></Popup>
             </Marker>
         </MapContainer>
     )

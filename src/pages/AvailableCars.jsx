@@ -204,7 +204,10 @@ const AvailableCars = () => {
 
                 {/* map */}
                 <div className='hidden md:block md:w-[50%] z-0'>
-                    {longitude ? <Map latitude={latitude} longitude={longitude} vehicles={availableCars} /> : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
+                    {
+                        longitude ?
+                        <Map latitude={latitude} longitude={longitude} vehicles={availableCars} tripStarts={tripStarts} tripEnds={tripEnds}/>
+                        : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
                 </div>
             </div>
             <ErrorToast setError={setError} error={error} />
