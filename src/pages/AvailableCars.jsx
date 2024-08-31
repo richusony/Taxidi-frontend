@@ -29,6 +29,7 @@ const AvailableCars = () => {
     };
 
     useEffect(() => {
+        setAvailableCars([]);
         fetchBrands();
         fetchBodyTypes();
         fetchCoordinates();
