@@ -1,5 +1,6 @@
 import axios from 'axios';
 import moment from 'moment';
+import ReactPaginate from 'react-paginate';
 import axiosInstance from '../axiosConfig';
 import ErrorToast from '../components/ErrorToast';
 import useNotification from '../hooks/useNotification';
@@ -11,9 +12,10 @@ const UserWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
     const { notificationBox } = useNotification();
+    const [pageCount, setPageCount] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
     const [walletData, setWalletData] = useState(null);
-    const [hasMoreData, setHasMoreData] = useState(true);
+    
     const [paymentHistory, setPaymentHistory] = useState([]);
     const accessToken = useMemo(() => localStorage.getItem("accessToken")[localStorage.getItem("accessToken")]);
 
@@ -24,7 +26,6 @@ const UserWallet = () => {
     }, []);
 
     useEffect(() => {
-        setHasMoreData(true);
         getWalletHistory();
     }, [currentPage])
 
@@ -50,13 +51,11 @@ const UserWallet = () => {
             const res = await axiosInstance.get("/wallet-history", {
                 params: {
                     limit: 2,
-                    skip: (currentPage - 1) * 2
+                    skip: currentPage
                 }
             });
-            setPaymentHistory(res?.data);
-            if (res?.data.length < 2) {
-                setHasMoreData(false);
-            }
+            setPaymentHistory(res?.data?.result);
+            setPageCount(res?.data?.pageCount);
             console.log(res.data);
         } catch (error) {
             console.log(error);
@@ -141,16 +140,8 @@ const UserWallet = () => {
         paymentObject.open()
     }
 
-    const changeTablePage = (action) => {
-        if (action == "add") {
-            if (hasMoreData) {
-                setCurrentPage(prev => prev + 1);
-            }
-        } else {
-            if (currentPage > 1) {
-                setCurrentPage(prev => prev - 1)
-            }
-        }
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
 
     return (
@@ -197,7 +188,7 @@ const UserWallet = () => {
                                         </tr>
                                     </thead>
                                     <tbody className='text-sm md:text-base'>
-                                        {paymentHistory.map(pay => (
+                                        {paymentHistory?.length > 0 && paymentHistory.map(pay => (
                                             <tr onClick={() => navigate(``)} key={pay?._id} className="hover:bg-gray-100 cursor-pointer">
                                                 <td className="py-2 px-4 border-b text-center">{pay?.paymentId}</td>
                                                 <td className="py-2 px-4 border-b text-center">{pay?.paymentMethod}</td>
@@ -212,12 +203,29 @@ const UserWallet = () => {
                         </div>
                         :
                         <h1 className='text-center text-gray-500'>No Transations yet</h1>}
-                    {paymentHistory.length > 0 &&
-                        <div className='mt-5 text-center flex gap-x-2 justify-center'>
-                            <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
-                            <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
-                        </div>
-                    }
+                    {
+                    paymentHistory?.length > 0 &&
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
+                    </div>
+                }
                 </div>
             </div>
             <ErrorToast error={error} setError={setError} />

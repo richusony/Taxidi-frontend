@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react'
-import AdminSideBar from '../../components/AdminSideBar'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons'
-import AddBrand from '../../components/AddBrand'
-import axiosInstance from '../../axiosConfig.js'
-import ErrorToast from "../../components/ErrorToast.jsx"
+import moment from 'moment';
+import ReactPaginate from 'react-paginate';
+import AddBrand from '../../components/AddBrand';
+import axiosInstance from '../../axiosConfig.js';
+import React, { useEffect, useState } from 'react';
+import EditBrand from '../../components/EditBrand.jsx';
+import AdminSideBar from '../../components/AdminSideBar';
+import ErrorToast from "../../components/ErrorToast.jsx";
+import AdminNavbar from '../../components/AdminNavbar.jsx';
 import SucessToast from "../../components/SuccessToast.jsx";
-import AdminNavbar from '../../components/AdminNavbar.jsx'
-import EditBrand from '../../components/EditBrand.jsx'
-import moment from 'moment'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencil, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Brands = () => {
     const [error, setError] = useState("");
     const [brands, setBrands] = useState([]);
     const [success, setSuccess] = useState("");
     const [page, setPage] = useState("Brands");
+    const [pageCount, setPageCount] = useState(1);
     const [addBrand, setAddBrand] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
     const [editBrand, setEditBrand] = useState(false);
     const [editBrandData, setEditBrandData] = useState(null);
 
@@ -23,11 +26,21 @@ const Brands = () => {
 
     useEffect(() => {
         getAllBrands();
-    }, []);
+    }, [currentPage]);
 
     const getAllBrands = async () => {
-        const res = await axiosInstance.get("/admin/brands");
-        setBrands(res.data);
+        const res = await axiosInstance.get("/admin/brands",{
+            params: {
+                limit: 3,
+                skip: currentPage
+            }
+        });
+        setBrands(res?.data?.result);
+        setPageCount(res?.data.pageCount);
+    }
+
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
 
     return (
@@ -70,6 +83,29 @@ const Brands = () => {
                             </tbody>
                         </table>
                     </div>
+                    {
+                    brands?.length > 0 &&
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
+                    </div>
+                }
                 </div>
                 {addBrand && <AddBrand setError={setError} setAddBrand={setAddBrand} setSuccess={setSuccess} />}
                 {editBrand && <EditBrand setError={setError} setEditBrand={setEditBrand} editBrandData={editBrandData} />}
