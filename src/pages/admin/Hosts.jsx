@@ -1,4 +1,5 @@
 import moment from 'moment';
+import ReactPaginate from 'react-paginate';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
@@ -9,16 +10,24 @@ const Hosts = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState("Hosts");
     const [hostList, setHostList] = useState([]);
+    const [pageCount, setPageCount] = useState(1);
+    const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(()=>{
         fetchAllHosts();
-    },[])
+    },[currentPage])
 
     const fetchAllHosts = async()=> {
         try {
-           const res = await axiosInstance.get("/admin/hosts");
+           const res = await axiosInstance.get("/admin/hosts", {
+            params: {
+                limit: 3,
+                skip: currentPage
+            }
+        });
         console.log(res?.data);
-        setHostList(res?.data);
+        setHostList(res?.data?.result);
+        setPageCount(res?.data.pageCount);
         } catch (error) {
             console.log(error);
         }
@@ -27,6 +36,10 @@ const Hosts = () => {
     const redirectTo = (e, url) => {
         e.stopPropagation();
         navigate(url);
+    }
+
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
 
     return (
@@ -69,6 +82,29 @@ const Hosts = () => {
                             </tbody>
                         </table>
                     </div>
+                    {
+                    hostList?.length > 0 &&
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
+                    </div>
+                }
                 </div>
             </div>
         </div>

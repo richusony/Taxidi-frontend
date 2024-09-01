@@ -1,51 +1,37 @@
 import htmlToPdf from "html2pdf.js";
+import ReactPaginate from 'react-paginate';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import AdminNavbar from '../../components/AdminNavbar';
 import AdminSideBar from '../../components/AdminSideBar';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const AdminBookingHistory = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(`Bookings`);
     const [bookings, setBookings] = useState([]);
+    const [pageCount, setPageCount] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMoreData, setHasMoreData] = useState(true);
 
     useEffect(() => {
         fetchAllNewBookings();
     }, [currentPage]);
 
     const fetchAllNewBookings = async () => {
-        setHasMoreData(true);
         try {
             const res = await axiosInstance("/admin/booking-history", {
                 params: {
-                    limit: 2,
-                    skip: (currentPage - 1) * 2
+                    limit: 3,
+                    skip: currentPage
                 }
             });
-            console.log(res?.data);
-            setBookings(res?.data);
-            if (res?.data.length < 2) {
-                setHasMoreData(false);
-            }
+            // console.log(res?.data);
+            setBookings(res?.data?.result);
+            setPageCount(res?.data?.pageCount);
         } catch (error) {
             console.log(error);
-        }
-    }
-
-    const changeTablePage = (action) => {
-        if (action == "add") {
-            if (hasMoreData) {
-                setCurrentPage(prev => prev + 1);
-            }
-        } else {
-            if (currentPage > 1) {
-                setCurrentPage(prev => prev - 1)
-            }
         }
     }
 
@@ -66,6 +52,10 @@ const AdminBookingHistory = () => {
         htmlToPdf(element);
     }
 
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
+    }
+
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
             <AdminSideBar />
@@ -77,8 +67,8 @@ const AdminBookingHistory = () => {
                 <h1 className='mt-5 text-2xl font-bold'>Bookings</h1>
                 <p className='text-gray-700'>See all vehicle bookings</p>
 
-                {bookings?.length > 0?<div className="flex flex-col justify-center my-8 overflow-x-scroll hideScrollBar">
-                    <div className='mb-2 text-end'><button onClick={handlePdf} className='px-4 py-1 bg-[#593CFB] text-white rounded shadow-md'><FontAwesomeIcon icon={faDownload}/> Report</button></div>
+                {bookings?.length > 0 ? <div className="flex flex-col justify-center my-8 overflow-x-scroll hideScrollBar">
+                    <div className='mb-2 text-end'><button onClick={handlePdf} className='px-4 py-1 bg-[#593CFB] text-white rounded shadow-md'><FontAwesomeIcon icon={faDownload} /> Report</button></div>
                     <table id="bookingList" className="min-w-full bg-white border border-gray-200 shadow-md rounded-lg">
                         <thead>
                             <tr>
@@ -107,12 +97,29 @@ const AdminBookingHistory = () => {
                             ))}
                         </tbody>
                     </table>
-                </div>:<h1 className="mt-10 text-center font-bold">No bookings yet!!</h1>}
+                </div> : <h1 className="mt-10 text-center font-bold">No bookings yet!!</h1>}
+
                 {
                     bookings?.length > 0 &&
-                    <div className='mt-5 text-center flex gap-x-2 justify-center'>
-                        <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
-                        <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
                     </div>
                 }
             </div>

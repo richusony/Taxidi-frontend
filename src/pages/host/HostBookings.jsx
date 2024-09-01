@@ -1,51 +1,37 @@
 import htmlToPdf from "html2pdf.js";
+import ReactPaginate from 'react-paginate';
 import axiosInstance from '../../axiosConfig';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import HostNavbar from '../../components/HostNavBar';
 import HostSideBar from '../../components/HostSideBar';
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const HostBookings = () => {
     const navigate = useNavigate();
     const [page, setPage] = useState(`Bookings`);
     const [bookings, setBookings] = useState([]);
+    const [pageCount, setPageCount] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMoreData, setHasMoreData] = useState(true);
 
     useEffect(() => {
         fetchAllNewBookings();
     }, [currentPage]);
 
     const fetchAllNewBookings = async () => {
-        setHasMoreData(true);
         try {
             const res = await axiosInstance("/host/bookings", {
                 params: {
                     limit: 2,
-                    skip: (currentPage - 1) * 2
+                    skip: currentPage
                 }
             });
             console.log(res?.data);
-            setBookings(res?.data);
-            if (res?.data.length < 2) {
-                setHasMoreData(false);
-            }
+            setBookings(res?.data?.result);
+            setPageCount(res?.data?.pageCount);
         } catch (error) {
             console.log(error);
-        }
-    }
-
-    const changeTablePage = (action) => {
-        if (action == "add") {
-            if (hasMoreData) {
-                setCurrentPage(prev => prev + 1);
-            }
-        } else {
-            if (currentPage > 1) {
-                setCurrentPage(prev => prev - 1)
-            }
         }
     }
 
@@ -64,6 +50,10 @@ const HostBookings = () => {
     const handlePdf = () => {
         const element = document.getElementById("bookingList");
         htmlToPdf(element);
+    }
+
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
 
     return (
@@ -110,9 +100,25 @@ const HostBookings = () => {
                 </div> : <h1 className="mt-10 text-center font-bold">No bookings yet!!</h1>}
                 {
                     bookings?.length > 0 &&
-                    <div className='mt-5 text-center flex gap-x-2 justify-center'>
-                        <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
-                        <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
                     </div>
                 }
             </div>

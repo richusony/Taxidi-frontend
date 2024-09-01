@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from 'react'
-import HostNavbar from '../../components/HostNavBar'
-import HostSideBar from '../../components/HostSideBar'
-import ErrorToast from '../../components/ErrorToast';
-import axiosInstance from '../../axiosConfig';
 import moment from 'moment';
+import ReactPaginate from 'react-paginate';
+import axiosInstance from '../../axiosConfig';
+import React, { useEffect, useState } from 'react';
+import HostNavbar from '../../components/HostNavBar';
+import ErrorToast from '../../components/ErrorToast';
+import HostSideBar from '../../components/HostSideBar';
 
 const HostWallet = () => {
     const [error, setError] = useState("");
     const [page, setPage] = useState(`Wallet`);
     const [wallet, setWallet] = useState(null);
+    const [pageCount, setPageCount] = useState(1);
     const [currentPage, setCurrentPage] = useState(1);
-    const [hasMoreData, setHasMoreData] = useState(true);
+    
     const [walletHistory, setWalletHistory] = useState([]);
 
     useEffect(() => {
@@ -18,7 +20,6 @@ const HostWallet = () => {
     }, []);
 
     useEffect(() => {
-        setHasMoreData(true);
         fetchWalletHistory();
     }, [currentPage]);
 
@@ -37,30 +38,21 @@ const HostWallet = () => {
             const res = await axiosInstance.get("/host/wallet-history", {
                 params: {
                     limit: 2,
-                    skip: (currentPage - 1) * 2
+                    skip: currentPage
                 }
             });
             // console.log(res?.data);
-            setWalletHistory(res?.data);
-            if (res?.data.length < 2) {
-                setHasMoreData(false);
-            }
+            setWalletHistory(res?.data?.result);
+            setPageCount(res?.data?.pageCount);
         } catch (error) {
             console.log(error);
         }
     }
 
-    const changeTablePage = (action) => {
-        if (action == "add") {
-            if (hasMoreData) {
-                setCurrentPage(prev => prev + 1);
-            }
-        } else {
-            if (currentPage > 1) {
-                setCurrentPage(prev => prev - 1)
-            }
-        }
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
+
 
     return (
         <div className='px-5 pb-5 bg-[#EDEDED] flex'>
@@ -119,9 +111,25 @@ const HostWallet = () => {
                             }
                             {
                                 walletHistory?.length > 0 &&
-                                <div className='mt-5 text-center flex gap-x-2 justify-center'>
-                                    <button disabled={currentPage <= 1} onClick={() => changeTablePage("sub")} className={`px-4 py-1 ${currentPage <= 1 ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-l-xl shadow-md`}>prev</button>
-                                    <button onClick={() => changeTablePage("add")} className={`px-4 py-1 ${hasMoreData === false ? "cursor-not-allowed" : ""} text-gray-700 bg-white rounded-r-xl shadow-md`}>next</button>
+                                <div>
+                                    <ReactPaginate
+                                        breakLabel="..."
+                                        nextLabel="next >"
+                                        onPageChange={handlePageClick}
+                                        pageRangeDisplayed={5}
+                                        pageCount={pageCount}
+                                        previousLabel="< previous"
+                                        renderOnZeroPageCount={null}
+                                        marginPagesDisplayed={2}
+                                        containerClassName="pagination justify-content-center"
+                                        pageClassName="page-item"
+                                        pageLinkClassName="page-link"
+                                        previousClassName="page-item"
+                                        previousLinkClassName="page-link"
+                                        nextClassName="page-item"
+                                        nextLinkClassName="page-link"
+                                        activeClassName="active"
+                                    />
                                 </div>
                             }
                         </div>

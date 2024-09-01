@@ -1,4 +1,5 @@
 import './index.css';
+import "./styles/pagination.css";
 import Otp from './pages/Otp.jsx';
 import Home from './pages/Home.jsx';
 import Login from './pages/Login.jsx';
@@ -16,6 +17,7 @@ import { SocketContextProvider } from "./contexts/SocketContext.jsx";
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import { NotificationContextProvider } from './contexts/NotificationContext';
 import { NotificationSocketContextProvider } from './contexts/NotificationSocketContext';
+import SuspenseLoader from './components/SuspenseLoader';
 
 // Lazy loads
 // users
@@ -78,55 +80,55 @@ const route = createBrowserRouter([
   },
   {
     path: "/admin/cars",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><Cars /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><Cars /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/brands",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><Brands /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><Brands /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/body-types",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><BodyTypes /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><BodyTypes /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/host-requests",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><HostRequests /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><HostRequests /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/verify-users",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><VerifyUsers /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><VerifyUsers /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/host-requests/:registrationNumber",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><HostRequestDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><HostRequestDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/cars/:registrationNumber",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminCarDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><AdminCarDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/license-verify-requests/:licenseNumber",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><LicenseRequestDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><LicenseRequestDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/become-host",
-    element: <Suspense fallback={"Lazy Loading..."}><BecomeHost /></Suspense>
+    element: <Suspense fallback={<SuspenseLoader/>}><BecomeHost /></Suspense>
   },
   {
     path: "/host-login",
-    element: <Suspense fallback={"Lazy Loading..."}><HostLogin /></Suspense>
+    element: <Suspense fallback={<SuspenseLoader/>}><HostLogin /></Suspense>
   },
   {
     path: "/host",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostDashboard /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostDashboard /></Suspense></PrivateRoute>
   },
   {
     path: "/host/my-vehicles",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><MyVehicles /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><MyVehicles /></Suspense></PrivateRoute>
   },
   {
     path: "/host/cars/:registrationNumber",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostCarDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostCarDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/search",
@@ -138,7 +140,7 @@ const route = createBrowserRouter([
   },
   {
     path: "/host/wallet",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostWallet /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostWallet /></Suspense></PrivateRoute>
   },
   {
     path: "/wallet",
@@ -146,55 +148,55 @@ const route = createBrowserRouter([
   },
   {
     path: "/my-bookings",
-    element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookings /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="user"><Suspense fallback={<SuspenseLoader/>}><UserBookings /></Suspense></PrivateRoute>
   },
   {
     path: "/booking-details/:paymentId",
-    element: <PrivateRoute role="user"><Suspense fallback={"Lazy Loading..."}><UserBookingDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="user"><Suspense fallback={<SuspenseLoader/>}><UserBookingDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/host/profile",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostProfile /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostProfile /></Suspense></PrivateRoute>
   },
   {
     path: "/host/bookings",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookings /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostBookings /></Suspense></PrivateRoute>
   },
   {
     path: "/host/booking-history",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookingHistory /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostBookingHistory /></Suspense></PrivateRoute>
   },
   {
     path: "/host/booking-details/:paymentId",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><HostBookingDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><HostBookingDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/hosts",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><Hosts /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><Hosts /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/chat/:email",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><AdminHostChatPage /></SocketContextProvider></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><SocketContextProvider><AdminHostChatPage /></SocketContextProvider></Suspense></PrivateRoute>
   },
   {
     path: "/host/chat",
-    element: <PrivateRoute role="host"><Suspense fallback={"Lazy Loading..."}><SocketContextProvider><ChatWithAdmin /></SocketContextProvider></Suspense></PrivateRoute>
+    element: <PrivateRoute role="host"><Suspense fallback={<SuspenseLoader/>}><SocketContextProvider><ChatWithAdmin /></SocketContextProvider></Suspense></PrivateRoute>
   },
   {
     path: "/admin/wallet",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminWallet /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><AdminWallet /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/bookings",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookings /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><AdminBookings /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/booking-details/:paymentId",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookingDetailed /></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><AdminBookingDetailed /></Suspense></PrivateRoute>
   },
   {
     path: "/admin/booking-history",
-    element: <PrivateRoute role="admin"><Suspense fallback={"Lazy Loading..."}><AdminBookingHistory/></Suspense></PrivateRoute>
+    element: <PrivateRoute role="admin"><Suspense fallback={<SuspenseLoader/>}><AdminBookingHistory/></Suspense></PrivateRoute>
   },
   {
     path: "*",

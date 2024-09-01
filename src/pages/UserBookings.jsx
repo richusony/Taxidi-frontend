@@ -1,4 +1,5 @@
 import axiosInstance from '../axiosConfig';
+import ReactPaginate from 'react-paginate';
 import { useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 import DefaultNavbar from "../components/DefaultNavbar";
@@ -9,19 +10,26 @@ import { useNotificationContext } from '../contexts/NotificationContext';
 
 const UserBookings = () => {
     const navigate = useNavigate();
+    const [pageCount, setPageCount] = useState(1);
     const [bookings, setBookings] = useState(null);
+    const [currentPage, setCurrentPage] = useState(1);
     const { notificationBox } = useNotificationContext();
 
     useEffect(() => {
         getBookings();
-    }, []);
+    }, [currentPage]);
 
     const getBookings = async () => {
         try {
-            const res = await axiosInstance.get("/bookings");
+            const res = await axiosInstance.get("/bookings", {
+                params: {
+                    limit: 2,
+                    skip: currentPage
+                }
+            });
             console.log(res?.data);
-            setBookings(res?.data);
-
+            setBookings(res?.data?.result);
+            setPageCount(res?.data?.pageCount);
         } catch (error) {
             console.log(error)
         }
@@ -36,7 +44,7 @@ const UserBookings = () => {
     const handleCancelBooking = async (e, paymentId) => {
         e.stopPropagation();
         const confirm = window.confirm("Are you sure");
-        if(!confirm) return;
+        if (!confirm) return;
 
         const reqData = {
             paymentId
@@ -51,6 +59,10 @@ const UserBookings = () => {
 
     const navigateTo = url => {
         navigate(url);
+    }
+
+    const handlePageClick = (e) => {
+        setCurrentPage(e.selected + 1);
     }
 
     return (
@@ -68,7 +80,7 @@ const UserBookings = () => {
                     </div>
                 </div>
 
-                <div className='mt-5 h-96 overflow-y-scroll hideScrollBar'>
+                <div className='mt-5 max-h-96 overflow-y-scroll hideScrollBar'>
                     {bookings?.length > 0 ? bookings.map((book) => (
                         <div onClick={() => navigateTo(`/booking-details/${book.paymentId}`)} key={book._id} className='transition delay-150 ease-linear mb-5 border-2 px-2 py-3 flex flex-cols md:flex-row items-center rounded-xl hover:scale-105 cursor-pointer relative shadow-sm'>
                             <div className='border-r-2 pr-2 w-fit'>
@@ -106,6 +118,29 @@ const UserBookings = () => {
                     ))
                         : <h1>No booking yet</h1>}
                 </div>
+                {
+                    bookings?.length > 0 &&
+                    <div>
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel="next >"
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={5}
+                            pageCount={pageCount}
+                            previousLabel="< previous"
+                            renderOnZeroPageCount={null}
+                            marginPagesDisplayed={2}
+                            containerClassName="pagination justify-content-center"
+                            pageClassName="page-item"
+                            pageLinkClassName="page-link"
+                            previousClassName="page-item"
+                            previousLinkClassName="page-link"
+                            nextClassName="page-item"
+                            nextLinkClassName="page-link"
+                            activeClassName="active"
+                        />
+                    </div>
+                }
             </div>
             {notificationBox && <UserNotifications />}
         </div>
