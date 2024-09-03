@@ -280,7 +280,7 @@ const CarDetailedPage = () => {
             <div className='mt-5'>
               <h1 className='font-semibold'>Hosted By</h1>
               <div className='mt-2 flex items-center'>
-                <div className='w-16 h-16 rounded-full shadow-md'><img className={vehicleData?.host?.profileImage} alt="host-profileImage" /></div>
+                <div className='w-16 h-16 rounded-full shadow-md'><img className='w-full h-full object-cover rounded-full' src={vehicleData?.host?.profileImage} alt="host-profileImage" /></div>
                 <div className='ml-2'><h1 className='md:text-xl font-semibold'>{vehicleData?.host?.fullname}</h1></div>
               </div>
             </div>
