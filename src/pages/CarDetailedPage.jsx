@@ -5,6 +5,7 @@ import Reviews from '../components/Reviews';
 import { handleLogOut } from '../utils/helper';
 import AuthContext from '../contexts/AuthContext';
 import RatingList from '../components/RatingList';
+import ErrorToast from '../components/ErrorToast';
 import useNotification from '../hooks/useNotification';
 import React, { useContext, useEffect, useState } from 'react';
 import UserNotifications from '../components/UserNotifications';
@@ -12,7 +13,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotificationContext } from '../contexts/NotificationContext';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
-import ErrorToast from '../components/ErrorToast';
 
 const CarDetailedPage = () => {
   const isOnline = useOnline();
@@ -280,7 +280,7 @@ const CarDetailedPage = () => {
             <div className='mt-5'>
               <h1 className='font-semibold'>Hosted By</h1>
               <div className='mt-2 flex items-center'>
-                <div className='w-16 h-16 rounded-full shadow-md'><img className='w-full h-full object-cover rounded-full' src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZSUyMGltYWdlfGVufDB8fDB8fHww" alt="" /></div>
+                <div className='w-16 h-16 rounded-full shadow-md'><img className={vehicleData?.host?.profileImage} alt="host-profileImage" /></div>
                 <div className='ml-2'><h1 className='md:text-xl font-semibold'>{vehicleData?.host?.fullname}</h1></div>
               </div>
             </div>
