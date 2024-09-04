@@ -6,11 +6,11 @@ import { handleLogOut } from '../utils/helper';
 import AuthContext from '../contexts/AuthContext';
 import RatingList from '../components/RatingList';
 import ErrorToast from '../components/ErrorToast';
-import useNotification from '../hooks/useNotification';
 import React, { useContext, useEffect, useState } from 'react';
 import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import VehicleImageFullScreen from '../components/VehicleImageFullScreen';
 import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { faBars, faCar, faLocationDot, faOilCan, faStar, faUsers } from '@fortawesome/free-solid-svg-icons';
 
@@ -29,6 +29,7 @@ const CarDetailedPage = () => {
   const [responseState, setResposeState] = useState(null);
   const [payUsingWallet, setPayUsingWallet] = useState(false);
   const { notificationBox, setNotificationBox } = useNotificationContext();
+  const [vehicleImageFullScreenView, setVehicleImageFullScreenView] = useState(false);
 
   axios.defaults.withCredentials = true;
 
@@ -220,7 +221,7 @@ const CarDetailedPage = () => {
   }
 
   return (
-    <div className='pb-10 overflow-x-hidden'>
+    <div className='relative pb-10 overflow-x-hidden'>
       <nav className='px-5 md:px-10 py-5 flex justify-between'>
         <div><Link to="/" className='text-2xl font-bold'>Taxid<span className='text-[#593CFB]'>i</span></Link></div>
         <div className='flex items-center'>
@@ -255,12 +256,12 @@ const CarDetailedPage = () => {
         {/* images  */}
         <div className='flex'>
           <div className='md:w-[60%] h-96'>
-            <img className='w-full h-full object-cover rounded-l' src={vehicleData?.vehicleImages[0]} alt="" />
+            <img onClick={()=>setVehicleImageFullScreenView(true)} className='w-full h-full object-cover rounded-l' src={vehicleData?.vehicleImages[0]} alt="" />
           </div>
 
           <div className='hidden w-[40%] md:flex flex-col justify-between px-5 h-96'>
-            <div className='h-[47%]'><img className='w-full h-full object-cover rounded-tr' src={vehicleData?.vehicleImages[1]} alt="" /></div>
-            <div className='h-[47%]'><img className='w-full h-full object-cover rounded-br' src={vehicleData?.vehicleImages[2]} alt="" /></div>
+            <div className='h-[47%]'><img onClick={()=>setVehicleImageFullScreenView(true)} className='w-full h-full object-cover rounded-tr' src={vehicleData?.vehicleImages[1]} alt="" /></div>
+            <div className='h-[47%]'><img onClick={()=>setVehicleImageFullScreenView(true)} className='w-full h-full object-cover rounded-br' src={vehicleData?.vehicleImages[2]} alt="" /></div>
           </div>
         </div>
 
@@ -329,6 +330,7 @@ const CarDetailedPage = () => {
         </div>
       </div>
       {notificationBox && <UserNotifications />}
+      {vehicleImageFullScreenView && <VehicleImageFullScreen vehicleImages={vehicleData?.vehicleImages} closeView={setVehicleImageFullScreenView}/>}
       <ErrorToast error={error} setError={setError} />
     </div>
   )
