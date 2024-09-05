@@ -62,7 +62,7 @@ const UserBookingDetailed = () => {
               <h1 className='text-gray-500 font-semibold'>Host</h1>
               <div className='mt-2 flex items-center'>
                 <div className='w-12 h-12'>
-                  <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
+                  <img className='w-full h-full object-cover rounded-full shadow-sm' src={bookingDetails?.hostDetails[0]?.profileImage} alt="" />
                 </div>
                 <span className='ml-3 text-gray-600'>{bookingDetails?.hostDetails[0]?.fullname}</span>
               </div>

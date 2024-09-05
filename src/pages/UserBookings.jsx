@@ -5,8 +5,8 @@ import React, { useEffect, useState } from 'react';
 import DefaultNavbar from "../components/DefaultNavbar";
 import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCarSide, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationContext } from '../contexts/NotificationContext';
+import { faCarSide, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 const UserBookings = () => {
     const navigate = useNavigate();
@@ -14,17 +14,19 @@ const UserBookings = () => {
     const [bookings, setBookings] = useState(null);
     const [currentPage, setCurrentPage] = useState(1);
     const { notificationBox } = useNotificationContext();
+    const [filterCancelled, setFilterCancelled] = useState(false);
 
     useEffect(() => {
         getBookings();
-    }, [currentPage]);
+    }, [currentPage,filterCancelled]);
 
     const getBookings = async () => {
         try {
             const res = await axiosInstance.get("/bookings", {
                 params: {
                     limit: 2,
-                    skip: currentPage
+                    skip: currentPage,
+                    cancelled:!filterCancelled
                 }
             });
             console.log(res?.data);
@@ -75,8 +77,8 @@ const UserBookings = () => {
 
                 <div className='mt-5'>
                     <div className='p-1 bg-gray-100 w-fit rounded shadow-sm'>
-                        <button className='mx-2 px-4 py-1 bg-white rounded shadow-md'>Latest</button>
-                        <button className='mx-2 px-4 py-1 rounded'>Cancelled</button>
+                        <button onClick={()=>setFilterCancelled(false)} className={`transition-all ease-linear mx-2 px-4 py-1 ${!filterCancelled && "bg-white shadow-md"} rounded `}>Latest</button>
+                        <button onClick={()=>setFilterCancelled(true)} className={`transition-all ease-linear mx-2 px-4 py-1 ${filterCancelled && "bg-white shadow-md"} rounded `}>Cancelled</button>
                     </div>
                 </div>
 
@@ -90,9 +92,9 @@ const UserBookings = () => {
                             </div>
 
                             <div className='flex items-center'>
-                                <div className='ml-2 md:ml-5'>
+                                <div className='ml-2 md:ml-5 w-40'>
                                     <h1 className='w-24 text-sm md:text-base font-semibold'>{book.vehicleId.model}</h1>
-                                    <h1 className='mt-1 text-gray-500 text-xs md:text-sm'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> {"Thaliparamba"}</h1>
+                                    <h1 className='mt-1 text-gray-500 text-xs md:text-xs'><FontAwesomeIcon className='text-[#593CFB]' icon={faLocationDot} /> {book?.vehicleId?.pickUpLocation}</h1>
                                 </div>
 
                                 <div className='hidden ml-2 md:ml-10 text-xs md:text-sm text-center text-gray-500 md:flex justify-between items-center'>
@@ -105,9 +107,9 @@ const UserBookings = () => {
 
                                 <div className='hidden ml-10 md:flex justify-center items-center'>
                                     <div className='w-12 h-12'>
-                                        <img className='w-full h-full object-cover rounded-full shadow-sm' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" />
+                                       <img className='w-full h-full object-cover rounded-full shadow-sm' src={book?.hostId?.profileImage} alt="host_image" />
                                     </div>
-                                    <span className='ml-3 text-gray-600'>Richu Sony</span>
+                                    <span className='ml-3 text-gray-600'>{book?.hostId?.fullname}</span>
                                 </div>
 
                                 {book?.bookingStatus === true ? <div className='md:ml-10 absolute right-2 md:right-10 text-sm md:text-base'>

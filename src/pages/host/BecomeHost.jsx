@@ -2,9 +2,9 @@ import useOnline from '../../hooks/useOnline';
 import React, { useRef, useState } from 'react';
 import ErrorToast from "../../components/ErrorToast.jsx";
 import DefaultNavbar from '../../components/DefaultNavbar';
-import { HOST_BG_IMAGE, isValidKeralaRegistrationNumber, isValidLicenseNumber } from '../../constants';
-import { isKannur, validateEmail, validatePhoneNumber } from '../../utils/helper';
 import SuccessToast from '../../components/SuccessToast.jsx';
+import { isKannur, validateEmail, validatePhoneNumber } from '../../utils/helper';
+import { HOST_BG_IMAGE, isValidKeralaRegistrationNumber, isValidLicenseNumber } from '../../constants';
 
 const BecomeHost = () => {
     const isOnline = useOnline();
@@ -27,14 +27,14 @@ const BecomeHost = () => {
         mileage: "",
         seats: "",
         color: "",
-        rent: null,
-        vehicleImages: null,
-        licenseFrontImage: null,
-        licenseBackImage: null,
-        registrationCertificateFrontImage: null,
-        registrationCertificateBackImage: null,
-        insuranceCertificateImage: null,
-        pollutionCertificateImage: null,
+        rent: "",
+        vehicleImages: "",
+        licenseFrontImage: "",
+        licenseBackImage: "",
+        registrationCertificateFrontImage: "",
+        registrationCertificateBackImage: "",
+        insuranceCertificateImage: "",
+        pollutionCertificateImage: ""
     });
 
     const handleFileChange = (e) => {
@@ -257,7 +257,7 @@ const BecomeHost = () => {
                         </div>
                         <div className='flex flex-col'>
                             <label htmlFor="seats">Seat Capcity</label>
-                            <select onChange={handleInputChange} name="seats" id="seats" className='border-2  px-2 py-1 rounded'>
+                            <select onChange={handleInputChange} name="seats" id="seats" className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded'>
                                 <option value="none">None</option>
                                 <option className='' value="2">Two-Seater</option>
                                 <option className='' value="4">Four-Seater</option>
@@ -277,7 +277,7 @@ const BecomeHost = () => {
                             <input type="tel" id='rent' name='rent' value={formData.rent} onChange={handleInputChange} className='outline-none py-2 px-2 border-2 border-[#593CFB] rounded' />
                         </div>
                         <div className='flex flex-col'>
-                            <label htmlFor="vehicleImages">Images</label>
+                            <label htmlFor="vehicleImages">Vehicle Images</label>
                             <input type="file" id='vehicleImages' multiple name='vehicleImages' onChange={handleVehicleFileChange} className='outline-none py-1 px-2 border-2 border-[#593CFB] rounded' />
                         </div>
                     </div>
