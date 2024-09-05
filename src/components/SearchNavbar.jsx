@@ -2,10 +2,12 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import useOnline from '../hooks/useOnline';
 import { handleLogOut } from '../utils/helper';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axiosInstance, { createCancelTokenSource } from '../axiosConfig.js';
+import AuthContext from '../contexts/AuthContext.jsx';
+import { useNotificationContext } from '../contexts/NotificationContext.jsx';
 
 const SearchNavbar = ({
     tripStarts,
@@ -28,14 +30,16 @@ const SearchNavbar = ({
 }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
+    const { user } = useContext(AuthContext);
     const [userData, setUserData] = useState(null);
+    const { notificationBox, setNotificationBox } = useNotificationContext();
 
     // To hold the cancel token
     const cancelTokenRef = useRef(null);
 
-    useEffect(()=>{
+    useEffect(() => {
         setAvailableCars([]);
-    },[tripStarts,tripEnds]);
+    }, [tripStarts, tripEnds]);
 
     useEffect(() => {
         // getUserDetails();
@@ -96,7 +100,7 @@ const SearchNavbar = ({
         const lat = latitude ?? localStorage.getItem("latitude");
         const long = longitude ?? localStorage.getItem("longitude");
         console.log(lat, long);
-        if(!lat || !long) return setError("Allow Location to list all the vehicle nearby you")
+        if (!lat || !long) return setError("Allow Location to list all the vehicle nearby you")
         try {
             console.log("request count")
             const res = await axiosInstance.get(`/get-available-cars?`, {
@@ -153,12 +157,15 @@ const SearchNavbar = ({
                             <Link className='hover:text-[#593CFB] text-lg' to="/profile">Profile</Link>
                         </div>
                         <div className='my-4'>
+                            <Link className='hover:text-[#593CFB] text-lg' onClick={() => setNotificationBox(true)}>Notifications</Link>
+                        </div>
+                        <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/wallet">Wallet</Link>
                         </div>
                         <div className='my-4'>
                             <Link className='hover:text-[#593CFB] text-lg' to="/my-bookings">Bookings</Link>
                         </div>
-                        {userData ? <div className='my-4'>
+                        {user ? <div className='my-4'>
                             <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
                         </div>
                             :

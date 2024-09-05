@@ -240,7 +240,7 @@ const CarDetailedPage = () => {
               <div className='my-4'>
                 <Link className='hover:text-[#593CFB] text-lg' to="/my-bookings">Bookings</Link>
               </div>
-              {userData ? <div className='my-4'>
+              {user ? <div className='my-4'>
                 <h1 className='hover:text-[#593CFB] text-lg cursor-pointer' onClick={handleLogOut}>Logout</h1>
               </div>
                 :

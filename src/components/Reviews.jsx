@@ -4,9 +4,11 @@ import React, { useEffect, useState } from 'react';
 import SuccessToast from '../components/SuccessToast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faStar } from '@fortawesome/free-solid-svg-icons';
+import ErrorToast from './ErrorToast';
 
 const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) => {
     const navigate = useNavigate();
+    const [error, setError] = useState("");
     const [reviews, setReviews] = useState(null);
     const [reviewMsg, setReviewMsg] = useState("");
     const [successMsg, setSuccessMsg] = useState("");
@@ -23,6 +25,10 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
 
     const handleSubmitReview = async () => {
         if (!user) return navigate("/login");
+
+        if (!reviewMsg || reviewMsg == "") {
+            return setError("write something to post")
+        }
 
         const reqData = {
             vehicleId,
@@ -63,7 +69,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
         <div className='mt-10'>
             <h1 className='md:text-xl font-semibold'>Reviews</h1>
 
-            {reviews?.length > 0?<div className='mt-2 h-52 md:h-96 overflow-y-scroll hideScrollBar'>
+            {reviews?.length > 0 ? <div className='mt-2 h-52 md:h-96 overflow-y-scroll hideScrollBar'>
                 {reviews?.map((review) => (
                     <div key={review?._id} className='my-2 border-b pb-5 flex'>
                         <div className='w-12 h-12 rounded-full'><img className='w-full h-full object-cover rounded-full' src="https://gravatar.com/images/homepage/avatar-01.png" alt="" /></div>
@@ -75,7 +81,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
                     </div>
                 ))
                 }
-            </div>: <h1 className='text-gray-500'>No reviews yet</h1>}
+            </div> : <h1 className='text-gray-500'>No reviews yet</h1>}
             <div className='relative'>
                 <div className={`transition-all delay-150 ease-in z-0 flex ${reviewMsg == "" ? "translate-y-full invisible" : "visible"} items-center py-2 text-[#593CFB]`}>
                     <div className='mx-1 border border-[#593CFB] px-2 py-1 w-fit rounded-xl shadow-md'>
@@ -128,6 +134,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
                     <div className='flex justify-center items-center'><button onClick={handleSubmitReview} className='transition delay-150 ease-linear ml-4 px-4 py-3 bg-[#593CFB] hover:scale-105 rounded-full shadow-md'><FontAwesomeIcon className='text-white' icon={faPaperPlane} /></button></div>
                 </div>
                 <SuccessToast msg={successMsg} setSuccessMsg={setSuccessMsg} />
+                <ErrorToast error={error} setError={setError}/>
             </div>
         </div>
     )

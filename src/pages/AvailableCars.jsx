@@ -7,6 +7,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { useNotificationContext } from '../contexts/NotificationContext';
+import UserNotifications from '../components/UserNotifications';
 
 const AvailableCars = () => {
     const navigate = useNavigate();
@@ -14,9 +16,10 @@ const AvailableCars = () => {
     const [brands, setBrands] = useState([]);
     const [bodyTypes, setBodyTypes] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const { notificationBox } = useNotificationContext();
     const [hasMoreCars, setHasMoreCars] = useState(true);
     const [availableCars, setAvailableCars] = useState([]);
-    
+
     const [selectedFuel, setSelectedFuel] = useState("None");
     const [selectedBrand, setSelectedBrand] = useState("None");
     const [selectedPrice, setSelectedPrice] = useState("None");
@@ -33,7 +36,7 @@ const AvailableCars = () => {
         fetchBrands();
         fetchBodyTypes();
         fetchCoordinates();
-    }, [latitude,longitude]);
+    }, [latitude, longitude]);
 
     const query = useQuery();
     // setTripStarts(query.get('tripStarts'));
@@ -59,8 +62,14 @@ const AvailableCars = () => {
 
     const fetchBrands = async () => {
         try {
-            const res = await axiosInstance.get("/brands");
+            const res = await axiosInstance.get("/brands", {
+                params: {
+                    limit: 0,
+                    skip: 0
+                }
+            });
             setBrands(res?.data);
+            console.log("brandsh;; ", res?.data);
         } catch (error) {
             console.log(error);
         }
@@ -206,11 +215,12 @@ const AvailableCars = () => {
                 <div className='hidden md:block md:w-[50%] z-0'>
                     {
                         longitude ?
-                        <Map latitude={latitude} longitude={longitude} vehicles={availableCars} tripStarts={tripStarts} tripEnds={tripEnds}/>
-                        : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
+                            <Map latitude={latitude} longitude={longitude} vehicles={availableCars} tripStarts={tripStarts} tripEnds={tripEnds} />
+                            : <h1 className='my-auto text-center'>Allow location for showing nearby vehicles</h1>}
                 </div>
             </div>
             <ErrorToast setError={setError} error={error} />
+            {notificationBox && <UserNotifications />}
         </div>
     )
 }

@@ -51,7 +51,7 @@ const UserBookingDetailed = () => {
 
       <div className='mt-10 mb-5'>
         <div className='flex flex-col md:flex-row gap-y-5 md:gap-y-0 justify-between'>
-          <div className='md:w-1/2'>
+          <div className='md:w-1/2 md:h-1/2 md:m-auto'>
             <img className='w-full h-full rounded-e' src={bookingDetails?.vehicleDetails?.vehicleImages[0]} alt="car-image" />
           </div>
 
@@ -89,6 +89,10 @@ const UserBookingDetailed = () => {
               <div className='mt-5'>
                 <h1 className='text-gray-500 font-semibold'>Booking Status</h1>
                 <span>{bookingStatus ? "Booked" : "Cancelled"}</span>
+              </div>
+              <div className='mt-5'>
+                <h1 className='text-gray-500 font-semibold'>Pick Up</h1>
+                <span>{bookingDetails?.vehicleDetails?.pickUpLocation}</span>
               </div>
             </div>
 
