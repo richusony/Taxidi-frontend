@@ -7,6 +7,7 @@ import HostProfileUpdate from '../../components/HostProfileUpdate';
 import axiosInstance from '../../axiosConfig';
 import ErrorToast from '../../components/ErrorToast';
 import LineGraph from '../../components/LineGraph';
+import { validateImageFile } from '../../utils/helper';
 
 const HostProfile = () => {
   const [error, setError] = useState("");
@@ -32,6 +33,12 @@ const HostProfile = () => {
   const handleProfileImageChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+
+    const error = validateImageFile(file);
+    if (error) {
+      setError(error);
+      return;
+    }
 
     const formData = new FormData();
     formData.append("profileImage", file);

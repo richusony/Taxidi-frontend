@@ -10,7 +10,7 @@ import HostNavbar from '../../components/HostNavBar';
 import HostVehiclePhotos from '../../components/HostVehiclePhotos';
 import HostVehicleUpdate from '../../components/HostVehicleUpdate';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFile, faFileAlt, faList } from '@fortawesome/free-solid-svg-icons';
+import { faFile, faFileAlt, faList, faWarning } from '@fortawesome/free-solid-svg-icons';
 
 const HostCarDetailed = () => {
     const [error, setError] = useState("");
@@ -72,13 +72,20 @@ const HostCarDetailed = () => {
                 {/* Navbar  */}
                 <HostNavbar page={page} />
 
-                <div className='mt-5 text-end'>
+                <div className={`mt-5 ${vehicleData?.location?.coordinates[0] == null ? "flex justify-between": "text-end"}`}>
                     {
+                        vehicleData?.location?.coordinates[0] == null && <div className='px-2 py-2 rounded-md shadow-md bg-yellow-400 text-gray-700'>
+                        <p><FontAwesomeIcon icon={faWarning}/> Update vehicle location to list vehicle for users</p>
+                    </div>
+                    }
+                    <div className=''>
+                        {
                         vehicleData?.availabilityStatus === false ?
                             <button onClick={handleListVehicle} className='mr-3 transition-all ease-linear px-4 py-1 bg-[#593CFB] text-white rounded'>List</button> :
                             <button onClick={handleUnListVehicle} className='mr-3 transition-all ease-linear px-4 py-1 bg-[#593CFB] text-white rounded'>Unlist</button>
                     }
                     <button onClick={() => setVehicleUpdateBox(true)} className='transition-all ease-linear border border-[#593CFB] px-4 py-1 text-[#593CFB] hover:bg-[#593CFB] hover:text-white rounded shadow-md'>Update</button>
+                    </div>
                 </div>
 
                 <div className='my-10'>

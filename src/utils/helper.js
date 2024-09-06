@@ -1,6 +1,14 @@
 import axiosInstance from "../axiosConfig.js";
 import { kannurDistrictPincodes } from "../constants";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/jpg",
+  "image/webp",
+];
+
 export const validateEmail = (email) => {
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return re.test(String(email).toLowerCase());
@@ -39,21 +47,27 @@ export const validateHost = async () => {
   }
 };
 
-export const handleAdminLogOut = async () =>
+export const handleAdminLogOut = async () => {
+  const confirm = window.confirm("are you sure?");
+  if (!confirm) return;
   await axiosInstance.get("/admin/logout").then(() => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     window.location.reload();
   });
+};
 
-export const handleHostLogOut = async () =>
+export const handleHostLogOut = async () => {
+  const confirm = window.confirm("are you sure?");
+  if (!confirm) return;
   await axiosInstance.get("/host/logout").then(() => {
     localStorage.removeItem("user");
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
     window.location.reload();
   });
+};
 
 export const handleLogOut = async () =>
   await axiosInstance.get("/logout").then(() => {
@@ -112,3 +126,13 @@ function formatDate(date) {
   };
   return new Intl.DateTimeFormat("en-US", options).format(date);
 }
+
+export const validateImageFile = (file) => {
+  if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
+    return "Invalid file type. Only JPEG, PNG, JPG, and WEBP are allowed.";
+  }
+  if (file.size > MAX_FILE_SIZE) {
+    return "File size exceeds the maximum limit of 5MB.";
+  }
+  return null;
+};

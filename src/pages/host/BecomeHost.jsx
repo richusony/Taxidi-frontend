@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react';
 import ErrorToast from "../../components/ErrorToast.jsx";
 import DefaultNavbar from '../../components/DefaultNavbar';
 import SuccessToast from '../../components/SuccessToast.jsx';
-import { isKannur, validateEmail, validatePhoneNumber } from '../../utils/helper';
+import { isKannur, validateEmail, validateImageFile, validatePhoneNumber } from '../../utils/helper';
 import { HOST_BG_IMAGE, isValidKeralaRegistrationNumber, isValidLicenseNumber } from '../../constants';
 
 const BecomeHost = () => {
@@ -37,16 +37,43 @@ const BecomeHost = () => {
         pollutionCertificateImage: ""
     });
 
+
+
+
     const handleFileChange = (e) => {
         const { name, files } = e.target;
+
+        const error = validateImageFile(files[0]);
+        if (error) {
+            errorMessageRef.current.scrollIntoView();
+            setError(error);
+            return;
+        }
+
         setFormData({
             ...formData,
             [name]: files[0],
         });
     };
 
+    const MAX_VEHICLE_IMAGES = 5;
     const handleVehicleFileChange = (e) => {
         const files = Array.from(e.target.files);
+
+        if (files.length < MAX_VEHICLE_IMAGES) {
+            setError(`minimum ${MAX_VEHICLE_IMAGES} images required.`);
+            return;
+        }
+
+        for (const file of files) {
+            const error = validateImageFile(file);
+            if (error) {
+                errorMessageRef.current.scrollIntoView();
+                setError(error);
+                return;
+            }
+        }
+
         setFormData({
             ...formData,
             vehicleImages: files,
@@ -120,6 +147,12 @@ const BecomeHost = () => {
             return;
         }
 
+        if (formData.vehicleImages.length < 5) {
+            errorMessageRef.current.scrollIntoView();
+            setError("minimum 5 images required");
+            return;
+        }
+
         if (!formData.licenseFrontImage || !formData.licenseBackImage) {
             errorMessageRef.current.scrollIntoView();
             setError("Upload both front & back image of license");
@@ -156,18 +189,26 @@ const BecomeHost = () => {
         }
 
         try {
-            console.log(formData);
-            console.log(formDataToSubmit.get("vehicleImages"));
+            // console.log(formData);
+            // console.log(formDataToSubmit.get("vehicleImages"));
             const res = await fetch(`${import.meta.env.VITE_BACKEND}/host/host-request`, {
                 method: 'POST',
                 credentials: 'include',
                 body: formDataToSubmit
             });
-            errorMessageRef.current.scrollIntoView();
-            setSuccessMsg("request sent successfully");
+            if (res.status === 400) {
+                const data = await res.json();
+                errorMessageRef.current.scrollIntoView();
+                setError(data?.error);
+            }
+
+            if (res.status === 201) {
+                errorMessageRef.current.scrollIntoView();
+                setSuccessMsg("request sent successfully");
+            }
         } catch (error) {
             errorMessageRef.current.scrollIntoView();
-            setError(error.response?.data?.error);
+            setError(error.message);
         }
     };
 

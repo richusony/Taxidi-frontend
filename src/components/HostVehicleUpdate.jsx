@@ -3,8 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react'
 import axiosInstance from '../axiosConfig';
 import axios from 'axios';
+import ErrorToast from './ErrorToast';
 
 const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData, role }) => {
+    const [error, setError] = useState("");
     const [longitude, setLongitude] = useState(null);
     const [latitude, setLatitude] = useState(null);
     const [currentAddress, setCurrentAddress] = useState("");
@@ -58,6 +60,9 @@ const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData, role }) => {
         try {
             const res = await axios.get(`https://api.opencagedata.com/geocode/v1/json?key=${apiKey}&q=${latitude},${longitude}`);
             const address = res?.data?.results[0]?.formatted;
+            const isInKannur = address.split(",").includes("Kannur");
+            if(!isInKannur) return setError("Vehicle should be in Kannur District");
+
             setCurrentAddress(address);
             setFormData({
                 ...formData,
@@ -143,6 +148,7 @@ const HostVehicleUpdate = ({ setVehicleUpdateBox, vehicleData, role }) => {
                     <button onClick={handleUpdateVehicle} className='px-4 py-2 bg-[#593CFB] text-white rounded shadow-md'>Update</button>
                 </div>
             </div>
+            <ErrorToast error={error} setError={setError} />
         </div>
     )
 }

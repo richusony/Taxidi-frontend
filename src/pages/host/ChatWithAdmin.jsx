@@ -41,8 +41,9 @@ const ChatWithAdmin = () => {
     }
 
     useRealTimeMsg(realTimeMessages, setRealTimeMessages);
-    console.log("real", realTimeMessages);
+    // console.log("real", realTimeMessages);
     const handleSubmit = async () => {
+        if (inputMsg == null || inputMsg.trim() == "") return;
         const reqData = {
             message: inputMsg.trim()
         }

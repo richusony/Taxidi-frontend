@@ -53,6 +53,7 @@ const AdminHostChatPage = () => {
     useRealTimeMsg(realTimeMessages, setRealTimeMessages);
 
     const handleSubmit = async () => {
+        if (inputMsg == null || inputMsg.trim() == "") return;
         const reqData = {
             message: inputMsg.trim(),
             to: email.trim()

@@ -37,7 +37,8 @@ const Signup = () => {
         }
 
         if (!formData.firstName || !formData.email || !formData.pincode || !formData.password || !formData.confirmPassword) {
-            setError("Fill all the forms")
+            setError("Fill all the forms");
+            return;
         }
 
         if (formData.password !== formData.confirmPassword) {
