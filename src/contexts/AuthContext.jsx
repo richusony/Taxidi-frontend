@@ -28,7 +28,7 @@ export const AuthProvider = ({ children }) => {
       // console.log("auth :", res?.data?.user);
     } catch (error) {
       setUser(null);
-      console.log(error);
+      console.log(error.message);
     }
   }
   const getAdminDetails = async () => {

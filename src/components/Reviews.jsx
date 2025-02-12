@@ -51,7 +51,6 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
         // console.log(reqData);
         try {
             const res = await axiosInstance.post("/vehicle-reivews", reqData);
-            console.log(res?.data);
             setReviews(res?.data?.reviews);
             setRatingData(res?.data?.rating[0]);
         } catch (error) {
@@ -130,7 +129,7 @@ const Reviews = ({ vehicleId, vehicleRegistrationNumber, user, setRatingData }) 
                     </div>
                 </div>
                 <div className='flex z-50'>
-                    <textarea defaultValue={reviewMsg} className='outline-none border-2 w-full border-[#593CFB] px-2 py-1 rounded' onChange={(e) => setReviewMsg(e.target.value)} placeholder='write something...' name="reviewMsg" id="reviewMsg"></textarea>
+                    <textarea defaultValue={reviewMsg} rows={3} className='outline-none border-2 w-full border-[#593CFB] px-2 py-1 rounded' onChange={(e) => setReviewMsg(e.target.value)} placeholder='write something...' name="reviewMsg" id="reviewMsg"></textarea>
                     <div className='flex justify-center items-center'><button onClick={handleSubmitReview} className='transition delay-150 ease-linear ml-4 px-4 py-3 bg-[#593CFB] hover:scale-105 rounded-full shadow-md'><FontAwesomeIcon className='text-white' icon={faPaperPlane} /></button></div>
                 </div>
                 <SuccessToast msg={successMsg} setSuccessMsg={setSuccessMsg} />

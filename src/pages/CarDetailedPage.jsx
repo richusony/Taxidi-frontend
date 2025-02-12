@@ -73,7 +73,6 @@ const CarDetailedPage = () => {
   const getVehicleDetails = async () => {
     try {
       const res = await axiosInstance.get(`/car/${registrationNumber}`);
-      console.log(res?.data);
       setVehicleData(res?.data);
     } catch (error) {
       console.log(error)
