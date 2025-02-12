@@ -26,13 +26,13 @@ const SearchNavbar = ({
     longitude,
     currentPage,
     setCurrentPage,
-    setHasMoreCars
+    setHasMoreCars,
+    setFetchLoading
 }) => {
     const isOnline = useOnline();
     const [menu, setMenu] = useState(false);
     const { user } = useContext(AuthContext);
-    const [userData, setUserData] = useState(null);
-    const { notificationBox, setNotificationBox } = useNotificationContext();
+    const { setNotificationBox } = useNotificationContext();
 
     // To hold the cancel token
     const cancelTokenRef = useRef(null);
@@ -99,10 +99,10 @@ const SearchNavbar = ({
 
         const lat = latitude ?? localStorage.getItem("latitude");
         const long = longitude ?? localStorage.getItem("longitude");
-        console.log(lat, long);
+        
         if (!lat || !long) return setError("Allow Location to list all the vehicle nearby you")
         try {
-            console.log("request count")
+            setFetchLoading(true);
             const res = await axiosInstance.get(`/get-available-cars?`, {
                 params: {
                     brand: selectedBrand,
@@ -118,7 +118,8 @@ const SearchNavbar = ({
                 },
                 cancelToken: cancelTokenRef.current.token,
             });
-            console.log(res?.data);
+            setFetchLoading(false);
+            
             if (res?.data.length < 4) {
                 setHasMoreCars(false); // No more cars to load
             }
@@ -126,10 +127,12 @@ const SearchNavbar = ({
             setAvailableCars(prevCars => [...prevCars, ...res?.data]);
             setCurrentPage(currentPage);
         } catch (error) {
+            setFetchLoading(false);
             if (axios.isCancel(error)) {
                 console.log("Request canceled", error.message);
             } else {
-                console.error("Error fetching cars", error);
+                setError("Something went wrong. Try again later!!");
+                console.error("Error fetching cars", error.message);
             }
         }
     }

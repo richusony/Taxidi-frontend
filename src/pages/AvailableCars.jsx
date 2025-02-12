@@ -1,14 +1,15 @@
 import Map from '../components/Map';
 import axiosInstance from '../axiosConfig';
+import { PuffLoader } from "react-spinners";
 import ErrorToast from '../components/ErrorToast';
+import React, { useEffect, useState } from 'react';
 import SearchNavbar from '../components/SearchNavbar';
-import React, { useRef, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import UserNotifications from '../components/UserNotifications';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar';
 import { faHeart, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { useNotificationContext } from '../contexts/NotificationContext';
-import UserNotifications from '../components/UserNotifications';
 
 const AvailableCars = () => {
     const navigate = useNavigate();
@@ -19,6 +20,7 @@ const AvailableCars = () => {
     const { notificationBox } = useNotificationContext();
     const [hasMoreCars, setHasMoreCars] = useState(true);
     const [availableCars, setAvailableCars] = useState([]);
+    const [fetchLoading, setFetchLoading] = useState(false);
 
     const [selectedFuel, setSelectedFuel] = useState("None");
     const [selectedBrand, setSelectedBrand] = useState("None");
@@ -84,14 +86,6 @@ const AvailableCars = () => {
         }
     }
 
-    const handleChangeBrand = async () => {
-        try {
-            const res = await axiosInstance.get("/brands?")
-        } catch (error) {
-            console.log(error);
-        }
-    }
-
     const handleFilterChange = (setter) => (event) => {
         const value = event.target.value;
         setAvailableCars([]); // Reset cars on filter change
@@ -141,6 +135,7 @@ const AvailableCars = () => {
                 currentPage={currentPage}
                 setCurrentPage={setCurrentPage}
                 setHasMoreCars={setHasMoreCars}
+                setFetchLoading={setFetchLoading}
             />
 
             {/* Filters */}
@@ -191,7 +186,7 @@ const AvailableCars = () => {
             {/* Cars and Map */}
             <div className='mt-2 px-2 md:px-5 pb-5 flex md:gap-x-4 justify-between'>
                 <div className='md:w-[50%] h-[600px] md:h-[500px] overflow-y-scroll hideScrollBar'>
-                    {availableCars?.length > 0 ?
+                    {fetchLoading ? <PuffLoader className='mx-auto' color='#593CFB'/> : availableCars?.length > 0 ?
                         availableCars.map((car) => (
                             <div key={car._id} onClick={() => navigate(`/car-details/${car.vehicleRegistrationNumber}?startDate=${tripStarts}&endDate=${tripEnds}`)} className='mb-5 border flex justify-between rounded shadow-md'>
                                 <div className='my-auto w-[30%] h-24 md:h-44'><img className='w-full h-full object-cover rounded' src={car.vehicleImages[0]} alt="car-image" /></div>
